@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>الأفكار — مركز مشاريع التخرج</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="data.js"></script>
+  <script defer src="critic.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="logo">مركز <span>مشاريع التخرج</span></a>
+    <button class="nav-toggle" aria-label="القائمة">☰</button>
+    <nav>
+      <div class="nav-links">
+        <a href="index.html">الرئيسية</a>
+        <a href="ideas.html">الأفكار</a>
+        <a href="feedback.html">التعليقات</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <h1>جميع المشاريع</h1>
+      <p>استعرض أفكار مشاريع التخرج المطروحة</p>
+    </section>
+
+    <section class="filters flex flex-wrap items-center gap-2" style="margin-bottom:20px">
+      <input type="text" id="searchInput" class="form-input" placeholder="ابحث عن فكرة..." style="max-width:300px" />
+      <select id="categoryFilter" class="form-select" style="max-width:200px">
+        <option value="">جميع المجالات</option>
+      </select>
+    </section>
+
+    <section id="ideasGrid" class="card-grid"></section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© ٢٠٢٦ مركز مشاريع التخرج</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var searchInput = document.getElementById('searchInput');
+      var categoryFilter = document.getElementById('categoryFilter');
+      var ideasGrid = document.getElementById('ideasGrid');
+
+      function renderIdeas() {
+        var results = GradHub.searchProjects(searchInput.value);
+        var cat = categoryFilter.value;
+        if (cat) {
+          results = results.filter(function (p) { return p.category === cat; });
+        }
+        GradHub.renderProjects(results, 'ideasGrid');
+      }
+
+      var cats = GradHub.getCategories();
+      cats.forEach(function (c) {
+        var opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        categoryFilter.appendChild(opt);
+      });
+
+      GradHub.init().then(function () {
+        renderIdeas();
+        searchInput.addEventListener('input', renderIdeas);
+        categoryFilter.addEventListener('change', renderIdeas);
+      });
+    });
+  </script>
+
+</body>
+</html>

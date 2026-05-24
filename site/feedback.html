@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>التعليقات — مركز مشاريع التخرج</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="data.js"></script>
+  <script defer src="critic.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="logo">مركز <span>مشاريع التخرج</span></a>
+    <button class="nav-toggle" aria-label="القائمة">☰</button>
+    <nav>
+      <div class="nav-links">
+        <a href="index.html">الرئيسية</a>
+        <a href="ideas.html">الأفكار</a>
+        <a href="feedback.html">التعليقات</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <h1>شارك برأيك</h1>
+      <p>نرحب باقتراحاتك وملاحظاتك حول المنصة أو أفكار المشاريع</p>
+    </section>
+
+    <section class="feedback-form" style="max-width:600px;margin:0 auto">
+      <form id="feedbackForm">
+        <div class="form-group">
+          <label class="form-label" for="fbName">الاسم</label>
+          <input type="text" id="fbName" class="form-input" placeholder="اسمك (اختياري)" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="fbEmail">البريد الإلكتروني <span class="required"></span></label>
+          <input type="email" id="fbEmail" class="form-input" placeholder="بريدك الإلكتروني" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="fbMessage">رسالتك <span class="required"></span></label>
+          <textarea id="fbMessage" class="form-textarea" placeholder="اكتب اقتراحك أو ملاحظاتك هنا..." required></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">إرسال</button>
+          <button type="reset" class="btn btn-ghost">إعادة تعيين</button>
+        </div>
+      </form>
+      <div id="feedbackMessage" style="margin-top:16px"></div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© ٢٠٢٦ مركز مشاريع التخرج</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var form = document.getElementById('feedbackForm');
+      var msgBox = document.getElementById('feedbackMessage');
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var name = document.getElementById('fbName').value.trim() || 'زائر';
+        var email = document.getElementById('fbEmail').value.trim();
+        var message = document.getElementById('fbMessage').value.trim();
+
+        if (!email || !message) {
+          msgBox.innerHTML = '<div class="alert alert-error">يرجى ملء جميع الحقول المطلوبة.</div>';
+          return;
+        }
+
+        var entry = {
+          name: name,
+          email: email,
+          message: message,
+          date: new Date().toISOString(),
+          page: window.location.pathname.split('/').pop()
+        };
+
+        var existing = JSON.parse(localStorage.getItem('gradhub_feedback') || '[]');
+        existing.push(entry);
+        localStorage.setItem('gradhub_feedback', JSON.stringify(existing));
+
+        msgBox.innerHTML = '<div class="alert alert-success">تم إرسال تعليقك بنجاح! شكراً لك.</div>';
+        form.reset();
+      });
+    });
+  </script>
+
+</body>
+</html>

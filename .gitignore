@@ -1,0 +1,13 @@
+node_modules/
+.env
+.DS_Store
+*.log
+.history/
+.hermes.md
+AGENT-*.md
+content_agent.md
+database_agent.md
+design_agent.md
+feedback_agent.md
+integration_agent.md
+webdev_agent.md

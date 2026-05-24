@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ناقد الأفكار — Grad Projects Hub</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="logo">ناقد <span>الأفكار</span></a>
+    <button class="dark-toggle" aria-label="الوضع الليلي">🌙</button>
+    <button class="nav-toggle" aria-label="القائمة">☰</button>
+    <nav>
+      <div class="nav-links">
+        <a href="index.html">المشاريع</a>
+        <a href="preferences.html">تفضيلاتي</a>
+        <a href="history.html">سجلي</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Idea Viewer -->
+    <section id="ideaViewer">
+      <div class="idea-progress">
+        <span>تمت المراجعة: <strong id="reviewedCount">0</strong></span>
+        <span>المتبقي: <strong id="remainingCount">0</strong></span>
+      </div>
+
+      <div id="ideaCard" class="idea-viewer"></div>
+
+      <div class="action-bar">
+        <div class="rating-section">
+          <label>تقييمك:</label>
+          <div id="starRating" class="star-rating">
+            <span class="star" data-value="1">★</span>
+            <span class="star" data-value="2">★</span>
+            <span class="star" data-value="3">★</span>
+            <span class="star" data-value="4">★</span>
+            <span class="star" data-value="5">★</span>
+          </div>
+        </div>
+        <div class="comment-section">
+          <textarea id="userComment" placeholder="اكتب ملاحظاتك على هذه الفكرة... ما الذي أعجبك؟ ما الذي ينقصها؟"></textarea>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="GradHub.saveAndNext()">💾 احفظ وانتقل للتالية</button>
+          <button class="btn btn-accent" onclick="GradHub.analyzeIdea()">🔍 حلّل هذه الفكرة</button>
+          <button class="btn btn-outline" onclick="GradHub.goBack()">↩ رجوع</button>
+          <button class="btn btn-ghost" onclick="GradHub.skipIdea()">⏭ تخطّ</button>
+        </div>
+      </div>
+
+      <div id="criticPanel" class="critic-panel" style="display:none"></div>
+    </section>
+
+    <!-- Empty state -->
+    <section id="emptyState" style="display:none">
+      <div class="hero">
+        <h2>🎉 لقد راجعت جميع الأفكار!</h2>
+        <p>سأبحث عن أفكار جديدة تناسب تفضيلاتك. عد لاحقاً.</p>
+        <button class="btn btn-accent" onclick="GradHub.resetSession()">ابدأ جلسة جديدة</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© ٢٠٢٦ ناقد الأفكار — مشروع شخصي</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script defer src="critic.js"></script>
+  <script defer src="app.js"></script>
+</body>
+</html>

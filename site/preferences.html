@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>تفضيلاتي — ناقد الأفكار</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .pref-card { max-width: 640px; margin: 0 auto 20px; border: 1px solid var(--color-border); border-radius: var(--radius); padding: 24px; background: var(--color-bg); box-shadow: var(--shadow); }
+    .pref-card h2 { margin: 0 0 16px; font-size: 1.2rem; color: var(--color-primary); }
+    .pref-card ul { list-style: none; padding: 0; margin: 0; }
+    .pref-card li { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--color-border); font-size: .95rem; }
+    .pref-card li:last-child { border-bottom: none; }
+    .pref-card .bar-wrap { flex: 1; margin: 0 12px; height: 8px; background: var(--color-bg-alt); border-radius: 4px; overflow: hidden; }
+    .pref-card .bar-fill { height: 100%; background: var(--color-accent); border-radius: 4px; }
+    .pref-card .stat-num { font-weight: 700; color: var(--color-primary); min-width: 30px; text-align: center; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag-list .tag { background: var(--color-primary); color: #fff; padding: 4px 12px; border-radius: 14px; font-size: .85rem; }
+    .reset-area { text-align: center; margin-top: 32px; }
+    .empty-state { text-align: center; padding: 60px 24px; color: var(--color-text-muted); }
+    .empty-state p { font-size: 1.1rem; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="logo">ناقد <span>الأفكار</span></a>
+    <button class="dark-toggle" aria-label="الوضع الليلي">🌙</button>
+    <button class="nav-toggle" aria-label="القائمة">☰</button>
+    <nav>
+      <div class="nav-links">
+        <a href="index.html">المشاريع</a>
+        <a href="preferences.html">تفضيلاتي</a>
+        <a href="history.html">سجلي</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <h1>تفضيلاتي</h1>
+      <p>بناءً على تقييماتك للأفكار السابقة، إليك تحليل لتفضيلاتك</p>
+    </section>
+
+    <div id="prefContent">
+      <div id="emptyPrefs" class="empty-state" style="display:none">
+        <p>لم تقيّم أي فكرة بعد. ابدأ بتصفح المشاريع لتظهر تفضيلاتك هنا.</p>
+        <a href="index.html" class="btn btn-accent">اذهب إلى المشاريع</a>
+      </div>
+
+      <div id="prefCards">
+        <!-- الفئات المفضلة -->
+        <div class="pref-card" id="favCategoriesCard">
+          <h2>🏷️ الفئات المفضلة</h2>
+          <div id="favCategoriesList"><p class="text-muted">لا توجد بيانات كافية بعد.</p></div>
+        </div>
+
+        <!-- المستوى المفضل -->
+        <div class="pref-card" id="difficultyCard">
+          <h2>📊 المستوى المفضل</h2>
+          <div id="difficultyContent"><p class="text-muted">لا توجد بيانات كافية بعد.</p></div>
+        </div>
+
+        <!-- الكلمات المفتاحية -->
+        <div class="pref-card" id="keywordsCard">
+          <h2>🔑 الكلمات المفتاحية</h2>
+          <div id="keywordsContent"><p class="text-muted">لا توجد بيانات كافية بعد.</p></div>
+        </div>
+
+        <!-- الأفكار التي أعجبتني -->
+        <div class="pref-card" id="likedIdeasCard">
+          <h2>⭐ الأفكار التي أعجبتني</h2>
+          <div id="likedIdeasList"><p class="text-muted">لا توجد بيانات كافية بعد.</p></div>
+        </div>
+      </div>
+
+      <div class="reset-area">
+        <button class="btn btn-outline" onclick="GradHub.resetAllData()">🗑️ إعادة تعيين جميع البيانات</button>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <footer>
+    <p>© ٢٠٢٦ ناقد الأفكار — مشروع شخصي</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script defer src="critic.js"></script>
+  <script defer src="app.js"></script>
+</body>
+</html>

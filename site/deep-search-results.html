@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grad Projects Hub - Deep Search Results</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Tajawal:wght@300;400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', 'Tajawal', sans-serif; background: #0f0f1a; color: #e0e0e0; min-height: 100vh; }
+  .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(99,102,241,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,.05) 1px,transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 0; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+  header { text-align: center; padding: 50px 20px 40px; position: relative; }
+  header::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 200px; height: 3px; background: linear-gradient(90deg,#6366f1,#06b6d4,#6366f1); border-radius: 2px; }
+  .logo { font-size: 14px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; background: linear-gradient(135deg,#6366f1,#06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+  h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 8px; }
+  h1 span { background: linear-gradient(135deg,#a78bfa,#06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .subtitle { font-size: clamp(1rem, 2vw, 1.3rem); color: #94a3b8; font-weight: 300; margin-bottom: 6px; }
+  .date-badge { display: inline-block; background: rgba(99,102,241,.15); border: 1px solid rgba(99,102,241,.3); border-radius: 100px; padding: 8px 24px; font-size: .9rem; color: #a5b4fc; margin-top: 12px; font-family: 'Tajawal', sans-serif; }
+  .stats { display: flex; justify-content: center; gap: 30px; margin: 30px 0 10px; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-size: 2rem; font-weight: 800; color: #a78bfa; }
+  .stat-label { font-size: .8rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+  .filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 25px 0 35px; }
+  .filter-btn { background: rgba(30,30,60,.8); border: 1px solid rgba(99,102,241,.2); border-radius: 100px; padding: 6px 18px; font-size: .8rem; color: #94a3b8; cursor: pointer; transition: all .3s; font-family: inherit; }
+  .filter-btn:hover, .filter-btn.active { background: rgba(99,102,241,.2); border-color: #6366f1; color: #e0e0e0; }
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+  .card { background: linear-gradient(145deg, rgba(20,20,40,.9), rgba(15,15,30,.95)); border: 1px solid rgba(99,102,241,.12); border-radius: 16px; padding: 24px; transition: all .4s cubic-bezier(.4,0,.2,1); position: relative; overflow: hidden; }
+  .card::before { content: ''; position: absolute; inset: 0; border-radius: 16px; background: linear-gradient(135deg, rgba(99,102,241,.08), transparent 60%); opacity: 0; transition: opacity .4s; }
+  .card:hover { transform: translateY(-4px); border-color: rgba(99,102,241,.3); box-shadow: 0 20px 60px rgba(0,0,0,.4); }
+  .card:hover::before { opacity: 1; }
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; position: relative; z-index: 1; }
+  .univ-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(99,102,241,.12); border-radius: 8px; padding: 4px 12px; font-size: .72rem; font-weight: 600; color: #a5b4fc; text-transform: uppercase; letter-spacing: .5px; }
+  .univ-badge .flag { font-size: .9rem; }
+  .category { display: inline-block; background: rgba(6,182,212,.12); color: #67e8f9; font-size: .65rem; font-weight: 600; padding: 3px 10px; border-radius: 100px; letter-spacing: .3px; text-transform: uppercase; border: 1px solid rgba(6,182,212,.15); }
+  .category.ai { background: rgba(168,85,247,.12); color: #d8b4fe; border-color: rgba(168,85,247,.15); }
+  .category.web { background: rgba(59,130,246,.12); color: #93c5fd; border-color: rgba(59,130,246,.15); }
+  .category.mobile { background: rgba(34,197,94,.12); color: #86efac; border-color: rgba(34,197,94,.15); }
+  .category.security { background: rgba(239,68,68,.12); color: #fca5a5; border-color: rgba(239,68,68,.15); }
+  .category.cloud { background: rgba(234,179,8,.12); color: #fde68a; border-color: rgba(234,179,8,.15); }
+  .category.blockchain { background: rgba(249,115,22,.12); color: #fdba74; border-color: rgba(249,115,22,.15); }
+  .category.data { background: rgba(20,184,166,.12); color: #5eead4; border-color: rgba(20,184,166,.15); }
+  .category.game { background: rgba(236,72,153,.12); color: #f9a8d4; border-color: rgba(236,72,153,.15); }
+  .category.ar-vr { background: rgba(139,92,246,.12); color: #c4b5fd; border-color: rgba(139,92,246,.15); }
+  .category.devops { background: rgba(14,165,233,.12); color: #7dd3fc; border-color: rgba(14,165,233,.15); }
+  .category.iot { background: rgba(132,204,22,.12); color: #bef264; border-color: rgba(132,204,22,.15); }
+  h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; position: relative; z-index: 1; color: #f1f5f9; }
+  .desc { font-size: .85rem; line-height: 1.6; color: #94a3b8; margin-bottom: 12px; position: relative; z-index: 1; }
+  .desc[lang=ar] { font-family: 'Tajawal', sans-serif; direction: rtl; text-align: right; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; position: relative; z-index: 1; }
+  .uni-location { display: inline-flex; align-items: center; gap: 4px; font-size: .7rem; color: #64748b; }
+  footer { text-align: center; padding: 50px 20px; color: #475569; font-size: .8rem; }
+  footer a { color: #6366f1; text-decoration: none; }
+  @media (max-width: 640px) {
+    .projects-grid { grid-template-columns: 1fr; }
+    .stats { gap: 16px; }
+    .container { padding: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="container">
+  <header>
+    <div class="logo">Grad Projects Hub</div>
+    <h1><span>Deep Search</span> Results</h1>
+    <div class="date-badge">&#x627;&#x644;&#x628;&#x62D;&#x62B; &#x627;&#x644;&#x64A;&#x648;&#x645;&#x64A; &mdash; Daily Search Results &mdash; 2026-05-24</div>
+    <div class="stats">
+      <div class="stat"><div class="stat-num">10</div><div class="stat-label">Universities</div></div>
+      <div class="stat"><div class="stat-num">70+</div><div class="stat-label">Projects</div></div>
+      <div class="stat"><div class="stat-num">12</div><div class="stat-label">Categories</div></div>
+    </div>
+    <div class="filters">
+      <button class="filter-btn active" onclick="document.querySelectorAll('.card').forEach(c=>c.style.display='')">All</button>
+      <button class="filter-btn" onclick="filter('ai')">AI/ML</button>
+      <button class="filter-btn" onclick="filter('web')">Web</button>
+      <button class="filter-btn" onclick="filter('mobile')">Mobile</button>
+      <button class="filter-btn" onclick="filter('security')">Security</button>
+      <button class="filter-btn" onclick="filter('cloud')">Cloud/DevOps</button>
+      <button class="filter-btn" onclick="filter('blockchain')">Blockchain</button>
+      <button class="filter-btn" onclick="filter('data')">Data Science</button>
+      <button class="filter-btn" onclick="filter('game')">Game Dev</button>
+      <button class="filter-btn" onclick="filter('ar-vr')">AR/VR</button>
+      <button class="filter-btn" onclick="filter('iot')">IoT</button>
+      <button class="filter-btn" onclick="filter('devops')">DevOps</button>
+    </div>
+  </header>
+
+  <div class="projects-grid" id="projectsGrid">
+
+    <!-- ==================== MIT ==================== -->
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> MIT</span><span class="category ai">AI/ML</span></div>
+    <h3>AI Studio &#x2013; Autonomous AI Agents</h3>
+    <div class="desc">Build autonomous AI agents that plan, coordinate, and execute complex workflows across distributed web systems. Learn agent architectures, inter-agent protocols, and web automation frameworks. <span lang="ar">&#x628;&#x646;&#x627;&#x621; &#x648;&#x643;&#x644;&#x627;&#x621; &#x630;&#x643;&#x64A;&#x629; &#x645;&#x633;&#x62A;&#x642;&#x644;&#x629; &#x644;&#x62A;&#x646;&#x641;&#x64A;&#x630; &#x645;&#x647;&#x627;&#x645; &#x645;&#x639;&#x642;&#x62F;&#x629; &#x639;&#x628;&#x631; &#x627;&#x644;&#x648;&#x64A;&#x628;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, MA, USA</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> MIT</span><span class="category ai">AI/ML</span></div>
+    <h3>Deep Learning Research &#x2013; Adaptive Computation Transformers</h3>
+    <div class="desc">Investigate how to modify transformers to have adaptive depth/width based on input complexity. Explore trade-offs between time, memory, and accuracy for molecular analysis. <span lang="ar">&#x62A;&#x639;&#x62F;&#x64A;&#x644; &#x645;&#x62D;&#x648;&#x644;&#x627;&#x62A; &#x627;&#x644;&#x62A;&#x62D;&#x648;&#x64A;&#x644; &#x644;&#x62A;&#x643;&#x64A;&#x641; &#x639;&#x645;&#x642;&#x647;&#x627; &#x645;&#x639; &#x62A;&#x639;&#x642;&#x64A;&#x62F; &#x627;&#x644;&#x645;&#x62F;&#x62E;&#x644;&#x627;&#x62A;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, MA, USA</span></div></div>
+
+    <div class="card" data-category="blockchain"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> MIT</span><span class="category blockchain">Blockchain</span></div>
+    <h3>Zero-Knowledge Proofs &amp; Secure Voting</h3>
+    <div class="desc">Design better cryptographic schemes for multi-party computation, privacy-preserving systems, secure voting, blockchain, and homomorphic/post-quantum encryption. <span lang="ar">&#x627;&#x642;&#x62A;&#x631;&#x627;&#x62D; &#x623;&#x646;&#x638;&#x645;&#x629; &#x62A;&#x635;&#x648;&#x64A;&#x62A; &#x622;&#x645;&#x646;&#x629; &#x628;&#x627;&#x633;&#x62A;&#x62E;&#x62F;&#x627;&#x645; &#x627;&#x644;&#x62A;&#x634;&#x641;&#x64A;&#x631; &#x648;&#x628;&#x631;&#x627;&#x647;&#x64A;&#x646; &#x639;&#x62F;&#x645; &#x627;&#x644;&#x645;&#x639;&#x631;&#x641;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, MA, USA</span></div></div>
+
+    <div class="card" data-category="web"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> MIT</span><span class="category web">Web</span></div>
+    <h3>Distributed Fault-Tolerant Reddit</h3>
+    <div class="desc">Build a distributed, decentralized, fault-tolerant social platform using replication and consensus algorithms. Explore system design for high availability. <span lang="ar">&#x628;&#x646;&#x627;&#x621; &#x645;&#x646;&#x635;&#x629; &#x645;&#x648;&#x632;&#x639;&#x629; &#x642;&#x627;&#x628;&#x644;&#x629; &#x644;&#x644;&#x62A;&#x62D;&#x645;&#x644; &#x627;&#x644;&#x623;&#x62E;&#x637;&#x627;&#x621;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, MA, USA</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> MIT</span><span class="category ai">AI/ML</span></div>
+    <h3>Computer Vision &#x2013; NeRF &amp; Scene Segmentation</h3>
+    <div class="desc">Implement Neural Radiance Fields, 3D shape reconstruction, video super-resolution, motion magnification, drone/satellite image alignment, and scene segmentation. <span lang="ar">&#x645;&#x634;&#x627;&#x631;&#x64A;&#x639; &#x631;&#x621;&#x64A;&#x629; &#xAD8C;&#x628;&#x648;&#x64A;&#x629; &#x628;&#x627;&#x633;&#x62A;&#x62E;&#x62F;&#x627;&#x645; &#x627;&#x644;&#x634;&#x628;&#x643;&#x627;&#x62A; &#x627;&#x644;&#x639;&#x635;&#x628;&#x64A;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, MA, USA</span></div></div>
+
+    <div class="card" data-category="data"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> MIT</span><span class="category data">Data Science</span></div>
+    <h3>ML for Systems &#x2013; Database Optimization</h3>
+    <div class="desc">Use machine learning to optimize database performance, congestion control, and resource allocation in distributed systems. Apply deep learning to system-level problems. <span lang="ar">&#x62A;&#x637;&#x628;&#x64A;&#x642; &#x627;&#x644;&#x62A;&#x639;&#x644;&#x645; &#x627;&#x644;&#x622;&#x644;&#x629; &#x644;&#x62A;&#x62D;&#x633;&#x64A;&#x646; &#x623;&#x62F;&#x627;&#x621; &#x627;&#x644;&#x623;&#x646;&#x638;&#x645;&#x629; &#x627;&#x644;&#x645;&#x648;&#x632;&#x639;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, MA, USA</span></div></div>
+
+    <!-- ==================== Stanford ==================== -->
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> Stanford</span><span class="category ai">AI/ML</span></div>
+    <h3>VisionaryAI &#x2013; Indoor Navigation for Visually Impaired</h3>
+    <div class="desc">GPT-powered indoor navigation assistant combining real-time computer vision with LLMs to provide conversational guidance for visually impaired users. <span lang="ar">&#x645;&#x633;&#x627;&#x639;&#x62F; &#x630;&#x643;&#x64A; &#x644;&#x644;&#x645;&#x644;&#x627;&#x62D;&#x629; &#x627;&#x644;&#x62F;&#x627;&#x62E;&#x644;&#x64A;&#x629; &#x628;&#x627;&#x633;&#x62A;&#x62E;&#x62F;&#x627;&#x645; &#x627;&#x644;&#x631;&#x621;&#x64A;&#x629; &#x627;&#x644;&#xAD8C;&#x628;&#x648;&#x64A;&#x629; &#x648;&#x627;&#x644;&#x630;&#x643;&#x627;&#x621; &#x627;&#x644;&#x635;&#x648;&#x62A;&#x64A;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Stanford, CA, USA</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> Stanford</span><span class="category ai">AI/ML</span></div>
+    <h3>LLM Applications &#x2013; Multimodal Assistants &amp; Copilots</h3>
+    <div class="desc">Build domain-specific AI assistants for law, medicine, government, and voice-based conversational interfaces. Explore multimodal processing of sound, language, image, and video. <span lang="ar">&#x628;&#x646;&#x627;&#x621; &#x645;&#x633;&#x627;&#x639;&#x62F;&#x627;&#x62A; &#x630;&#x643;&#x64A;&#x629; &#x645;&#x62A;&#x639;&#x62F;&#x62F;&#x629; &#x627;&#x644;&#x648;&#x633;&#x627;&#x626;&#x637; &#x644;&#x645;&#x62C;&#x627;&#x644;&#x627;&#x62A; &#x645;&#x62E;&#x62A;&#x644;&#x641;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Stanford, CA, USA</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> Stanford</span><span class="category ai">AI/ML</span></div>
+    <h3>WEBSIGHT &#x2013; Vision-Based Web Agent</h3>
+    <div class="desc">Autonomous web agent that interacts with web environments purely through visual perception (screenshots), using a fine-tuned vision-language model. <span lang="ar">&#x648;&#x643;&#x64A;&#x644; &#x648;&#x64A;&#x628; &#x628;&#x635;&#x631;&#x64A; &#x64A;&#x62A;&#x641;&#x627;&#x639;&#x644; &#x645;&#x639; &#x645;&#x648;&#x627;&#x642;&#x639; &#x627;&#x644;&#x648;&#x64A;&#x628; &#x645;&#x646; &#x62E;&#x644;&#x627;&#x644; &#x644;&#x642;&#x637;&#x627;&#x62A; &#x627;&#x644;&#x634;&#x627;&#x634;&#x629; &#x641;&#x642;&#x637;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Stanford, CA, USA</span></div></div>
+
+    <div class="card" data-category="mobile"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> Stanford</span><span class="category mobile">Mobile</span></div>
+    <h3>ALTiO &#x2013; Audio + Art Social Platform for Deaf Community</h3>
+    <div class="desc">React Native mobile app allowing users to supplement audio posts with drawings and artwork, designed with and for the Deaf and hard-of-hearing community. <span lang="ar">&#x62A;&#x637;&#x628;&#x64A;&#x642; &#x645;&#x628;&#x62A;&#x643;&#x631; &#x644;&#x62C;&#x645;&#x639; &#x627;&#x644;&#x635;&#x648;&#x62A; &#x648;&#x627;&#x644;&#x631;&#x633;&#x648;&#x645; &#x644;&#x645;&#x62C;&#x62A;&#x645;&#x639; &#x627;&#x644;&#x635;&#x645; &#x648;&#x636;&#x639;&#x64A;&#x641; &#x627;&#x644;&#x633;&#x645;&#x639;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Stanford, CA, USA</span></div></div>
+
+    <div class="card" data-category="mobile"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> Stanford</span><span class="category mobile">Mobile</span></div>
+    <h3>superbloom &#x2013; Grief Processing &amp; Memorial App</h3>
+    <div class="desc">React Native app for grieving individuals to memorialize loved ones through interactive gardens, share memories, and find community support. <span lang="ar">&#x62A;&#x637;&#x628;&#x64A;&#x642; &#x644;&#x645;&#x633;&#x627;&#x639;&#x62F;&#x629; &#x627;&#x644;&#x645;&#x62D;&#x62F;&#x64A;&#x646; &#x639;&#x644;&#x649; &#x62A;&#x630;&#x643;&#x631; &#x623;&#x62D;&#x628;&#x627;&#x621;&#x647;&#x645; &#x645;&#x646; &#x62E;&#x644;&#x627;&#x644; &#x62D;&#x62F;&#x627;&#x626;&#x642; &#x62A;&#x641;&#x627;&#x639;&#x644;&#x64A;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Stanford, CA, USA</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> Stanford</span><span class="category ai">AI/ML</span></div>
+    <h3>Conversational Virtual Assistants with Deep Learning</h3>
+    <div class="desc">Create usable NLP projects using LLMs within a quarter. Build domain-specific assistants, model training projects, and LLM agent systems. <span lang="ar">&#x645;&#x634;&#x627;&#x631;&#x64A;&#x639; &#x645;&#x633;&#x627;&#x639;&#x62F;&#x627;&#x62A; &#x645;&#xAD8C;&#x627;&#x62F;&#xAB1;&#x629; &#x628;&#x627;&#x633;&#x62A;&#x62E;&#x62F;&#x627;&#x645; &#x646;&#x645;&#x627;&#x630;&#x62C; &#x644;&#x63A;&#x629; &#x643;&#x628;&#x64A;&#x631;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Stanford, CA, USA</span></div></div>
+
+    <div class="card" data-category="data"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> Stanford</span><span class="category data">Data Science</span></div>
+    <h3>AI Price Prediction &amp; Recommendation Systems</h3>
+    <div class="desc">Predict airline ticket prices, electricity consumption, or build news/article recommendation systems using NLP and search algorithms. <span lang="ar">&#x646;&#x645;&#x627;&#x630;&#x62C; &#x62A;&#x646;&#x628;&#x621; &#x628;&#x627;&#x633;&#x62A;&#x62E;&#x62F;&#x627;&#x645; &#x627;&#x644;&#x62A;&#x639;&#x644;&#x645; &#x627;&#x644;&#x622;&#x644;&#x629; &#x644;&#x644;&#x623;&#x633;&#x639;&#x627;&#x631; &#x648;&#x627;&#x644;&#x627;&#x633;&#x62A;&#x647;&#x644;&#x627;&#x643;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Stanford, CA, USA</span></div></div>
+
+    <div class="card" data-category="game"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> Stanford</span><span class="category game">Game Dev</span></div>
+    <h3>AI Game Engines &#x2013; Go, Chess, Poker &amp; Sudoku</h3>
+    <div class="desc">Build engines to play strategic games using search algorithms, reinforcement learning, and game theory. Explore puzzles like Sudoku and crosswords. <span lang="ar">&#x628;&#x646;&#x627;&#x621; &#x645;&#x642;&#x627;&#x628;&#x631; &#x623;&#x644;&#x639;&#x627;&#x628; &#x630;&#x643;&#x64A;&#x629; &#x644;&#x644;&#x634;&#x637;&#x631;&#x646;&#x62C; &#x648;&#x627;&#x644;&#x628;&#x648;&#x643;&#x631; &#x648;&#x627;&#x644;&#x3A9;&#x627;&#x644;&#x648;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Stanford, CA, USA</span></div></div>
+
+    <!-- ==================== CMU ==================== -->
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> CMU</span><span class="category ai">AI/ML</span></div>
+    <h3>LLM Integration Architecture &amp; Evaluation</h3>
+    <div class="desc">Design software architecture for incorporating LLMs, evaluate different models, implement translation features, and test robustness and reliability of LLM-powered features. <span lang="ar">&#x62A;&#x635;&#x645;&#x64A;&#x645; &#x645;&#x639;&#x645;&#x627;&#x631;&#x64A;&#x629; &#x628;&#x631;&#x645;&#x62C;&#x64A;&#x627;&#x62A; &#x644;&#x62F;&#x645;&#x62C; &#x646;&#x645;&#x627;&#x630;&#x62C; &#x627;&#x644;&#x644;&#x63A;&#x629; &#x627;&#x644;&#x643;&#x628;&#x64A;&#x631;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Pittsburgh, PA, USA</span></div></div>
+
+    <div class="card" data-category="cloud"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> CMU</span><span class="category cloud">Cloud</span></div>
+    <h3>Scalable Web Service &#x2013; Performance Tuning</h3>
+    <div class="desc">Implement dynamic scaling techniques for cloud-hosted multi-tier web services. Learn to identify bottlenecks and scale components to meet varying loads. <span lang="ar">&#x62A;&#x646;&#x641;&#x64A;&#x630; &#x62A;&#x642;&#x646;&#x64A;&#x627;&#x62A; &#x62A;&#x648;&#x633;&#x64A;&#x639; &#x62F;&#x64A;&#x646;&#x627;&#x645;&#x64A;&#x643;&#x64A;&#x629; &#x644;&#x62E;&#x62F;&#x645;&#x627;&#x62A; &#x627;&#x644;&#x648;&#x64A;&#x628; &#x641;&#x64A; &#x627;&#x644;&#x633;&#x62D;&#x627;&#x628;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Pittsburgh, PA, USA</span></div></div>
+
+    <div class="card" data-category="ar-vr"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> CMU</span><span class="category ar-vr">AR/VR</span></div>
+    <h3>Wonder360 &#x2013; Interactive 3D Scene Generation</h3>
+    <div class="desc">Generate realistic 360&#xB0; explorable 3D environments from a single image using Gaussian representations and multi-view generation models. <span lang="ar">&#x62A;&#x648;&#x644;&#x64A;&#x62F; &#x645;&#x634;&#x627;&#x647;&#x62F; &#xAB3;&#x64A;&#x629; &#x623;&#x628;&#x639;&#x627;&#x62F; &#x642;&#x627;&#x628;&#x644;&#x629; &#x644;&#x644;&#x627;&#x633;&#x62A;&#x643;&#x634;&#x627;&#x641; &#x645;&#x646; &#x635;&#x648;&#x631;&#x629; &#x648;&#x627;&#x62D;&#x62F;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Pittsburgh, PA, USA</span></div></div>
+
+    <div class="card" data-category="mobile"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> CMU</span><span class="category mobile">Mobile</span></div>
+    <h3>LumiKeys &#x2013; Smart Piano Learning System</h3>
+    <div class="desc">Hardware-software system using LED strips and FSR sensors to guide piano learning. Optical music recognition and real-time feedback for practice. <span lang="ar">&#x646;&#x638;&#x627;&#x645; &#x630;&#x643;&#x64A; &#x644;&#x62A;&#x639;&#x644;&#x645; &#x627;&#x644;&#x628;&#x64A;&#x627;&#x646;&#x648; &#x645;&#x639; &#x62A;&#x632;&#x648;&#x64A;&#x62F; &#x645;&#x631;&#x621;&#x64A; &#x641;&#x648;&#x631;&#x64A;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Pittsburgh, PA, USA</span></div></div>
+
+    <div class="card" data-category="web"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> CMU</span><span class="category web">Web</span></div>
+    <h3>Civic-Tech Startup &#x2013; Social Impact &amp; Pitch</h3>
+    <div class="desc">Build a civic-minded product solving urban problems, develop a pitch deck, demo, and business plan. Address real community needs through technology. <span lang="ar">&#x628;&#x646;&#x627;&#x621; &#x645;&#x646;&#xAAA;&#x648;&#x62C; &#x62A;&#x642;&#x646;&#x64A; &#x644;&#x62D;&#x644; &#x645;&#x634;&#x627;&#x643;&#x644; &#x627;&#x644;&#x645;&#x62F;&#x64A;&#x646;&#x629; &#x645;&#x639; &#x62E;&#x637;&#x629; &#x639;&#x645;&#x644; &#x648;&#x639;&#x631;&#x636; &#x62A;&#x62C;&#x627;&#x631;&#x64A;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Pittsburgh, PA, USA</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> CMU</span><span class="category ai">AI/ML</span></div>
+    <h3>HCI Capstone &#x2013; AI Feedback Interface &amp; Mobile Games</h3>
+    <div class="desc">Design clinician-AI feedback interfaces, interactive museum exhibits, mobile games for students, and music learning apps with user-centered research. <span lang="ar">&#x648;&#x627;&#x62C;&#x647;&#x629; &#x62A;&#x641;&#x627;&#x639;&#x644; &#x628;&#x64A;&#x646; &#x627;&#x644;&#x645;&#x645;&#x627;&#x631;&#x633; &#x648;&#x627;&#x644;&#x630;&#x643;&#x627;&#x621; &#x627;&#x644;&#x627;&#x635;&#x637;&#x646;&#x627;&#x639;&#x64A;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Pittsburgh, PA, USA</span></div></div>
+
+    <!-- ==================== UC Berkeley ==================== -->
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> UC Berkeley</span><span class="category ai">AI/ML</span></div>
+    <h3>Concierge AI &#x2013; AI Travel Planning Assistant</h3>
+    <div class="desc">Centralized AI travel platform using LangGraph orchestration, semantic search, and multi-agent architecture for personalized trip planning. <span lang="ar">&#x645;&#x633;&#x627;&#x639;&#x62F; &#x630;&#x643;&#x64A; &#x644;&#x62A;&#x62E;&#x637;&#x64A;&#x637; &#x627;&#x644;&#x633;&#x641;&#x631; &#x64A;&#x633;&#x62A;&#x62E;&#x62F;&#x645; &#x627;&#x644;&#x623;&#x646;&#x638;&#x645;&#x629; &#x627;&#x644;&#x645;&#x62A;&#x639;&#x62F;&#x62F;&#x629; &#x627;&#x644;&#x648;&#x643;&#x644;&#x627;&#x621;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Berkeley, CA, USA</span></div></div>
+
+    <div class="card" data-category="web"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> UC Berkeley</span><span class="category web">Web</span></div>
+    <h3>DealMaxer AI &#x2013; Online Shopping Assistant</h3>
+    <div class="desc">Chrome extension using multi-agent architecture for best price search, coupon checking, and product comparison across e-commerce sites. <span lang="ar">&#x625;&#x645;&#x62A;&#x62F;&#x627;&#x62F; &#x643;&#x631;&#x648;&#x645; &#x644;&#x644;&#x62A;&#x633;&#x648;&#x642; &#x627;&#x644;&#x630;&#x643;&#x64A; &#x645;&#x639; &#x623;&#x646;&#x638;&#x645;&#x629; &#x645;&#x62A;&#x639;&#x62F;&#x62F;&#x629; &#x644;&#x644;&#x628;&#x62D;&#x62B; &#x639;&#x646; &#x627;&#x644;&#x623;&#x641;&#x636;&#x644; &#x627;&#x644;&#x623;&#x633;&#x639;&#x627;&#x631;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Berkeley, CA, USA</span></div></div>
+
+    <div class="card" data-category="mobile"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> UC Berkeley</span><span class="category mobile">Mobile</span></div>
+    <h3>GenZen &#x2013; AI Mental Health Assistant</h3>
+    <div class="desc">24/7 AI mental health support app for students using text classification, supervised fine-tuning, RAG, and LangGraph agent infrastructure deployed on AWS. <span lang="ar">&#x645;&#x633;&#x627;&#x639;&#x62F; &#x635;&#x62D;&#x629; &#x646;&#x641;&#x633;&#x64A;&#x629; &#x630;&#x643;&#x64A; &#x645;&#x62A;&#x627;&#x62D; 24/7 &#x644;&#x644;&#x637;&#x644;&#x627;&#x628;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Berkeley, CA, USA</span></div></div>
+
+    <div class="card" data-category="mobile"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> UC Berkeley</span><span class="category mobile">Mobile</span></div>
+    <h3>AllerGenie &#x2013; Allergen Detection &amp; Recipe App</h3>
+    <div class="desc">Flutter-based mobile app using Llama3 RAG pipeline for recipe generation, barcode scanning with OpenCV, and allergen detection for food safety. <span lang="ar">&#x62A;&#x637;&#x628;&#x64A;&#x642; &#x644;&#x627;&#x634;&#xAAA;&#x627;&#x641; &#x627;&#x644;&#x645;&#x648;&#x627;&#x62F; &#x627;&#x644;&#x645;&#x62D;&#x633;&#x633;&#x629; &#x648;&#x648;&#x635;&#x641;&#x627;&#x62A; &#x627;&#x644;&#x637;&#x628;&#x62E; &#x628;&#x627;&#x633;&#x62A;&#x62E;&#x62F;&#x627;&#x645; &#x627;&#x644;&#x630;&#x643;&#x627;&#x621; &#x627;&#x644;&#x627;&#x635;&#x637;&#x646;&#x627;&#x639;&#x64A;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Berkeley, CA, USA</span></div></div>
+
+    <div class="card" data-category="data"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> UC Berkeley</span><span class="category data">Data Science</span></div>
+    <h3>QuantBot &#x2013; AI Investment Assistant</h3>
+    <div class="desc">Multi-agent AI system for real-time financial analysis with portfolio optimization, market analysis, and personalized investment strategies using FastAPI + React. <span lang="ar">&#x646;&#x638;&#x627;&#x645; &#x630;&#x643;&#x64A; &#x645;&#x62A;&#x639;&#x62F;&#x62F; &#x627;&#x644;&#x648;&#x643;&#x644;&#x627;&#x621; &#x644;&#x644;&#x62A;&#x62D;&#x644;&#x64A;&#x644; &#x627;&#x644;&#x645;&#x627;&#x644;&#x64A; &#x627;&#x644;&#x641;&#x648;&#x631;&#x64A;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Berkeley, CA, USA</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> UC Berkeley</span><span class="category ai">AI/ML</span></div>
+    <h3>MedQuest &#x2013; Medical Diagnosis AI</h3>
+    <div class="desc">AI-powered symptom checker using Asclepius LLM combined with a deep neural network classifier. Provides disease assessments and recommendations. <span lang="ar">&#x646;&#x638;&#x627;&#x645; &#x62A;&#x634;&#x62E;&#x64A;&#x635; &#x637;&#x628;&#x64A; &#x630;&#x643;&#x64A; &#x64A;&#x62F;&#x645;&#x62C; &#x646;&#x645;&#x627;&#x630;&#x62C; &#x627;&#x644;&#x644;&#x63A;&#x629; &#x627;&#x644;&#x643;&#x628;&#x64A;&#x631;&#x629; &#x645;&#x639; &#x627;&#x644;&#x634;&#x628;&#x643;&#x627;&#x62A; &#x627;&#x644;&#x639;&#x635;&#x628;&#x64A;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Berkeley, CA, USA</span></div></div>
+
+    <div class="card" data-category="game"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> UC Berkeley</span><span class="category game">Game Dev</span></div>
+    <h3>NPChat &#x2013; LLM-Powered NPCs for Gaming</h3>
+    <div class="desc">Create intelligent game NPCs using RAG pipeline with fine-tuned language models (DialogStudio-T5, LLaMa) for realistic, human-like dialogue and quest generation. <span lang="ar">&#x635;&#x646;&#x639; &#x634;&#x62E;&#x635;&#x64A;&#x627;&#x62A; &#x648;&#x627;&#x642;&#x639;&#x64A;&#x629; &#x648;&#x62F;&#x64A;&#x646;&#x627;&#x645;&#x64A;&#x643;&#x64A;&#x629; &#x641;&#x64A; &#x627;&#x644;&#x623;&#x644;&#x639;&#x627;&#x628; &#x628;&#x627;&#x633;&#x62A;&#x62E;&#x62F;&#x627;&#x645; &#x627;&#x644;&#x630;&#x643;&#x627;&#x621; &#x627;&#x644;&#x623;&#x635;&#x637;&#x646;&#x627;&#x639;&#x64A;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Berkeley, CA, USA</span></div></div>
+
+    <div class="card" data-category="data"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> UC Berkeley</span><span class="category data">Data Science</span></div>
+    <h3>RAG Enhanced Stock Market LLM</h3>
+    <div class="desc">Predictive trading model using news sentiment analysis, FinBERT, Faiss vector search, and behavioral finance principles. Flask + React + PostgreSQL. <span lang="ar">#x646;&#x645;&#x648;&#x630;&#x62C; &#x62A;&#x646;&#x628;&#x621; &#x627;&#x633;&#x647;&#x645;&#x64A; &#x628;&#x627;&#x633;&#x62A;&#x62E;&#x62F;&#x627;&#x645; &#x62A;&#x62D;&#x644;&#x64A;&#x644; &#x627;&#x644;&#x645;&#x634;&#x627;&#x639;&#x631; &#x648;&#x627;&#x644;&#x630;&#x643;&#x627;&#x621; &#x627;&#x644;&#x623;&#x635;&#x637;&#x646;&#x627;&#x639;&#x64A;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Berkeley, CA, USA</span></div></div>
+
+    <div class="card" data-category="data"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> UC Berkeley</span><span class="category data">Data Science</span></div>
+    <h3>Datadrip &#x2013; Financial Document Analysis</h3>
+    <div class="desc">AI-powered web app that summarizes financial documents, derenders charts from presentations using YOLOv5 and MatCha, and converts them to Excel. <span lang="ar">#x62A;&#x62D;&#x644;&#x64A;&#x644; &#x627;&#x644;&#x645;&#x633;&#x62A;&#x646;&#x62F;&#x627;&#x62A; &#x627;&#x644;&#x645;&#x627;&#x644;&#x64A;&#x629; &#x628;&#x627;&#x633;&#x62E;&#x62F;&#x627;&#x645; &#x627;&#x644;&#x630;&#x643;&#x627;&#x621; &#x627;&#x644;&#x623;&#x635;&#x637;&#x646;&#x627;&#x639;&#x64A; &#x648;&#x631;&#x621;&#x64A;&#x629; &#x627;&#x644;&#x643;&#x645;&#x628;&#x64A;&#x648;&#x62A;&#x631;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Berkeley, CA, USA</span></div></div>
+
+    <!-- ==================== Harvard ==================== -->
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> Harvard</span><span class="category ai">AI/ML</span></div>
+    <h3>ML for Antibiotic Combination Therapy</h3>
+    <div class="desc">Neural network models (2D FFN, GNN, 3D FFN) to predict synergistic activity of antibiotic combinations against E. coli for accelerating drug discovery. <span lang="ar">#x646;&#x645;&#x627;&#x630;&#x62C; &#x62A;&#x639;&#x644;&#x645; &#x622;&#x644;&#x629; &#x644;&#x644;&#x62A;&#x646;&#x628;&#x621; &#x628;&#x627;&#x644;&#x646;&#x634;&#x627;&#x637; &#x627;&#x644;&#x62A;&#x631;&#x627;&#x641;&#x64A; &#x644;&#x645;&#x636;&#x627;&#x62F;&#x627;&#x62A; &#x627;&#x644;&#xAD8A;&#x64A;&#x648;&#x64A;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, MA, USA</span></div></div>
+
+    <div class="card" data-category="web"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> Harvard</span><span class="category web">Web</span></div>
+    <h3>Arts &amp; Humanities Web App (React/Node/SQL)</h3>
+    <div class="desc">Team-based project solving problems in arts and humanities using HTML5, CSS3, JavaScript (ES6), React frontend, Node.js backend, and SQL database deployed on Heroku. <span lang="ar">&#x645;&#x634;&#x631;&#x648;&#x639; &#x641;&#x631;&#x64A;&#x642;&#x64A; &#x644;&#x62D;&#x644; &#x645;&#x634;&#x627;&#x643;&#x644; &#x641;&#x64A; &#x627;&#x644;&#x641;&#x646;&#x648;&#x646; &#x648;&#x627;&#x644;&#x639;&#x644;&#x648;&#x645; &#x627;&#x644;&#x625;&#x646;&#x633;&#x627;&#x646;&#x64A;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, MA, USA</span></div></div>
+
+    <div class="card" data-category="cloud"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> Harvard</span><span class="category cloud">Cloud</span></div>
+    <h3>Parallel Computing on AWS &amp; Supercomputer</h3>
+    <div class="desc">Solve data-intensive problems using MPI, OpenMP, Spark on AWS cloud or Harvard's Cannon supercomputer. Demonstrate strong/weak scaling across 8+ nodes. <span lang="ar">#x62D;&#x644; &#x645;&#x634;&#x627;&#x643;&#x644; &#x634;&#x62F;&#x64A;&#x62F;&#x629; &#x641;&#x64A; &#x645;&#x639;&#x627;&#x644;&#x62C;&#x629; &#x627;&#x644;&#x628;&#x64A;&#x627;&#x646;&#x627;&#x62A; &#x628;&#x627;&#x633;&#x62E;&#x62F;&#x627;&#x645; &#x627;&#x644;&#x62D;&#x648;&#x633;&#x628;&#x629; &#x627;&#x644;&#x645;&#x62A;&#x647;&#x6A9;&#x644;&#x643; &#x639;&#x644;&#x649; AWS.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, MA, USA</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> Harvard</span><span class="category ai">AI/ML</span></div>
+    <h3>CS50 AI &#x2013; Degrees of Separation &amp; Search</h3>
+    <div class="desc">BFS-based shortest path algorithm connecting actors through movies. Explore search problems, graph algorithms, and AI fundamentals with real datasets. <span lang="ar">#x62E;&#x648;&#x627;&#x631;&#x632;&#x645;&#x64A;&#x629; BFS &#x644;&#x627;&#x62C;&#x627;&#x62F; &#x623;&#x642;&#x635;&#x631; &#x645;&#x633;&#x627;&#x631; &#x628;&#x64A;&#x646; &#x627;&#x644;&#x645;&#x645;&#x62B;&#x644;&#x64A;&#x646; &#x639;&#x628;&#x631; &#x627;&#x644;&#x623;&#x641;&#x644;&#x627;&#x645;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, MA, USA</span></div></div>
+
+    <div class="card" data-category="web"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> Harvard</span><span class="category web">Web</span></div>
+    <h3>CS50 Final Projects &#x2013; Web, iOS, Android, Games</h3>
+    <div class="desc">Build any software: web apps (JS/Python/SQL), iOS (Swift), Android (Java), Chrome extensions, games (Lua), or AR/VR with Apple Vision Pro. <span lang="ar">#x628;&#x646;&#x627;&#x621; &#x623;&#x6CC; &#x62A;&#x637;&#x628;&#x64A;&#x642; &#x628;&#x631;&#x645;&#x62C;&#x64A; &#x645;&#x646; &#x62A;&#x637;&#x628;&#x64A;&#x642;&#x627;&#x62A; &#x627;&#x644;&#x648;&#x64A;&#x628; &#x623;&#x648; &#x627;&#x644;&#x62C;&#x648;&#x627;&#x644; &#x623;&#x648; &#x627;&#x644;&#x623;&#x644;&#x639;&#x627;&#x628;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, MA, USA</span></div></div>
+
+    <div class="card" data-category="data"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1FA;&#x1F1F8;</span> Harvard</span><span class="category data">Data Science</span></div>
+    <h3>Astronomical Spectral Analysis Library (Python)</h3>
+    <div class="desc">Develop a Python library for spectral analysis of astronomical data with modules for feature extraction, interactive visualization, and machine learning. <span lang="ar">#x645;&#x643;&#x62A;&#x628;&#x629; &#x628;&#x627;&#x64A;&#xAB8;&#x648;&#x646; &#x644;&#x62A;&#x62D;&#x644;&#x64A;&#x644; &#x627;&#x644;&#x623;&#x637;&#x64A;&#x627;&#x641; &#x627;&#x644;&#x641;&#x644;&#x643;&#x64A;&#x629; &#x645;&#x639; &#x62A;&#x635;&#x648;&#x631; &#x62A;&#x641;&#x627;&#x639;&#x644;&#x64A;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, MA, USA</span></div></div>
+
+    <!-- ==================== Oxford ==================== -->
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Oxford</span><span class="category ai">AI/ML</span></div>
+    <h3>AI for a Decentralised Web (Solid)</h3>
+    <div class="desc">Integrate AI with Solid personal data pods to provide Google-like search features while respecting decentralized data ownership and privacy. <span lang="ar">#x62F;&#x645;&#x62C; &#x627;&#x644;&#x630;&#x643;&#x627;&#x621; &#x627;&#x644;&#x623;&#x635;&#x637;&#x646;&#x627;&#x639;&#x64A; &#x645;&#x639; &#x648;&#x643;&#x64A;&#x644;&#x627;&#x62A; &#x627;&#x644;&#x628;&#x64A;&#x627;&#x646;&#x627;&#x62A; &#x627;&#x644;&#x645;&#x632;&#x643;&#x631;&#x629; &#x644;&#x62A;&#x62D;&#x633;&#x64A;&#x646; &#x627;&#x644;&#x628;&#x62D;&#x62B;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Oxford, UK</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Oxford</span><span class="category ai">AI/ML</span></div>
+    <h3>Graph-Memory Agents for Self-Evolving Web Tasks</h3>
+    <div class="desc">Adapt AriGraph architecture (semantic-episodic knowledge graph for agent memory) to WebArena, Mind2Web, and SWE-Bench for long-horizon web tasks. <span lang="ar">#x648;&#x643;&#x644;&#x627;&#x621; &#x630;&#x643;&#x64A;&#x629; &#x645;&#x639; &#x630;&#x627;&#x643;&#x631;&#x629; &#x631;&#x633;&#x648;&#x645;&#x64A;&#x629; &#x645;&#x62A;&#x637;&#x648;&#x631;&#x629; &#x644;&#x645;&#x647;&#x627;&#x645; &#x627;&#x644;&#x648;&#x64A;&#x628; &#x627;&#x644;&#x645;&#x639;&#x642;&#x62F;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Oxford, UK</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Oxford</span><span class="category ai">AI/ML</span></div>
+    <h3>AI Scientist for Scientific Discovery with LLMs</h3>
+    <div class="desc">Develop an AI system that reads scientific literature, reasons over causal evidence, and proposes executable hypotheses that can be tested against data. <span lang="ar">#x639;&#x627;&#x644;&#x645; &#x630;&#x643;&#x627;&#x621; &#x627;&#x635;&#x637;&#x646;&#x627;&#x639;&#x64A; &#x64A;&#x641;&#x62A;&#x631;&#x636; &#x641;&#x631;&#x636;&#x64A;&#x627;&#x62A; &#x639;&#x644;&#x645;&#x64A;&#x629; &#x642;&#x627;&#x628;&#x644;&#x629; &#x644;&#x644;&#x627;&#x62E;&#x62A;&#x628;&#x627;&#x631;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Oxford, UK</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Oxford</span><span class="category ai">AI/ML</span></div>
+    <h3>Task-Tailored Schema Agents for Reliable LLM Automation</h3>
+    <div class="desc">Design an agent that automatically induces schemas from task descriptions, compiles extraction pipelines, and self-improves through iterative refinement. <span lang="ar">#x648;&#x643;&#x64A;&#x644; &#x64A;&#x642;&#x62A;&#x631;&#x62D; &#x645;&#x62E;&#x637;&#x637;&#x627;&#x62A; &#x645;&#x62E;&#x635;&#x635;&#x629; &#x644;&#x644;&#x645;&#x647;&#x645;&#x629; &#x648;&#x64A;&#x62E;&#x645;&#x644; &#x62E;&#x637; &#x627;&#x646;&#x62A;&#x627;&#x62C; &#x645;&#x648;&#x62B;&#x648;&#x642;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Oxford, UK</span></div></div>
+
+    <div class="card" data-category="web"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Oxford</span><span class="category web">Web</span></div>
+    <h3>Natural Language Querying of RDF Knowledge Graphs</h3>
+    <div class="desc">Convert natural language questions into SPARQL queries for RDF Knowledge Graphs using LLMs and ontology-aware generation with the RDFox engine. <span lang="ar">#x62A;&#x62D;&#x648;&#x64A;&#x644; &#x627;&#x644;&#x623;&#x633;&#x626;&#x644;&#x629; &#x627;&#x644;&#x644;&#x63A;&#x648;&#x64A;&#x629; &#x625;&#x644;&#x649; &#x627;&#x633;&#x62A;&#x639;&#x644;&#x627;&#x645;&#x627;&#x62A; SPARQL &#x644;&#x642;&#x648;&#x627;&#x639;&#x62F; &#x627;&#x644;&#x645;&#x639;&#x631;&#x641;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Oxford, UK</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Oxford</span><span class="category ai">AI/ML</span></div>
+    <h3>Bayesian Preference Learning for LLMs</h3>
+    <div class="desc">Explore Bayesian methods for uncertainty quantification in preference models for LLMs, active learning strategies, and robust policy optimization in RLHF. <span lang="ar">#x62A;&#x639;&#x644;&#x645; &#x627;&#x644;&#x62A;&#x641;&#x636;&#x64A;&#x644;&#x627;&#x62A; &#x628;&#x627;&#x64A;&#x630;&#x64A;&#x629; &#x644;&#x62A;&#x62D;&#x633;&#x64A;&#x646; &#x645;&#x62D;&#x627;&#x62F;&#xAB1;&#x629; &#x646;&#x645;&#x627;&#x630;&#x62C; &#x627;&#x644;&#x644;&#x63A;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Oxford, UK</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Oxford</span><span class="category ai">AI/ML</span></div>
+    <h3>Multi-Agent Path Finding with Machine Learning</h3>
+    <div class="desc">Use ML (GNNs, RL) to solve multi-agent path finding for automated warehouses, drone scheduling, autonomous vehicles, and robotaxi fleets. <span lang="ar">#x627;&#x633;&#x62A;&#x62E;&#x62F;&#x627;&#x645; &#x627;&#x644;&#x62A;&#x639;&#x644;&#x645; &#x627;&#x644;&#x622;&#x644;&#x629; &#x644;&#x62D;&#x644; &#x645;&#x634;&#x627;&#x643;&#x644; &#x625;&#x64A;&#x62C;&#x627;&#x62F; &#x627;&#x644;&#x645;&#x633;&#x627;&#x631; &#x644;&#x644;&#x648;&#x643;&#x644;&#x627;&#x621; &#x627;&#x644;&#x645;&#x62A;&#x639;&#x62F;&#x62F;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Oxford, UK</span></div></div>
+
+    <!-- ==================== Cambridge ==================== -->
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Cambridge</span><span class="category ai">AI/ML</span></div>
+    <h3>Multi-Objective Scheduling of Distributed LLM Serving</h3>
+    <div class="desc">Design a custom LLM serving framework for heterogeneous GPU clusters with dynamic resource allocation to optimize throughput and latency. <span lang="ar">#x62C;&#x62F;&#x648;&#x644;&#x629; &#x62E;&#x62F;&#x645;&#x629; LLM &#x645;&#x648;&#x632;&#x639;&#x629; &#x639;&#x644;&#x649; &#x645;&#x62C;&#x645;&#x648;&#x639;&#x627;&#x62A; GPU &#x63A;&#x64A;&#x631; &#x645;&#x62A;&#x62C;&#x627;&#x646;&#x633;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, UK</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Cambridge</span><span class="category ai">AI/ML</span></div>
+    <h3>&quot;BS-Meter&quot; &#x2013; Text BS Detection with ML</h3>
+    <div class="desc">Apply Wittgenstein's language philosophy with ML to quantify BS likelihood in political discourse, journalism, and social media. <span lang="ar">#x623;&#x62F;&#x627;&#x629; &#x631;&#x642;&#x625;&#x645; &#x627;&#x644;&#x647;&#x631;&#x62B;&#x629; &#x627;&#x644;&#x645;&#x632;&#x64A;&#x641;&#x629; &#x627;&#x644;&#x645;&#x642;&#x6A9;&#x648;&#x645;&#x629; &#x639;&#x644;&#x649; &#x627;&#x644;&#x62A;&#x639;&#x644;&#x645; &#x627;&#x644;&#x622;&#x644;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, UK</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Cambridge</span><span class="category ai">AI/ML</span></div>
+    <h3>Code Explain AI Assistant</h3>
+    <div class="desc">LLM-powered tool that explains code portions, generates comments, and answers queries to help developers understand complex open-source codebases. <span lang="ar">#x645;&#x633;&#x627;&#x639;&#x62F; &#x630;&#x643;&#x64A; &#x644;&#x634;&#x631;&#x62D; &#x627;&#x644;&#x643;&#x648;&#x62F; &#x648;&#x62A;&#x648;&#x644;&#x64A;&#x62F; &#x62A;&#x639;&#x644;&#x64A;&#x642;&#x627;&#x62A; &#x645;&#x641;&#x64A;&#x62F;&#x629; &#x644;&#x644;&#x645;&#x62D;&#x627;&#x654;&#x631;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, UK</span></div></div>
+
+    <div class="card" data-category="ar-vr"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Cambridge</span><span class="category ar-vr">AR/VR</span></div>
+    <h3>3D t-SNE Visualization for VR Headsets</h3>
+    <div class="desc">Create an interactive 3D version of t-SNE for VR where users can literally grasp and manipulate ML model concept clusters in immersive space. <span lang="ar">#x62A;&#x635;&#x648;&#x631; &#x62B;&#x644;&#x627;&#x62B;&#x64A; &#x627;&#x644;&#x623;&#x628;&#x639;&#x627;&#x62F; &#x644;&#x62A;&#x635;&#x648;&#x631; &#x627;&#x644;&#x646;&#x645;&#x627;&#x630;&#x62C; t-SNE &#x641;&#x64A; &#x648;&#x627;&#x642;&#x639; &#x627;&#x641;&#x62A;&#x631;&#x627;&#x636;&#x64A;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, UK</span></div></div>
+
+    <div class="card" data-category="security"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Cambridge</span><span class="category security">Security</span></div>
+    <h3>Fraud Detection in CBDC &amp; Cryptocurrency</h3>
+    <div class="desc">Taxonomy of financial frauds in digital currencies, AI/ML fraud detection models for blockchain and central bank digital currencies. <span lang="ar">#x645;&#x643;&#x627;&#x641;&#x62D;&#x629; &#x627;&#x644;&#x627;&#x62D;&#x62A;&#x64A;&#x627;&#x644; &#x627;&#x644;&#x645;&#x627;&#x644;&#x64A; &#x641;&#x64A; &#x627;&#x644;&#x639;&#x645;&#x644;&#x627;&#x62A; &#x627;&#x644;&#x631;&#x642;&#x645;&#x64A;&#x629; &#x628;&#x627;&#x633;&#x62E;&#x62F;&#x627;&#x645; &#x627;&#x644;&#x630;&#x643;&#x627;&#x621; &#x627;&#x644;&#x623;&#x635;&#x637;&#x646;&#x627;&#x639;&#x64A;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, UK</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Cambridge</span><span class="category ai">AI/ML</span></div>
+    <h3>Neural Face Super-resolution for Teleconferencing</h3>
+    <div class="desc">Part-based neural super-resolution for faces in low-bandwidth teleconferencing, applying separate up-samplers for eyes, skin, nose, and mouth. <span lang="ar">#x631;&#x641;&#x639; &#x62F;&#x642;&#x629; &#x627;&#x644;&#x647;&#x64F;&#x6CAC;&#x648;&#x647; &#x628;&#x627;&#x633;&#x62E;&#x62F;&#x627;&#x645; &#x627;&#x644;&#x634;&#x628;&#x643;&#x627;&#x62A; &#x627;&#x644;&#x639;&#x635;&#x628;&#x64A;&#x629; &#x644;&#x645;&#x635;&#x627;&#x62F;&#x627;&#x62A; &#x625;&#x62A;&#x635;&#x627;&#x644;&#x627;&#x62A; &#x645;&#x646;&#x62E;&#x641;&#x636;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, UK</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Cambridge</span><span class="category ai">AI/ML</span></div>
+    <h3>LLM-Generated Text Detection System</h3>
+    <div class="desc">Design a system to reliably detect AI-generated text in student assignments with per-line statistics, highlighting human vs machine-written content. <span lang="ar">#x646;&#x638;&#x627;&#x645; &#x644;&#x643;&#x634;&#x641; &#x627;&#x644;&#x646;&#x635;&#x648;&#x635; &#x627;&#x644;&#x645;&#x646;&#xAAA;&#x648;&#x62C;&#x629; &#x628;&#x648;&#x627;&#x633;&#x637;&#x629; &#x627;&#x644;&#x630;&#x643;&#x627;&#x621; &#x627;&#x644;&#x623;&#x635;&#x637;&#x646;&#x627;&#x639;&#x64A;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, UK</span></div></div>
+
+    <div class="card" data-category="mobile"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Cambridge</span><span class="category mobile">Mobile</span></div>
+    <h3>Braille Learning Assistant with AI</h3>
+    <div class="desc">Augment a mechanical Braille typewriter with AI prediction, offering spoken suggestions to help users learn Braille more effectively. <span lang="ar">#x645;&#x633;&#x627;&#x639;&#x62F; &#x630;&#x643;&#x64A; &#x644;&#x62A;&#x639;&#x644;&#x645; &#x628;&#x631;&#x64A;&#x644; &#x645;&#x639; &#x627;&#x642;&#x62A;&#x631;&#x627;&#x62D;&#x627;&#x62A; &#x635;&#x648;&#x62A;&#x64A;&#x629; &#x630;&#x643;&#x64A;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, UK</span></div></div>
+
+    <div class="card" data-category="web"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Cambridge</span><span class="category web">Web</span></div>
+    <h3>AI Coach for Non-Programmers</h3>
+    <div class="desc">Natural language interface that generates and explains code for non-programmers, helping them extract and visualize data from business databases. <span lang="ar">#x648;&#x627;&#x62C;&#x647;&#x629; &#x644;&#x63A;&#x629; &#x637;&#x628;&#x64A;&#x639;&#x64A;&#x629; &#x62A;&#x648;&#x644;&#x62F; &#x648;&#x62A;&#x634;&#x631;&#x62D; &#x627;&#x644;&#x643;&#x648;&#x62F; &#x644;&#x63A;&#x64A;&#x631; &#x627;&#x644;&#x645;&#x628;&#x631;&#x645;&#x62C;&#x64A;&#x646;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, UK</span></div></div>
+
+    <div class="card" data-category="mobile"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1EC;&#x1F1E7;</span> Cambridge</span><span class="category mobile">Mobile</span></div>
+    <h3>AI Component Identifier &amp; Marketplace App</h3>
+    <div class="desc">Smartphone app that uses AI to identify and value electronic components from PCB photos using the phone camera, with marketplace integration. <span lang="ar">#x62A;&#x637;&#x628;&#x64A;&#x642; &#x64A;&#x633;&#x62A;&#x62E;&#x62F;&#x645; &#x627;&#x644;&#x630;&#x643;&#x627;&#x621; &#x627;&#x644;&#x623;&#x635;&#x637;&#x646;&#x627;&#x639;&#x64A; &#x644;&#x62A;&#x62D;&#x62F;&#x64A;&#x62F; &#x627;&#x644;&#x645;&#x643;&#x648;&#x646;&#x627;&#x62A; &#x627;&#x644;&#x625;&#x644;&#x643;&#x62A;&#x631;&#x648;&#x646;&#x64A;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Cambridge, UK</span></div></div>
+
+    <!-- ==================== ETH Zurich ==================== -->
+    <div class="card" data-category="blockchain"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1E8;&#x1F1ED;</span> ETH Zurich</span><span class="category blockchain">Blockchain</span></div>
+    <h3>Multi-Cryptocurrency Node Explorer</h3>
+    <div class="desc">Build a pipeline that crawls Bitcoin, Bitcoin Cash, Litecoin, Dogecoin, and Ethereum networks, visualizes node distributions, and analyzes network dynamics. <span lang="ar">#x645;&#x633;&#x62A;&#x643;&#x634;&#x641; &#x639;&#x642;&#x62F; &#x645;&#x62A;&#x639;&#x62F;&#x62F; &#x627;&#x644;&#x639;&#x645;&#x644;&#x627;&#x62A; &#x627;&#x644;&#x631;&#x642;&#x645;&#x64A;&#x629; &#x64A;&#x639;&#x631;&#x636; &#x62A;&#x648;&#x632;&#x64A;&#x639; &#x627;&#x644;&#x639;&#x642;&#x62F; &#x648;&#x62A;&#x62D;&#x644;&#x64A;&#x644; &#x627;&#x644;&#x634;&#x628;&#x643;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Zurich, Switzerland</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1E8;&#x1F1ED;</span> ETH Zurich</span><span class="category ai">AI/ML</span></div>
+    <h3>Large Language Models for Verified Programs</h3>
+    <div class="desc">Leverage LLMs to automatically infer program specifications and generate verified code with formal guarantees using the Viper verification suite. <span lang="ar">#x627;&#x633;&#x62A;&#x62E;&#x62F;&#x627;&#x645; &#x646;&#x645;&#x627;&#x630;&#x62C; &#x627;&#x644;&#x644;&#x63A;&#x629; &#x627;&#x644;&#x643;&#x628;&#x64A;&#x631;&#x629; &#x644;&#x62A;&#x648;&#x644;&#x64A;&#x62F; &#x628;&#x631;&#x627;&#x645;&#x62C; &#x645;&#x62B;&#x628;&#x62A;&#x629; &#x631;&#x633;&#x645;&#x64A;&#x627;&#x64B;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Zurich, Switzerland</span></div></div>
+
+    <div class="card" data-category="security"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1E8;&#x1F1ED;</span> ETH Zurich</span><span class="category security">Security</span></div>
+    <h3>Website Privacy Compliance (GDPR/ePrivacy)</h3>
+    <div class="desc">Automate detection of privacy violations on websites using ML classification. Extend crawling capabilities to identify non-compliance with European regulations. <span lang="ar">#x627;&#x643;&#x62A;&#x634;&#x627;&#x641; &#x627;&#x646;&#x62A;&#x647;&#x627;&#x643;&#x627;&#x62A; &#x627;&#x644;&#x62E;&#x635;&#x648;&#x635;&#x64A;&#x629; &#x639;&#x644;&#x649; &#x645;&#x648;&#x627;&#x642;&#x639; &#x627;&#x644;&#x648;&#x64A;&#x628; &#x628;&#x627;&#x633;&#x62E;&#x62F;&#x627;&#x645; &#x627;&#x644;&#x62A;&#x639;&#x644;&#x645; &#x627;&#x644;&#x622;&#x644;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Zurich, Switzerland</span></div></div>
+
+    <div class="card" data-category="cloud"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1E8;&#x1F1ED;</span> ETH Zurich</span><span class="category cloud">Cloud</span></div>
+    <h3>Design &amp; Verification of Cloud Database Systems</h3>
+    <div class="desc">Build provably correct, high-performance cloud database transaction systems with geo-replication, scalability, and fault tolerance. <span lang="ar">#x62A;&#x635;&#x645;&#x64A;&#x645; &#x648;&#x62A;&#x62D;&#x642;&#x642; &#x623;&#x646;&#x638;&#x645;&#x629; &#x642;&#x648;&#x627;&#x639;&#x62F; &#x628;&#x64A;&#x627;&#x646;&#x627;&#x62A; &#x633;&#x62D;&#x627;&#x628;&#x64A;&#x629; &#x645;&#x648;&#x632;&#x639;&#x629; &#x62C;&#x63A;&#x631;&#x627;&#x641;&#x64A;&#x627;&#x64B;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Zurich, Switzerland</span></div></div>
+
+    <div class="card" data-category="security"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1E8;&#x1F1ED;</span> ETH Zurich</span><span class="category security">Security</span></div>
+    <h3>SCION Next-Generation Internet Security</h3>
+    <div class="desc">Work on path-aware networking, multipath QUIC, DDoS defense, IoT security, and secure routing in the SCION future Internet architecture. <span lang="ar">#x623;&#x645;&#x646; &#x627;&#x644;&#x62C;&#x64A;&#x644; &#x627;&#x644;&#x62B;&#x627;&#x646;&#x64A; &#x644;&#x644;&#x627;&#x646;&#x62A;&#x631;&#x646;&#x62A; &#x645;&#x639; &#x645;&#x639;&#x645;&#x627;&#x631;&#x64A;&#x629; SCION.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Zurich, Switzerland</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1E8;&#x1F1ED;</span> ETH Zurich</span><span class="category ai">AI/ML</span></div>
+    <h3>Safety &amp; Alignment of Frontier LLMs</h3>
+    <div class="desc">Research AI safety, deception detection, anthropomorphized misalignment, and interpretability in large language models. <span lang="ar">#x62B;&#x62D;&#x642;&#x64A;&#x642; &#x633;&#x644;&#x627;&#x645;&#x629; &#x648;&#x645;&#x648;&#x627;&#x634;&#x627;&#x629; &#x646;&#x645;&#x627;&#x630;&#x62C; &#x627;&#x644;&#x644;&#x63A;&#x629; &#x627;&#x644;&#x643;&#x628;&#x64A;&#x631;&#x629; &#x627;&#x644;&#x645;&#x62A;&#x642;&#x62F;&#x645;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Zurich, Switzerland</span></div></div>
+
+    <!-- ==================== NUS ==================== -->
+    <div class="card" data-category="ar-vr"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1F8;&#x1F1EC;</span> NUS</span><span class="category ar-vr">AR/VR</span></div>
+    <h3>Glassify &#x2013; AR Smartglasses App Converter</h3>
+    <div class="desc">Research heuristics to convert smartphone apps into experiences for AR smartglasses (nreal Air). HCI research at Synteraction Lab. <span lang="ar">#x062A;&#x62D;&#x648;&#x64A;&#x644; &#x62A;&#x637;&#x628;&#x64A;&#x642;&#x627;&#x62A; &#x627;&#x644;&#x647;&#x648;&#x627;&#x62A;&#x641; &#x627;&#x644;&#x630;&#x643;&#x64A;&#x629; &#x625;&#x644;&#x649; &#x62A;&#x62C;&#x627;&#x628; &#x648;&#x627;&#x642;&#x639; &#x645;&#x639;&#x632;&#x632; &#x644;&#x646;&#x638;&#x627;&#x631;&#x627;&#x62A; AR.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Singapore</span></div></div>
+
+    <div class="card" data-category="web"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1F8;&#x1F1EC;</span> NUS</span><span class="category web">Web</span></div>
+    <h3>Ripple &#x2013; Peer-Request Platform for Campus</h3>
+    <div class="desc">Mobile peer-request platform where NUS residents post quests (errands, social hangouts). Features trust scores, maps, and real-time WebSocket sync. <span lang="ar">#x645;&#x646;&#x635;&#x629; &#x627;&#x62C;&#x62A;&#x645;&#x627;&#x639;&#x64A;&#x629; &#x644;&#x637;&#x644;&#x628; &#x627;&#x644;&#x645;&#x633;&#x627;&#x639;&#x62F;&#x627;&#x62A; &#x628;&#x64A;&#x646; &#x637;&#x644;&#x627;&#x628; &#x627;&#x644;&#x62C;&#x627;&#x645;&#x639;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Singapore</span></div></div>
+
+    <div class="card" data-category="mobile"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1F8;&#x1F1EC;</span> NUS</span><span class="category mobile">Mobile</span></div>
+    <h3>nextClass &#x2013; All-in-One University App</h3>
+    <div class="desc">Flutter mobile app consolidating timetable, NUS maps with shortest path navigation, bus arrival times, reminders, and an AI chatbot assistant. <span lang="ar">#x62A;&#x637;&#x628;&#x64A;&#x642; &#x62C;&#x627;&#x645;&#x639; &#x644;&#x62E;&#x62F;&#x645;&#x627;&#x62A; &#x627;&#x644;&#x62C;&#x627;&#x645;&#x639;&#x629; &#x645;&#x639; &#x62E;&#x631;&#x627;&#x626;&#x637; &#x648;&#x645;&#x633;&#x627;&#x639;&#x62F; &#x630;&#x643;&#x64A;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Singapore</span></div></div>
+
+    <div class="card" data-category="web"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1F8;&#x1F1EC;</span> NUS</span><span class="category web">Web</span></div>
+    <h3>NUSBuffets &#x2013; Campus Food Waste Reduction</h3>
+    <div class="desc">Platform connecting students with surplus food from campus events. Real-time push notifications, sustainability tracking, and map integration. <span lang="ar">#x645;&#x646;&#x635;&#x629; &#x644;&#x62A;&#x642;&#x644;&#x64A;&#x644; &#x647;&#x62F;&#x631; &#x627;&#x644;&#x637;&#x639;&#x627;&#x645; &#x641;&#x64A; &#x627;&#x644;&#x62D;&#x631;&#x645; &#x628;&#x631;&#x628;&#x637; &#x627;&#x644;&#x637;&#x644;&#x627;&#x628; &#x628;&#x627;&#x644;&#x641;&#x627;&#x636;&#x62F; &#x645;&#x646; &#x627;&#x644;&#x637;&#x639;&#x627;&#x645;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Singapore</span></div></div>
+
+    <div class="card" data-category="mobile"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1F8;&#x1F1EC;</span> NUS</span><span class="category mobile">Mobile</span></div>
+    <h3>joiNUS &#x2013; Social Event Organizing &amp; Venue Booking</h3>
+    <div class="desc">Mobile and web platform for NUS community to organize events, book venues, with token-based system, social credit gamification, and interest matching. <span lang="ar">#x645;&#x646;&#x635;&#x629; &#x644;&#x62A;&#x646;&#x638;&#x64A;&#x645; &#x627;&#x644;&#x641;&#x639;&#x627;&#x644;&#x64A;&#x627;&#x62A; &#x627;&#x644;&#x627;&#x62C;&#x62A;&#x645;&#x627;&#x639;&#x64A;&#x629; &#x648;&#x62D;&#x62C;&#x632; &#x627;&#x644;&#x645;&#x631;&#x627;&#x641;&#x642;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Singapore</span></div></div>
+
+    <div class="card" data-category="mobile"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1F8;&#x1F1EC;</span> NUS</span><span class="category mobile">Mobile</span></div>
+    <h3>Voyager &#x2013; Safe Travel Mobile App</h3>
+    <div class="desc">Tourist safety app providing attraction recommendations, real-time incident reporting with severity levels, and emergency contacts accessible without SIM card. <span lang="ar">#x62A;&#x637;&#x628;&#x64A;&#x642; &#x633;&#x641;&#x631; &#x622;&#x645;&#x646; &#x645;&#x639; &#x625;&#x628;&#x644;&#x627;&#x63A;&#x627;&#x62A; &#x627;&#x644;&#x62D;&#x648;&#x627;&#x62F;&#x62B; &#x641;&#x64A; &#x627;&#x644;&#x648;&#x642;&#x62A; &#x627;&#x644;&#x62D;&#x642;&#x64A;&#x642;&#x64A;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Singapore</span></div></div>
+
+    <div class="card" data-category="security"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1F8;&#x1F1EC;</span> NUS</span><span class="category security">Security</span></div>
+    <h3>PGUS &#x2013; 5G Security &amp; Privacy Framework</h3>
+    <div class="desc">Novel cryptographic primitive (Sanitizable Blind Signature) for securing Thick MVNOs in 5G, with formal security analysis and testbed evaluation. <span lang="ar">#x625;&#x637;&#x627;&#x631; &#x623;&#x645;&#x646; &#x648;&#x62E;&#x635;&#x648;&#x635;&#x64A;&#x629; &#x644;&#x634;&#x628;&#x643;&#x627;&#x62A; 5G &#x628;&#x627;&#x633;&#x62E;&#x62F;&#x627;&#x645; &#x62A;&#x642;&#x646;&#x64A;&#x629; &#x62A;&#x634;&#x641;&#x64A;&#x631; &#x62C;&#x62F;&#x64A;&#x62F;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Singapore</span></div></div>
+
+    <div class="card" data-category="web"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1F8;&#x1F1EC;</span> NUS</span><span class="category web">Web</span></div>
+    <h3>NUSMates &#x2013; Student Contact Manager</h3>
+    <div class="desc">JavaFX desktop app for NUS students to manage contacts with NUS-specific fields (year, major, housing, modules) and NUSMods integration for timetables. <span lang="ar">#x645;&#x62F;&#x64A;&#x631; &#x628;&#x62A;&#x627;&#x642;&#x627;&#x62A; &#x644;&#x637;&#x644;&#x627;&#x628; NUS &#x645;&#x639; &#x62A;&#x643;&#x627;&#x645;&#x644; NUSMods.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Singapore</span></div></div>
+
+    <!-- ==================== Tsinghua ==================== -->
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1E8;&#x1F1F3;</span> Tsinghua</span><span class="category ai">AI/ML</span></div>
+    <h3>Long-Context LLM Inference Acceleration (Locret/APB)</h3>
+    <div class="desc">Novel frameworks for accelerating long-context LLM inference: KV cache compression (20&#x00D7;), distributed prefill (9.2&#x00D7;), and multimodal optimization. <span lang="ar">#x62A;&#x633;&#x631;&#x64A;&#x639; &#x627;&#x633;&#x62A;&#x646;&#x62A;&#x627;&#x62C; &#x646;&#x645;&#x627;&#x630;&#x62C; &#x627;&#x644;&#x644;&#x63A;&#x629; &#x627;&#x644;&#x643;&#x628;&#x64A;&#x631;&#x629; &#x644;&#x644;&#x633;&#x64A;&#x627;&#x642;&#x627;&#x62A; &#x627;&#x644;&#x637;&#x648;&#x64A;&#x644;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Beijing, China</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1E8;&#x1F1F3;</span> Tsinghua</span><span class="category ai">AI/ML</span></div>
+    <h3>Privacy-Preserving Edge Computing for DNN</h3>
+    <div class="desc">Three-stage framework protecting privacy during DNN training (federated learning), model authorization, and inference on edge devices. <span lang="ar">#x62D;&#x645;&#x627;&#x64A;&#x629; &#x627;&#x644;&#x62E;&#x635;&#x648;&#x635;&#x64A;&#x629; &#x641;&#x64A; &#x62D;&#x627;&#x633;&#x648;&#x628;&#x629; &#x627;&#x644;&#x637;&#x631;&#x641; &#x644;&#x634;&#x628;&#x643;&#x627;&#x62A; &#x627;&#x644;&#x639;&#x635;&#x628; &#x627;&#x644;&#x639;&#x645;&#x64A;&#x642;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Beijing, China</span></div></div>
+
+    <div class="card" data-category="cloud"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1E8;&#x1F1F3;</span> Tsinghua</span><span class="category cloud">Cloud</span></div>
+    <h3>Mooncake &#x2013; KVCache-centric LLM Serving</h3>
+    <div class="desc">Best Paper at FAST'25. Production LLM serving platform separating prefill/decode, using KVCache caching pool to increase throughput by 59-498%. <span lang="ar">#x645;&#x646;&#x635;&#x629; &#x62E;&#x62F;&#x645;&#x629; LLM &#x645;&#x628;&#x62A;&#x643;&#x631;&#x629; &#x62A;&#x641;&#x635;&#x644; &#x627;&#x644;&#x645;&#x644;&#x621; &#x648;&#x627;&#x644;&#x641;&#x643; &#x644;&#x632;&#x64A;&#x627;&#x62F;&#x629; &#x627;&#x644;&#x625;&#x646;&#x62A;&#x627;&#x62C;&#x64A;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Beijing, China</span></div></div>
+
+    <div class="card" data-category="devops"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1E8;&#x1F1F3;</span> Tsinghua</span><span class="category devops">DevOps</span></div>
+    <h3>Microservice Anomaly Detection &amp; Root Cause Analysis</h3>
+    <div class="desc">Deep learning (GNNs, VAEs) for detecting anomalies and locating root causes in complex microservice systems with 98.8% top-3 accuracy. <span lang="ar">#x627;&#x643;&#x62A;&#x634;&#x627;&#x641; &#x627;&#x644;&#x634;&#x630;&#x648;&#x630;&#x627;&#x631; &#x648;&#x62A;&#x62D;&#x62F;&#x64A;&#x62F; &#x627;&#x644;&#x3A9;&#x631;&#x648;&#x639; &#x641;&#x64A; &#x623;&#x646;&#x638;&#x645;&#x629; &#x627;&#x644;&#x645;&#x64A;&#x643;&#x631;&#x648;&#x62E;&#x62F;&#x645;&#x627;&#x62A;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Beijing, China</span></div></div>
+
+    <div class="card" data-category="data"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1E8;&#x1F1F3;</span> Tsinghua</span><span class="category data">Data Science</span></div>
+    <h3>IoTDB-FS &#x2013; Distributed File System for Geoscience</h3>
+    <div class="desc">National challenge winner. Combines IoTDB time-series database with distributed file system for massive grid data storage and efficient earth science queries. <span lang="ar">#x646;&#x638;&#x627;&#x645; &#x645;&#x644;&#x641;&#x627;&#x62A; &#x645;&#x648;&#x632;&#x639; &#x644;&#x628;&#x64A;&#x627;&#x646;&#x627;&#x62A; &#x639;&#x644;&#x648;&#x645; &#x627;&#x644;&#x3A3;&#x631;&#x636; &#x628;&#x627;&#x633;&#x62E;&#x62F;&#x627;&#x645; IoTDB.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Beijing, China</span></div></div>
+
+    <div class="card" data-category="ai"><div class="card-header"><span class="univ-badge"><span class="flag">&#x1F1E8;&#x1F1F3;</span> Tsinghua</span><span class="category ai">AI/ML</span></div>
+    <h3>Storage Systems for ML Applications</h3>
+    <div class="desc">Research on storage system support for ML, including efficient multi-LLM serving, GPU preemptive scheduling, and serverless LLM inference with materialization. <span lang="ar">#x623;&#x646;&#x638;&#x645;&#x629; &#x62A;&#x62E;&#x632;&#x64A;&#x646; &#x645;&#x62D;&#x633;&#x646;&#x629; &#x644;&#x62F;&#x639;&#x645; &#x62A;&#x637;&#x628;&#x64A;&#x642;&#x627;&#x62A; &#x627;&#x644;&#x62A;&#x639;&#x644;&#x645; &#x627;&#x644;&#x622;&#x644;&#x629;.</span></div>
+    <div class="meta"><span class="uni-location">&#x1F4CD; Beijing, China</span></div></div>
+
+  </div>
+
+  <footer>
+    <p>Grad Projects Hub &mdash; Deep Search Agent &mdash; <a href="#">&#x627;&#x628;&#x62D;&#x62B; &#x645;&#x62A;&#x639;&#x645;&#x642;</a></p>
+    <p style="margin-top:6px;">2026-05-24 &bullet; 10 Universities &bullet; 70+ Projects &bullet; No Embedded Systems</p>
+  </footer>
+</div>
+
+<script>
+function filter(cat) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  if (cat === 'all') {
+    document.querySelectorAll('.card').forEach(c => c.style.display = '');
+  } else {
+    document.querySelectorAll('.card').forEach(c => {
+      c.style.display = c.dataset.category === cat ? '' : 'none';
+    });
+  }
+}
+</script>
+</body>
+</html>

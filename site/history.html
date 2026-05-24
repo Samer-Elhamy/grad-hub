@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>سجلي — ناقد الأفكار</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .sort-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+    .sort-bar label { font-weight: 600; font-size: .9rem; }
+    .sort-bar select { padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--radius); font-family: inherit; font-size: .9rem; background: var(--color-bg); }
+    .history-stats { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 24px; }
+    .history-stats .stat-card { flex: 1; min-width: 120px; text-align: center; padding: 16px; border: 1px solid var(--color-border); border-radius: var(--radius); background: var(--color-bg); }
+    .history-stats .stat-card .num { font-size: 1.6rem; font-weight: 700; color: var(--color-primary); }
+    .history-stats .stat-card .label { font-size: .8rem; color: var(--color-text-muted); }
+    .rating-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: .8rem; font-weight: 600; }
+    .rating-high { background: #d4edda; color: #155724; }
+    .rating-mid { background: #fff3cd; color: #856404; }
+    .rating-low { background: #f8d7da; color: #721c24; }
+    .export-bar { margin-bottom: 20px; display: flex; justify-content: flex-end; }
+    .empty-state { text-align: center; padding: 60px 24px; color: var(--color-text-muted); }
+    .empty-state p { font-size: 1.1rem; }
+    .comment-truncate { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; vertical-align: middle; }
+    [data-theme="dark"] .rating-high { background: #1e3a2e; color: #7dd181; }
+    [data-theme="dark"] .rating-mid { background: #3a3520; color: #e8c76b; }
+    [data-theme="dark"] .rating-low { background: #3a2020; color: #f5a5a5; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="logo">ناقد <span>الأفكار</span></a>
+    <button class="dark-toggle" aria-label="الوضع الليلي">🌙</button>
+    <button class="nav-toggle" aria-label="القائمة">☰</button>
+    <nav>
+      <div class="nav-links">
+        <a href="index.html">المشاريع</a>
+        <a href="preferences.html">تفضيلاتي</a>
+        <a href="history.html">سجلي</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <h1>سجل المراجعات</h1>
+      <p>جميع الأفكار التي راجعتها مع تقييماتك وملاحظاتك</p>
+    </section>
+
+    <div id="historyContent">
+      <div id="emptyHistory" class="empty-state" style="display:none">
+        <p>لم تراجع أي فكرة بعد. ابدأ بتصفح المشاريع وقيّم بعض الأفكار.</p>
+        <a href="index.html" class="btn btn-accent">اذهب إلى المشاريع</a>
+      </div>
+
+      <div id="historyTableWrap" style="display:none">
+        <div class="history-stats" id="historyStats">
+        </div>
+
+        <div class="export-bar">
+          <button class="btn btn-primary btn-sm" onclick="GradHub.exportHistory()">📥 تصدير السجل (JSON)</button>
+        </div>
+
+        <div class="sort-bar">
+          <label>ترتيب حسب:</label>
+          <select id="sortSelect" onchange="GradHub.renderHistoryTable()">
+            <option value="date-desc">التاريخ (الأحدث أولاً)</option>
+            <option value="date-asc">التاريخ (الأقدم أولاً)</option>
+            <option value="rating-desc">التقييم (الأعلى أولاً)</option>
+            <option value="rating-asc">التقييم (الأدنى أولاً)</option>
+            <option value="category">الفئة</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>الفكرة</th>
+                <th>الفئة</th>
+                <th>التقييم</th>
+                <th>ملاحظاتي</th>
+                <th>التاريخ</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <footer>
+    <p>© ٢٠٢٦ ناقد الأفكار — مشروع شخصي</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script defer src="critic.js"></script>
+  <script defer src="app.js"></script>
+</body>
+</html>

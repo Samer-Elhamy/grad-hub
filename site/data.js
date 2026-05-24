@@ -1,0 +1,855 @@
+window.__IDEAS_DATA__ = {
+  "projects": [
+    {
+      "id": 1,
+      "title_ar": "مساعد تشخيص طبي بالذكاء الاصطناعي",
+      "title_en": "AI-Powered Medical Diagnosis Assistant",
+      "category": "AI/ML",
+      "short_desc_ar": "نظام ذكاء اصطناعي متعدد الوسائط يحلل الأعراض النصية والصور الطبية لتقديم تشخيصات أولية دقيقة للأطباء",
+      "short_desc_en": "A multimodal AI system that analyzes textual symptoms and medical images to provide accurate preliminary diagnoses",
+      "university": "MIT",
+      "country": "USA",
+      "tech_stack": [
+        "Python",
+        "PyTorch",
+        "React",
+        "Docker",
+        "PostgreSQL"
+      ],
+      "difficulty": "متقدم",
+      "rating": 0,
+      "featured": true,
+      "description": "نظام ذكاء اصطناعي متعدد الوسائط يحلل الأعراض النصية والصور الطبية لتقديم تشخيصات أولية دقيقة للأطباء",
+      "technologies": [
+        "Python",
+        "PyTorch",
+        "React",
+        "Docker",
+        "PostgreSQL"
+      ]
+    },
+    {
+      "id": 2,
+      "title_ar": "شاتوب للصحة النفسية مدعوم بالذكاء الاصطناعي",
+      "title_en": "NLP-Powered Mental Health Support Chatbot",
+      "category": "AI/ML",
+      "short_desc_ar": "روبوت محادثة يعالج اللغة الطبيعية لفهم المشاعر وتقديم دعم نفسي أولي وتقنيات علاج سلوكي معرفي",
+      "short_desc_en": "A conversational agent using NLP to understand emotions and provide initial mental health support",
+      "university": "Stanford",
+      "country": "USA",
+      "tech_stack": [
+        "Python",
+        "Transformers",
+        "FastAPI",
+        "React Native",
+        "MongoDB"
+      ],
+      "difficulty": "متقدم",
+      "rating": 0,
+      "featured": true,
+      "description": "روبوت محادثة يعالج اللغة الطبيعية لفهم المشاعر وتقديم دعم نفسي أولي وتقنيات علاج سلوكي معرفي",
+      "technologies": [
+        "Python",
+        "Transformers",
+        "FastAPI",
+        "React Native",
+        "MongoDB"
+      ]
+    },
+    {
+      "id": 3,
+      "title_ar": "محرك توصية ذكي للأوراق البحثية",
+      "title_en": "AI-Based Recommendation Engine for Research Papers",
+      "category": "AI/ML",
+      "short_desc_ar": "نظام توصية يعتمد على التعلم العميق يحلل اهتمامات الباحثين ويقترح أوراقاً بحثية ذات صلة",
+      "short_desc_en": "A deep learning recommendation system that suggests relevant academic papers",
+      "university": "Cambridge",
+      "country": "UK",
+      "tech_stack": [
+        "Python",
+        "TensorFlow",
+        "Elasticsearch",
+        "Flask",
+        "Neo4j"
+      ],
+      "difficulty": "متوسط",
+      "rating": 0,
+      "featured": false,
+      "description": "نظام توصية يعتمد على التعلم العميق يحلل اهتمامات الباحثين ويقترح أوراقاً بحثية ذات صلة",
+      "technologies": [
+        "Python",
+        "TensorFlow",
+        "Elasticsearch",
+        "Flask",
+        "Neo4j"
+      ]
+    },
+    {
+      "id": 4,
+      "title_ar": "كشف احتيال مالي فوري بالتعلم العميق",
+      "title_en": "Real-Time Fraud Detection for Financial Transactions",
+      "category": "AI/ML",
+      "short_desc_ar": "نظام تعلم عميق يكتشف المعاملات المالية المشبوهة في الوقت الفعلي من خلال تحليل أنماط الإنفاق",
+      "short_desc_en": "A deep learning system that detects suspicious financial transactions in real time",
+      "university": "Carnegie Mellon",
+      "country": "USA",
+      "tech_stack": [
+        "Python",
+        "Scikit-learn",
+        "Apache Kafka",
+        "PostgreSQL",
+        "Grafana"
+      ],
+      "difficulty": "متقدم",
+      "rating": 0,
+      "featured": false,
+      "description": "نظام تعلم عميق يكتشف المعاملات المالية المشبوهة في الوقت الفعلي من خلال تحليل أنماط الإنفاق",
+      "technologies": [
+        "Python",
+        "Scikit-learn",
+        "Apache Kafka",
+        "PostgreSQL",
+        "Grafana"
+      ]
+    },
+    {
+      "id": 5,
+      "title_ar": "نظام رؤية حاسوبية للدفع الآلي في المتاجر",
+      "title_en": "Computer Vision System for Autonomous Retail Checkout",
+      "category": "AI/ML",
+      "short_desc_ar": "نظام رؤية حاسوبية يتعرف على المنتجات في عربة التسوق ويحسب الفاتورة تلقائياً",
+      "short_desc_en": "A computer vision system that identifies products in shopping carts and calculates the bill automatically",
+      "university": "UC Berkeley",
+      "country": "USA",
+      "tech_stack": [
+        "Python",
+        "YOLOv8",
+        "OpenCV",
+        "AWS Lambda",
+        "DynamoDB"
+      ],
+      "difficulty": "متقدم",
+      "rating": 0,
+      "featured": false,
+      "description": "نظام رؤية حاسوبية يتعرف على المنتجات في عربة التسوق ويحسب الفاتورة تلقائياً",
+      "technologies": [
+        "Python",
+        "YOLOv8",
+        "OpenCV",
+        "AWS Lambda",
+        "DynamoDB"
+      ]
+    },
+    {
+      "id": 6,
+      "title_ar": "تحليبات تنبؤية للوقاية من الأمراض المزمنة",
+      "title_en": "Predictive Analytics Platform for Chronic Disease Prevention",
+      "category": "AI/ML",
+      "short_desc_ar": "منصة تحليبات تنبؤية تستخدم بيانات المرضى التاريخية للتنبؤ بخطر الإصابة بأمراض مزمنة",
+      "short_desc_en": "A predictive analytics platform that forecasts the risk of chronic diseases",
+      "university": "Oxford",
+      "country": "UK",
+      "tech_stack": [
+        "Python",
+        "TensorFlow",
+        "Apache Spark",
+        "Flask",
+        "Tableau"
+      ],
+      "difficulty": "متقدم",
+      "rating": 0,
+      "featured": false,
+      "description": "منصة تحليبات تنبؤية تستخدم بيانات المرضى التاريخية للتنبؤ بخطر الإصابة بأمراض مزمنة",
+      "technologies": [
+        "Python",
+        "TensorFlow",
+        "Apache Spark",
+        "Flask",
+        "Tableau"
+      ]
+    },
+    {
+      "id": 7,
+      "title_ar": "منصة تعلم إلكتروني ذكي بمسارات تكيفية",
+      "title_en": "Smart E-Learning Platform with Adaptive Learning Paths",
+      "category": "Web Applications",
+      "short_desc_ar": "منصة تعليمية تفاعلية تستخدم الذكاء الاصطناعي لتخصيص مسارات التعلم لكل طالب",
+      "short_desc_en": "An interactive educational platform that uses AI to personalize learning paths",
+      "university": "Harvard",
+      "country": "USA",
+      "tech_stack": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "Python",
+        "Redis"
+      ],
+      "difficulty": "متوسط",
+      "rating": 0,
+      "featured": true,
+      "description": "منصة تعليمية تفاعلية تستخدم الذكاء الاصطناعي لتخصيص مسارات التعلم لكل طالب",
+      "technologies": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "Python",
+        "Redis"
+      ]
+    },
+    {
+      "id": 8,
+      "title_ar": "محرر أكواد تعاوني مع مساعد ذكاء اصطناعي",
+      "title_en": "Collaborative Code Editor with Real-Time AI Assistance",
+      "category": "Web Applications",
+      "short_desc_ar": "محرر أكواد متعدد المستخدمين يتيح التحرير التعاوني المباشر مع اقتراحات ذكية للكود",
+      "short_desc_en": "A multi-user code editor with real-time collaboration and AI-powered code suggestions",
+      "university": "Carnegie Mellon",
+      "country": "USA",
+      "tech_stack": [
+        "Next.js",
+        "WebSockets",
+        "PostgreSQL",
+        "Docker",
+        "OpenAI API"
+      ],
+      "difficulty": "متقدم",
+      "rating": 0,
+      "featured": true,
+      "description": "محرر أكواد متعدد المستخدمين يتيح التحرير التعاوني المباشر مع اقتراحات ذكية للكود",
+      "technologies": [
+        "Next.js",
+        "WebSockets",
+        "PostgreSQL",
+        "Docker",
+        "OpenAI API"
+      ]
+    },
+    {
+      "id": 9,
+      "title_ar": "منصة تعاون فوري لفرق التصميم عن بعد",
+      "title_en": "Real-Time Collaboration Platform for Remote Design Teams",
+      "category": "Web Applications",
+      "short_desc_ar": "منصة ويب تفاعلية تسمح لفرق التصميم بالعمل على نفس اللوحة في الوقت الفعلي",
+      "short_desc_en": "A web platform for design teams to work on the same canvas in real time",
+      "university": "Imperial College",
+      "country": "UK",
+      "tech_stack": [
+        "React",
+        "Socket.io",
+        "Node.js",
+        "PostgreSQL",
+        "S3"
+      ],
+      "difficulty": "متوسط",
+      "rating": 0,
+      "featured": false,
+      "description": "منصة ويب تفاعلية تسمح لفرق التصميم بالعمل على نفس اللوحة في الوقت الفعلي",
+      "technologies": [
+        "React",
+        "Socket.io",
+        "Node.js",
+        "PostgreSQL",
+        "S3"
+      ]
+    },
+    {
+      "id": 10,
+      "title_ar": "باني محافظ تفاعلي للمبدعين والمطورين",
+      "title_en": "Interactive Portfolio Builder for Creative Professionals",
+      "category": "Web Applications",
+      "short_desc_ar": "أداة ويب سهلة الاستخدام تساعد المبدعين والمطورين على بناء محافظ أعمال احترافية",
+      "short_desc_en": "An easy-to-use web tool for building professional portfolios with drag-and-drop",
+      "university": "NUS",
+      "country": "Singapore",
+      "tech_stack": [
+        "Vue.js",
+        "Nuxt.js",
+        "Tailwind CSS",
+        "Firebase",
+        "Netlify"
+      ],
+      "difficulty": "مبتدئ",
+      "rating": 0,
+      "featured": false,
+      "description": "أداة ويب سهلة الاستخدام تساعد المبدعين والمطورين على بناء محافظ أعمال احترافية",
+      "technologies": [
+        "Vue.js",
+        "Nuxt.js",
+        "Tailwind CSS",
+        "Firebase",
+        "Netlify"
+      ]
+    },
+    {
+      "id": 11,
+      "title_ar": "متتبع صحة ولياقة شخصي بالذكاء الاصطناعي",
+      "title_en": "AI-Powered Personal Health and Fitness Tracker",
+      "category": "Mobile Apps",
+      "short_desc_ar": "تطبيق جوال يتتبع النشاط البدني وجودة النوم والتغذية ويقدم توصيات ذكية مخصصة",
+      "short_desc_en": "A mobile app that tracks physical activity, sleep, and nutrition with AI recommendations",
+      "university": "Stanford",
+      "country": "USA",
+      "tech_stack": [
+        "Flutter",
+        "TensorFlow Lite",
+        "Firebase",
+        "HealthKit",
+        "Dart"
+      ],
+      "difficulty": "متوسط",
+      "rating": 0,
+      "featured": false,
+      "description": "تطبيق جوال يتتبع النشاط البدني وجودة النوم والتغذية ويقدم توصيات ذكية مخصصة",
+      "technologies": [
+        "Flutter",
+        "TensorFlow Lite",
+        "Firebase",
+        "HealthKit",
+        "Dart"
+      ]
+    },
+    {
+      "id": 12,
+      "title_ar": "تطبيق تفاعلي لتعلم اللغات بالتعرف على الصوت",
+      "title_en": "Gamified Language Learning App with Speech Recognition",
+      "category": "Mobile Apps",
+      "short_desc_ar": "تطبيق جوال لتعلم اللغات يجمع بين التلعيب وتقنيات التعرف على الكلام لتقييم النطق",
+      "short_desc_en": "A gamified language learning app with speech recognition for pronunciation assessment",
+      "university": "University of Tokyo",
+      "country": "Japan",
+      "tech_stack": [
+        "Kotlin",
+        "TensorFlow Lite",
+        "Room DB",
+        "Jetpack Compose",
+        "Firebase Auth"
+      ],
+      "difficulty": "متوسط",
+      "rating": 0,
+      "featured": false,
+      "description": "تطبيق جوال لتعلم اللغات يجمع بين التلعيب وتقنيات التعرف على الكلام لتقييم النطق",
+      "technologies": [
+        "Kotlin",
+        "TensorFlow Lite",
+        "Room DB",
+        "Jetpack Compose",
+        "Firebase Auth"
+      ]
+    },
+    {
+      "id": 13,
+      "title_ar": "مساعد تسوق بالواقع المعزز للأزياء",
+      "title_en": "AR-Powered Shopping Assistant for Fashion Retail",
+      "category": "Mobile Apps",
+      "short_desc_ar": "تطبيق جوال يستخدم الواقع المعزز لتجربة الملابس افتراضياً على جسم المستخدم",
+      "short_desc_en": "A mobile app using AR to let users virtually try on clothes",
+      "university": "Georgia Tech",
+      "country": "USA",
+      "tech_stack": [
+        "Swift",
+        "ARKit",
+        "CoreML",
+        "Firebase",
+        "Algolia"
+      ],
+      "difficulty": "متقدم",
+      "rating": 0,
+      "featured": false,
+      "description": "تطبيق جوال يستخدم الواقع المعزز لتجربة الملابس افتراضياً على جسم المستخدم",
+      "technologies": [
+        "Swift",
+        "ARKit",
+        "CoreML",
+        "Firebase",
+        "Algolia"
+      ]
+    },
+    {
+      "id": 14,
+      "title_ar": "منصة توصيل تشاركي لتحسين التوصيل في الميل الأخير",
+      "title_en": "Crowdsourced Last-Mile Delivery Optimization Platform",
+      "category": "Mobile Apps",
+      "short_desc_ar": "منصة جوال تربط المستخدمين بمندوبي توصيل مستقلين وتحسن مسارات التوصيل",
+      "short_desc_en": "A mobile platform connecting users with independent delivery couriers with route optimization",
+      "university": "UC San Diego",
+      "country": "USA",
+      "tech_stack": [
+        "React Native",
+        "Node.js",
+        "GraphQL",
+        "PostgreSQL",
+        "Google Maps API"
+      ],
+      "difficulty": "متوسط",
+      "rating": 0,
+      "featured": false,
+      "description": "منصة جوال تربط المستخدمين بمندوبي توصيل مستقلين وتحسن مسارات التوصيل",
+      "technologies": [
+        "React Native",
+        "Node.js",
+        "GraphQL",
+        "PostgreSQL",
+        "Google Maps API"
+      ]
+    },
+    {
+      "id": 15,
+      "title_ar": "إضافة متصفح لكشف التصيد الاحتيالي بالتعلم العميق",
+      "title_en": "Phishing Detection Browser Extension Using Deep Learning",
+      "category": "Cybersecurity",
+      "short_desc_ar": "إضافة متصفح تفحص صفحات الويب في الوقت الفعلي وتستخدم التعلم العميق لكشف هجمات التصيد",
+      "short_desc_en": "A browser extension that uses deep learning to detect phishing attacks in real time",
+      "university": "KFUPM",
+      "country": "Saudi Arabia",
+      "tech_stack": [
+        "JavaScript",
+        "Python",
+        "TensorFlow.js",
+        "Chrome APIs",
+        "Flask"
+      ],
+      "difficulty": "متوسط",
+      "rating": 0,
+      "featured": false,
+      "description": "إضافة متصفح تفحص صفحات الويب في الوقت الفعلي وتستخدم التعلم العميق لكشف هجمات التصيد",
+      "technologies": [
+        "JavaScript",
+        "Python",
+        "TensorFlow.js",
+        "Chrome APIs",
+        "Flask"
+      ]
+    },
+    {
+      "id": 16,
+      "title_ar": "نظام مصادقة لا ثقة فيه للمؤسسات",
+      "title_en": "Zero-Trust Authentication System for Enterprise Networks",
+      "category": "Cybersecurity",
+      "short_desc_ar": "نظام أمني يطبق نموذج الأمن اللاثقي مع مصادقة مستمرة متعددة العوامل",
+      "short_desc_en": "A security system implementing Zero Trust with continuous multi-factor authentication",
+      "university": "KAUST",
+      "country": "Saudi Arabia",
+      "tech_stack": [
+        "Go",
+        "OAuth 2.0",
+        "gRPC",
+        "Redis",
+        "Prometheus"
+      ],
+      "difficulty": "متقدم",
+      "rating": 0,
+      "featured": false,
+      "description": "نظام أمني يطبق نموذج الأمن اللاثقي مع مصادقة مستمرة متعددة العوامل",
+      "technologies": [
+        "Go",
+        "OAuth 2.0",
+        "gRPC",
+        "Redis",
+        "Prometheus"
+      ]
+    },
+    {
+      "id": 17,
+      "title_ar": "ماسح ضعف شبكات آلي",
+      "title_en": "Automated Network Vulnerability Scanner",
+      "category": "Cybersecurity",
+      "short_desc_ar": "أداة آلية تفحص الشبكات المحلية والخوادم بحثاً عن الثغرات الأمنية المعروفة",
+      "short_desc_en": "An automated tool that scans networks for known security vulnerabilities",
+      "university": "KSU",
+      "country": "Saudi Arabia",
+      "tech_stack": [
+        "Python",
+        "Nmap",
+        "OWASP ZAP",
+        "PostgreSQL",
+        "Django"
+      ],
+      "difficulty": "متوسط",
+      "rating": 0,
+      "featured": false,
+      "description": "أداة آلية تفحص الشبكات المحلية والخوادم بحثاً عن الثغرات الأمنية المعروفة",
+      "technologies": [
+        "Python",
+        "Nmap",
+        "OWASP ZAP",
+        "PostgreSQL",
+        "Django"
+      ]
+    },
+    {
+      "id": 18,
+      "title_ar": "تحليل تسلسل جينوم كوفيد وتتبع المتحورات",
+      "title_en": "COVID-19 Genome Sequence Analysis and Variant Tracking",
+      "category": "Data Science",
+      "short_desc_ar": "منصة تحليل بيانات حيوية تتعقب المتحورات الجينية لفيروس كوفيد بتقنيات المحاذاة الجينية",
+      "short_desc_en": "A bioinformatics platform tracking COVID-19 genetic variants using sequence alignment",
+      "university": "Tsinghua",
+      "country": "China",
+      "tech_stack": [
+        "Python",
+        "Biopython",
+        "Pandas",
+        "D3.js",
+        "Jupyter"
+      ],
+      "difficulty": "متقدم",
+      "rating": 0,
+      "featured": false,
+      "description": "منصة تحليل بيانات حيوية تتعقب المتحورات الجينية لفيروس كوفيد بتقنيات المحاذاة الجينية",
+      "technologies": [
+        "Python",
+        "Biopython",
+        "Pandas",
+        "D3.js",
+        "Jupyter"
+      ]
+    },
+    {
+      "id": 19,
+      "title_ar": "تحليل بيانات حركة المرور في المدن الذكية",
+      "title_en": "Smart City Traffic Data Analytics and Prediction",
+      "category": "Data Science",
+      "short_desc_ar": "نظام يحلل بيانات حركة المرور التاريخية واللحظية للتنبؤ بالازدحام وتحسين إشارات المرور",
+      "short_desc_en": "A system that analyzes traffic data to predict congestion and optimize signal timing",
+      "university": "NUS",
+      "country": "Singapore",
+      "tech_stack": [
+        "Python",
+        "Apache Spark",
+        "Kafka",
+        "Tableau",
+        "PostGIS"
+      ],
+      "difficulty": "متوسط",
+      "rating": 0,
+      "featured": false,
+      "description": "نظام يحلل بيانات حركة المرور التاريخية واللحظية للتنبؤ بالازدحام وتحسين إشارات المرور",
+      "technologies": [
+        "Python",
+        "Apache Spark",
+        "Kafka",
+        "Tableau",
+        "PostGIS"
+      ]
+    },
+    {
+      "id": 20,
+      "title_ar": "تحليل المشاعر لوسائل التواصل لمراقبة العلامات",
+      "title_en": "Social Media Sentiment Analysis for Brand Monitoring",
+      "category": "Data Science",
+      "short_desc_ar": "أداة تحليل مشاعر تجمع المنشورات من وسائل التواصل وتستخدم NLP لقياس الرأي العام",
+      "short_desc_en": "A sentiment analysis tool that uses NLP to measure public opinion about brands",
+      "university": "UAE University",
+      "country": "UAE",
+      "tech_stack": [
+        "Python",
+        "NLTK",
+        "Scrapy",
+        "MongoDB",
+        "Plotly"
+      ],
+      "difficulty": "مبتدئ",
+      "rating": 0,
+      "featured": false,
+      "description": "أداة تحليل مشاعر تجمع المنشورات من وسائل التواصل وتستخدم NLP لقياس الرأي العام",
+      "technologies": [
+        "Python",
+        "NLTK",
+        "Scrapy",
+        "MongoDB",
+        "Plotly"
+      ]
+    },
+    {
+      "id": 21,
+      "title_ar": "نظام مراقبة وكشف شذوذ لمجموعات Kubernetes",
+      "title_en": "Kubernetes Cluster Monitoring and Anomaly Detection",
+      "category": "Cloud/DevOps",
+      "short_desc_ar": "نظام مراقبة شامل لمجموعات Kubernetes يجمع مقاييس الأداء ويكتشف الشذوذ",
+      "short_desc_en": "A monitoring system for Kubernetes clusters with anomaly detection and failure prediction",
+      "university": "TU Delft",
+      "country": "Netherlands",
+      "tech_stack": [
+        "Go",
+        "Prometheus",
+        "Grafana",
+        "Kubernetes",
+        "Python"
+      ],
+      "difficulty": "متقدم",
+      "rating": 0,
+      "featured": false,
+      "description": "نظام مراقبة شامل لمجموعات Kubernetes يجمع مقاييس الأداء ويكتشف الشذوذ",
+      "technologies": [
+        "Go",
+        "Prometheus",
+        "Grafana",
+        "Kubernetes",
+        "Python"
+      ]
+    },
+    {
+      "id": 22,
+      "title_ar": "إطار عمل بدون خادم لمعالجة البيانات الفورية",
+      "title_en": "Serverless Framework for Real-Time Data Processing",
+      "category": "Cloud/DevOps",
+      "short_desc_ar": "إطار عمل Serverless يتيح بناء خطوط معالجة بيانات فورية بشكل آلي",
+      "short_desc_en": "A serverless framework for building real-time data processing pipelines automatically",
+      "university": "University of Toronto",
+      "country": "Canada",
+      "tech_stack": [
+        "AWS Lambda",
+        "Terraform",
+        "Python",
+        "DynamoDB",
+        "SQS"
+      ],
+      "difficulty": "متقدم",
+      "rating": 0,
+      "featured": false,
+      "description": "إطار عمل Serverless يتيح بناء خطوط معالجة بيانات فورية بشكل آلي",
+      "technologies": [
+        "AWS Lambda",
+        "Terraform",
+        "Python",
+        "DynamoDB",
+        "SQS"
+      ]
+    },
+    {
+      "id": 23,
+      "title_ar": "مدير تحسين تكاليف الموارد متعددة السحابات",
+      "title_en": "Multi-Cloud Cost Optimization and Resource Manager",
+      "category": "Cloud/DevOps",
+      "short_desc_ar": "منصة تدير الموارد عبر AWS وAzure وGoogle Cloud وتحسن التكاليف",
+      "short_desc_en": "A platform managing resources across AWS, Azure, and Google Cloud with cost optimization",
+      "university": "Georgia Tech",
+      "country": "USA",
+      "tech_stack": [
+        "Python",
+        "Terraform",
+        "Go",
+        "PostgreSQL",
+        "React"
+      ],
+      "difficulty": "متقدم",
+      "rating": 0,
+      "featured": false,
+      "description": "منصة تدير الموارد عبر AWS وAzure وGoogle Cloud وتحسن التكاليف",
+      "technologies": [
+        "Python",
+        "Terraform",
+        "Go",
+        "PostgreSQL",
+        "React"
+      ]
+    },
+    {
+      "id": 24,
+      "title_ar": "متتبع سلسلة توريد الأدوية بالبلوكشين",
+      "title_en": "Blockchain-Based Pharmaceutical Supply Chain Tracker",
+      "category": "Blockchain",
+      "short_desc_ar": "نظام بلوكشين يتتبع رحلة الأدوية من المصنع إلى المريض لضمان الأصالة ومنع التزوير",
+      "short_desc_en": "A blockchain system tracking pharmaceuticals from manufacturer to patient ensuring authenticity",
+      "university": "ETH Zurich",
+      "country": "Switzerland",
+      "tech_stack": [
+        "Solidity",
+        "Ethereum",
+        "Web3.js",
+        "Node.js",
+        "IPFS"
+      ],
+      "difficulty": "متوسط",
+      "rating": 0,
+      "featured": true,
+      "description": "نظام بلوكشين يتتبع رحلة الأدوية من المصنع إلى المريض لضمان الأصالة ومنع التزوير",
+      "technologies": [
+        "Solidity",
+        "Ethereum",
+        "Web3.js",
+        "Node.js",
+        "IPFS"
+      ]
+    },
+    {
+      "id": 25,
+      "title_ar": "منصة هوية رقمية ذاتية السيادة على البلوكشين",
+      "title_en": "Self-Sovereign Digital Identity Platform on Blockchain",
+      "category": "Blockchain",
+      "short_desc_ar": "منصة هوية رقمية تمنح المستخدمين سيطرة كاملة على بياناتهم الشخصية باستخدام البلوكشين",
+      "short_desc_en": "A digital identity platform giving users full control over personal data using blockchain",
+      "university": "University of Toronto",
+      "country": "Canada",
+      "tech_stack": [
+        "Solidity",
+        "Hyperledger",
+        "React",
+        "Go",
+        "MongoDB"
+      ],
+      "difficulty": "متقدم",
+      "rating": 0,
+      "featured": false,
+      "description": "منصة هوية رقمية تمنح المستخدمين سيطرة كاملة على بياناتهم الشخصية باستخدام البلوكشين",
+      "technologies": [
+        "Solidity",
+        "Hyperledger",
+        "React",
+        "Go",
+        "MongoDB"
+      ]
+    },
+    {
+      "id": 26,
+      "title_ar": "نظام تصويت إلكتروني لامركزي مع سجل تدقيق",
+      "title_en": "Decentralized Voting System with Verifiable Audit Trail",
+      "category": "Blockchain",
+      "short_desc_ar": "نظام تصويت إلكتروني لامركزي يضمن سرية وشفافية الانتخابات عبر البلوكشين",
+      "short_desc_en": "A decentralized voting system ensuring election secrecy and transparency via blockchain",
+      "university": "Tsinghua",
+      "country": "China",
+      "tech_stack": [
+        "Solidity",
+        "React",
+        "Hardhat",
+        "TypeScript",
+        "The Graph"
+      ],
+      "difficulty": "متقدم",
+      "rating": 0,
+      "featured": false,
+      "description": "نظام تصويت إلكتروني لامركزي يضمن سرية وشفافية الانتخابات عبر البلوكشين",
+      "technologies": [
+        "Solidity",
+        "React",
+        "Hardhat",
+        "TypeScript",
+        "The Graph"
+      ]
+    },
+    {
+      "id": 27,
+      "title_ar": "لعبة واقع افتراضي تعليمية لتدريب السلامة المخبرية",
+      "title_en": "Educational VR Game for Chemical Lab Safety Training",
+      "category": "Game Development",
+      "short_desc_ar": "لعبة واقع افتراضي تحاكي مختبر كيميائي لتدريب الطلاب على إجراءات السلامة",
+      "short_desc_en": "An immersive VR game simulating a chemistry lab for safety procedure training",
+      "university": "MIT",
+      "country": "USA",
+      "tech_stack": [
+        "Unity",
+        "C#",
+        "SteamVR",
+        "Blender",
+        "Photon Networking"
+      ],
+      "difficulty": "متوسط",
+      "rating": 0,
+      "featured": true,
+      "description": "لعبة واقع افتراضي تحاكي مختبر كيميائي لتدريب الطلاب على إجراءات السلامة",
+      "technologies": [
+        "Unity",
+        "C#",
+        "SteamVR",
+        "Blender",
+        "Photon Networking"
+      ]
+    },
+    {
+      "id": 28,
+      "title_ar": "محرك توليد إجرائي لمحتوى ألعاب العالم المفتوح",
+      "title_en": "Procedural Content Generation Engine for Open-World Games",
+      "category": "Game Development",
+      "short_desc_ar": "محرك ألعاب يولد عوالم وبيئات إجرائية لإنشاء محتوى لا نهائي في ألعاب العالم المفتوح",
+      "short_desc_en": "A game engine that procedurally generates worlds for infinite open-world game content",
+      "university": "UC Berkeley",
+      "country": "USA",
+      "tech_stack": [
+        "Unreal Engine 5",
+        "C++",
+        "Perlin Noise",
+        "Python",
+        "Houdini"
+      ],
+      "difficulty": "متقدم",
+      "rating": 0,
+      "featured": false,
+      "description": "محرك ألعاب يولد عوالم وبيئات إجرائية لإنشاء محتوى لا نهائي في ألعاب العالم المفتوح",
+      "technologies": [
+        "Unreal Engine 5",
+        "C++",
+        "Perlin Noise",
+        "Python",
+        "Houdini"
+      ]
+    },
+    {
+      "id": 29,
+      "title_ar": "لوحة معلومات ذكية للزراعة بحساسات إنترنت الأشياء",
+      "title_en": "Smart Agriculture Dashboard with IoT Sensors",
+      "category": "IoT",
+      "short_desc_ar": "لوحة معلومات تحلل بيانات حساسات التربة والطقس لتقديم توصيات ذكية للمزارعين",
+      "short_desc_en": "A dashboard analyzing soil and weather sensor data for smart farming recommendations",
+      "university": "KSU",
+      "country": "Saudi Arabia",
+      "tech_stack": [
+        "Node.js",
+        "MQTT",
+        "React",
+        "InfluxDB",
+        "Grafana"
+      ],
+      "difficulty": "متوسط",
+      "rating": 0,
+      "featured": false,
+      "description": "لوحة معلومات تحلل بيانات حساسات التربة والطقس لتقديم توصيات ذكية للمزارعين",
+      "technologies": [
+        "Node.js",
+        "MQTT",
+        "React",
+        "InfluxDB",
+        "Grafana"
+      ]
+    },
+    {
+      "id": 30,
+      "title_ar": "نظام تتبع أساطيل ولوجستيات في الوقت الفعلي",
+      "title_en": "Real-Time Fleet Tracking and Logistics Optimization",
+      "category": "IoT",
+      "short_desc_ar": "نظام إنترنت الأشياء يتتبع أساطيل المركبات عبر GPS ويحسن طرق التوصيل",
+      "short_desc_en": "An IoT system that tracks vehicle fleets via GPS and optimizes delivery routes",
+      "university": "KAUST",
+      "country": "Saudi Arabia",
+      "tech_stack": [
+        "Python",
+        "ESP32",
+        "AWS IoT Core",
+        "React Native",
+        "PostGIS"
+      ],
+      "difficulty": "متوسط",
+      "rating": 0,
+      "featured": false,
+      "description": "نظام إنترنت الأشياء يتتبع أساطيل المركبات عبر GPS ويحسن طرق التوصيل",
+      "technologies": [
+        "Python",
+        "ESP32",
+        "AWS IoT Core",
+        "React Native",
+        "PostGIS"
+      ]
+    }
+  ],
+  "categories": [
+    "AI/ML",
+    "Blockchain",
+    "Cloud/DevOps",
+    "Cybersecurity",
+    "Data Science",
+    "Game Development",
+    "IoT",
+    "Mobile Apps",
+    "Web Applications"
+  ]
+};
