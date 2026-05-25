@@ -1,19 +1,20 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/idea.dart';
+import '../config/environment.dart';
 import '../services/api_service.dart';
 import '../services/websocket_service.dart';
 
 /// Provider for the API service.
 final apiServiceProvider = Provider<ApiService>((ref) {
-  final service = ApiService();
+  final service = ApiService(baseUrl: AppEnvironment.current.baseUrl);
   ref.onDispose(() => service.dispose());
   return service;
 });
 
 /// Provider for the WebSocket service (lazy singleton).
 final webSocketServiceProvider = Provider<WebSocketService>((ref) {
-  final service = WebSocketService(wsUrl: 'ws://localhost:3000/ws/stream');
+  final service = WebSocketService(wsUrl: AppEnvironment.current.wsUrl);
   ref.onDispose(() => service.dispose());
   // Connect on first access.
   service.connect();
@@ -57,7 +58,16 @@ class IdeaStackNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
     final ideas = <Idea>[];
     for (var i = 0; i < count; i++) {
       try {
-        ideas.add(await _api.fetchNextIdea());
+        final existingIds = state.whenOrNull(
+              data: (items) => items.map((idea) => idea.id),
+            ) ??
+            const <int>[];
+        final activeIds = [
+          ...ideas.map((idea) => idea.id),
+          ...existingIds,
+        ];
+        final idea = await _api.fetchNextIdea(excludeIds: activeIds);
+        if (!ideas.contains(idea)) ideas.add(idea);
       } catch (_) {
         break;
       }
@@ -68,6 +78,7 @@ class IdeaStackNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
   /// Add a single idea to the end of the stack (from WebSocket).
   void _addIdea(Idea idea) {
     state.whenData((ideas) {
+      if (ideas.contains(idea)) return;
       state = AsyncData([...ideas, idea]);
     });
   }
@@ -93,7 +104,11 @@ class IdeaStackNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
   /// Manually fetch and push the next idea.
   Future<void> fetchNext() async {
     try {
-      final idea = await _api.fetchNextIdea();
+      final activeIds = state.whenOrNull(
+            data: (ideas) => ideas.map((idea) => idea.id).toList(),
+          ) ??
+          const <int>[];
+      final idea = await _api.fetchNextIdea(excludeIds: activeIds);
       _addIdea(idea);
     } catch (e, st) {
       state = AsyncError(e, st);
@@ -102,7 +117,8 @@ class IdeaStackNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
 
   /// The current top idea (for display), or null if empty.
   Idea? get currentIdea {
-    return state.whenOrNull(data: (ideas) => ideas.isNotEmpty ? ideas[0] : null);
+    return state.whenOrNull(
+        data: (ideas) => ideas.isNotEmpty ? ideas[0] : null);
   }
 
   /// Number of ideas remaining in the stack.

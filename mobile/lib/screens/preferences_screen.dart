@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../i18n.dart';
 import '../models/preference.dart';
+import '../providers/language_provider.dart';
 import '../providers/preference_provider.dart';
-import '../theme/app_theme.dart';
 
 /// Preferences screen with category toggles and stats.
 ///
@@ -17,6 +18,7 @@ class PreferencesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final prefsAsync = ref.watch(preferenceProvider);
+    final language = ref.watch(languageProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -24,7 +26,7 @@ class PreferencesScreen extends ConsumerWidget {
         child: prefsAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => _buildError(context, e, ref),
-          data: (prefs) => _buildContent(context, theme, prefs, ref),
+          data: (prefs) => _buildContent(context, theme, prefs, ref, language),
         ),
       ),
     );
@@ -35,6 +37,7 @@ class PreferencesScreen extends ConsumerWidget {
     ThemeData theme,
     PreferenceVector prefs,
     WidgetRef ref,
+    AppLanguage language,
   ) {
     final isDark = theme.brightness == Brightness.dark;
 
@@ -44,40 +47,42 @@ class PreferencesScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header
-          Text('Preferences', style: theme.textTheme.headlineMedium),
+          Text(tr(language, 'preferences'),
+              style: theme.textTheme.headlineMedium),
           const SizedBox(height: 4),
           Text(
-            'Customise your idea feed',
+            tr(language, 'customiseFeed'),
             style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 24),
 
           // Stats summary
-          _buildStatsCard(context, prefs, isDark),
+          _buildStatsCard(context, prefs, isDark, language),
           const SizedBox(height: 24),
 
           // Liked categories
-          _buildSectionLabel(context, 'Liked Categories'),
+          _buildSectionLabel(context, tr(language, 'likedCategories')),
           const SizedBox(height: 8),
           if (prefs.likedCategories.isEmpty)
-            _buildEmptyHint(context, 'No liked categories yet. Start swiping!')
+            _buildEmptyHint(context, tr(language, 'noLikedCategories'))
           else
             _buildCategoryChips(
               context,
               categories: prefs.allLikedCategoryNames,
               selectedCategories: prefs.allLikedCategoryNames,
               excludedCategories: prefs.excludedCategories,
-              onToggle: (cat) =>
-                  ref.read(preferenceProvider.notifier).toggleLikedCategory(cat),
+              onToggle: (cat) => ref
+                  .read(preferenceProvider.notifier)
+                  .toggleLikedCategory(cat),
               isDark: isDark,
             ),
           const SizedBox(height: 24),
 
           // Excluded categories
-          _buildSectionLabel(context, 'Excluded Categories'),
+          _buildSectionLabel(context, tr(language, 'excludedCategories')),
           const SizedBox(height: 8),
           if (prefs.excludedCategories.isEmpty)
-            _buildEmptyHint(context, 'No excluded categories.')
+            _buildEmptyHint(context, tr(language, 'noExcludedCategories'))
           else
             _buildCategoryChips(
               context,
@@ -93,7 +98,7 @@ class PreferencesScreen extends ConsumerWidget {
           const SizedBox(height: 24),
 
           // All available categories
-          _buildSectionLabel(context, 'All Categories'),
+          _buildSectionLabel(context, tr(language, 'allCategories')),
           const SizedBox(height: 8),
           _buildCategoryChips(
             context,
@@ -109,9 +114,9 @@ class PreferencesScreen extends ConsumerWidget {
           // Reset button
           Center(
             child: TextButton.icon(
-              onPressed: () => _showResetDialog(context, ref),
+              onPressed: () => _showResetDialog(context, ref, language),
               icon: const Icon(Icons.refresh, size: 18),
-              label: const Text('Reset to defaults'),
+              label: Text(tr(language, 'resetToDefaults')),
               style: TextButton.styleFrom(
                 foregroundColor: theme.colorScheme.error,
               ),
@@ -123,8 +128,8 @@ class PreferencesScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatsCard(
-      BuildContext context, PreferenceVector prefs, bool isDark) {
+  Widget _buildStatsCard(BuildContext context, PreferenceVector prefs,
+      bool isDark, AppLanguage language) {
     final theme = Theme.of(context);
 
     return Card(
@@ -135,19 +140,19 @@ class PreferencesScreen extends ConsumerWidget {
           children: [
             _StatItem(
               value: prefs.totalSwipes.toString(),
-              label: 'Swipes',
+              label: tr(language, 'swipes'),
               icon: Icons.swipe,
               color: theme.colorScheme.primary,
             ),
             _StatItem(
               value: prefs.likedCategories.length.toString(),
-              label: 'Liked cats',
+              label: tr(language, 'likedCats'),
               icon: Icons.favorite,
               color: const Color(0xFF10B981),
             ),
             _StatItem(
               value: prefs.averageRating.toStringAsFixed(1),
-              label: 'Avg rating',
+              label: tr(language, 'avgRating'),
               icon: Icons.star,
               color: const Color(0xFFF59E0B),
             ),
@@ -170,11 +175,8 @@ class PreferencesScreen extends ConsumerWidget {
       child: Text(
         message,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.color
-                  ?.withAlpha(128),
+              color:
+                  Theme.of(context).textTheme.bodyMedium?.color?.withAlpha(128),
             ),
       ),
     );
@@ -202,9 +204,8 @@ class PreferencesScreen extends ConsumerWidget {
         } else if (isSelected) {
           chipColor = const Color(0xFF10B981);
         } else {
-          chipColor = isDark
-              ? const Color(0xFF30363D)
-              : const Color(0xFFE5E7EB);
+          chipColor =
+              isDark ? const Color(0xFF30363D) : const Color(0xFFE5E7EB);
         }
 
         return GestureDetector(
@@ -233,14 +234,12 @@ class PreferencesScreen extends ConsumerWidget {
                 if (isSelected)
                   Padding(
                     padding: const EdgeInsets.only(right: 6),
-                    child: Icon(Icons.check_circle,
-                        size: 16, color: chipColor),
+                    child: Icon(Icons.check_circle, size: 16, color: chipColor),
                   ),
                 if (isExcluded)
                   Padding(
                     padding: const EdgeInsets.only(right: 6),
-                    child: Icon(Icons.block,
-                        size: 16, color: chipColor),
+                    child: Icon(Icons.block, size: 16, color: chipColor),
                   ),
                 Text(
                   category,
@@ -267,7 +266,8 @@ class PreferencesScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.error_outline, size: 48, color: Theme.of(context).colorScheme.error),
+          Icon(Icons.error_outline,
+              size: 48, color: Theme.of(context).colorScheme.error),
           const SizedBox(height: 16),
           Text('Could not load preferences',
               style: Theme.of(context).textTheme.titleMedium),
@@ -281,18 +281,17 @@ class PreferencesScreen extends ConsumerWidget {
     );
   }
 
-  void _showResetDialog(BuildContext context, WidgetRef ref) {
+  void _showResetDialog(
+      BuildContext context, WidgetRef ref, AppLanguage language) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Reset preferences?'),
-        content: const Text(
-          'This will clear all your liked and excluded categories.',
-        ),
+        title: Text(tr(language, 'resetPreferences')),
+        content: Text(tr(language, 'resetMessage')),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancel'),
+            child: Text(tr(language, 'cancel')),
           ),
           TextButton(
             onPressed: () {
@@ -303,7 +302,7 @@ class PreferencesScreen extends ConsumerWidget {
                 prefs.toggleLikedCategory(cat);
               });
             },
-            child: const Text('Reset'),
+            child: Text(tr(language, 'reset')),
           ),
         ],
       ),

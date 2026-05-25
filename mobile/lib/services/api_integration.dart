@@ -16,13 +16,11 @@ import '../models/preference.dart';
 /// on non-2xx responses or network errors.
 class ApiIntegrationService {
   final Dio _dio;
-  final AppEnvironment _env;
 
   ApiIntegrationService({
     AppEnvironment? env,
     Dio? dio,
-  })  : _env = env ?? AppEnvironment.current,
-        _dio = dio ?? _createDio(env ?? AppEnvironment.current);
+  }) : _dio = dio ?? _createDio(env ?? AppEnvironment.current);
 
   /// Build a Dio instance with logging and error interceptors.
   static Dio _createDio(AppEnvironment env) {
@@ -139,8 +137,7 @@ class ApiIntegrationService {
   /// Fetch the current preference vector.
   Future<PreferenceVector> getPreferences() async {
     try {
-      final response =
-          await _dio.get<Map<String, dynamic>>('/api/preferences');
+      final response = await _dio.get<Map<String, dynamic>>('/api/preferences');
       final body = response.data;
       if (body != null && body['success'] == true) {
         return PreferenceVector.fromJson(body);

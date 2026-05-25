@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/idea.dart';
+import '../../providers/language_provider.dart';
 import 'card_overlay.dart';
 
 /// A Tinder-style swipeable idea card.
@@ -11,7 +13,7 @@ import 'card_overlay.dart';
 ///   - Exit animation when over threshold
 ///
 /// Threshold: 150px horizontal distance or 500px/s velocity.
-class SwipeableCard extends StatefulWidget {
+class SwipeableCard extends ConsumerStatefulWidget {
   /// The idea to display on this card.
   final Idea idea;
 
@@ -37,10 +39,10 @@ class SwipeableCard extends StatefulWidget {
   });
 
   @override
-  State<SwipeableCard> createState() => _SwipeableCardState();
+  ConsumerState<SwipeableCard> createState() => _SwipeableCardState();
 }
 
-class _SwipeableCardState extends State<SwipeableCard>
+class _SwipeableCardState extends ConsumerState<SwipeableCard>
     with SingleTickerProviderStateMixin {
   /// Current horizontal drag offset.
   double _dragX = 0;
@@ -161,7 +163,8 @@ class _SwipeableCardState extends State<SwipeableCard>
       onPanUpdate: _onPanUpdate,
       onPanEnd: _onPanEnd,
       child: AnimatedContainer(
-        duration: _isDragging ? Duration.zero : const Duration(milliseconds: 300),
+        duration:
+            _isDragging ? Duration.zero : const Duration(milliseconds: 300),
         curve: Curves.easeOut,
         transform: Matrix4.identity()
           ..translate(_dragX, 0, 0)
@@ -172,7 +175,8 @@ class _SwipeableCardState extends State<SwipeableCard>
             _buildCardContent(context),
             // Show overlay during drag
             if (_isDragging)
-              CardOverlay(dragProgress: (_dragX / _swipeThreshold).clamp(-1.0, 1.0)),
+              CardOverlay(
+                  dragProgress: (_dragX / _swipeThreshold).clamp(-1.0, 1.0)),
           ],
         ),
       ),
@@ -183,6 +187,7 @@ class _SwipeableCardState extends State<SwipeableCard>
     final idea = widget.idea;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final language = ref.watch(languageProvider);
 
     return Container(
       width: double.infinity,
@@ -202,14 +207,12 @@ class _SwipeableCardState extends State<SwipeableCard>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image placeholder (top 55% of card, 16:9 aspect ratio)
+          // Idea image (falls back to a category gradient).
           Container(
             height: 264, // ~55% of 480
             width: double.infinity,
             decoration: BoxDecoration(
-              color: isDark
-                  ? const Color(0xFF21262D)
-                  : const Color(0xFFF3F4F6),
+              color: isDark ? const Color(0xFF21262D) : const Color(0xFFF3F4F6),
               gradient: LinearGradient(
                 colors: [
                   _getCategoryColor(idea.category),
@@ -219,13 +222,25 @@ class _SwipeableCardState extends State<SwipeableCard>
                 end: Alignment.bottomRight,
               ),
             ),
-            child: Center(
-              child: Icon(
-                _getCategoryIcon(idea.category),
-                size: 64,
-                color: Colors.white.withAlpha(153),
-              ),
-            ),
+            child: idea.imageUrl != null
+                ? Image.network(
+                    idea.imageUrl!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Center(
+                      child: Icon(
+                        _getCategoryIcon(idea.category),
+                        size: 64,
+                        color: Colors.white.withAlpha(153),
+                      ),
+                    ),
+                  )
+                : Center(
+                    child: Icon(
+                      _getCategoryIcon(idea.category),
+                      size: 64,
+                      color: Colors.white.withAlpha(153),
+                    ),
+                  ),
           ),
 
           // Content padding
@@ -237,7 +252,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                 children: [
                   // Title — 2 lines max
                   Text(
-                    idea.titleAr ?? idea.title,
+                    idea.displayTitle(arabic: language.isArabic),
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontFamily: 'Roboto',
                     ),
@@ -276,7 +291,7 @@ class _SwipeableCardState extends State<SwipeableCard>
 
                   // Description — 3 lines max
                   Text(
-                    idea.description ?? 'No description',
+                    idea.displayDescription(arabic: language.isArabic),
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: isDark
                           ? const Color(0xFF8B949E)

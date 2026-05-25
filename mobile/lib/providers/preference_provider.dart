@@ -56,9 +56,7 @@ class PreferenceNotifier extends StateNotifier<AsyncValue<PreferenceVector>> {
     if (current == null) return;
 
     final updatedLiked = current.isCategoryLiked(category)
-        ? current.likedCategories
-            .where((c) => c.category != category)
-            .toList()
+        ? current.likedCategories.where((c) => c.category != category).toList()
         : [
             ...current.likedCategories,
             CategoryPreference(category: category, weight: 1.0),

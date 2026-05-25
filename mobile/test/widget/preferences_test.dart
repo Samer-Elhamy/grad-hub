@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:grad_projects_hub/models/preference.dart';
-import 'package:grad_projects_hub/providers/preference_provider.dart';
-import 'package:grad_projects_hub/screens/preferences_screen.dart';
+import 'package:grad_hub_mobile/models/preference.dart';
+import 'package:grad_hub_mobile/providers/preference_provider.dart';
+import 'package:grad_hub_mobile/screens/preferences_screen.dart';
 
 void main() {
   group('Preference Model Tests', () {
@@ -140,7 +140,8 @@ void main() {
   });
 
   group('Preferences Screen Widget Tests', () {
-    testWidgets('shows loading indicator while loading', (WidgetTester tester) async {
+    testWidgets('shows loading indicator while loading',
+        (WidgetTester tester) async {
       // Create a provider that always returns loading state
       final loadingPrefProvider = FutureProvider<PreferenceVector>((ref) async {
         await Future.delayed(const Duration(seconds: 1));
@@ -150,7 +151,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            preferenceProvider.overrideWith((ref) => ref.watch(loadingPrefProvider)),
+            preferenceProvider
+                .overrideWith((ref) => ref.watch(loadingPrefProvider)),
           ],
           child: const MaterialApp(
             home: PreferencesScreen(),
@@ -190,7 +192,8 @@ void main() {
       expect(find.text('Preferences'), findsOneWidget);
     });
 
-    testWidgets('displays stats summary when data loaded', (WidgetTester tester) async {
+    testWidgets('displays stats summary when data loaded',
+        (WidgetTester tester) async {
       final mockPrefs = PreferenceVector(
         likedCategories: const [
           CategoryPreference(category: 'AI/ML', weight: 0.9),
@@ -219,7 +222,8 @@ void main() {
       expect(find.text('4.5'), findsOneWidget); // Avg rating
     });
 
-    testWidgets('shows empty hint when no liked categories', (WidgetTester tester) async {
+    testWidgets('shows empty hint when no liked categories',
+        (WidgetTester tester) async {
       final mockPrefs = PreferenceVector(
         likedCategories: const [],
         totalSwipes: 0,
@@ -241,7 +245,8 @@ void main() {
       expect(find.textContaining('No liked'), findsOneWidget);
     });
 
-    testWidgets('shows excluded categories section', (WidgetTester tester) async {
+    testWidgets('shows excluded categories section',
+        (WidgetTester tester) async {
       final mockPrefs = PreferenceVector(
         excludedCategories: const ['Embedded Systems', 'IoT Hardware'],
       );
@@ -262,7 +267,8 @@ void main() {
       expect(find.text('Excluded Categories'), findsOneWidget);
     });
 
-    testWidgets('shows empty hint when no excluded categories', (WidgetTester tester) async {
+    testWidgets('shows empty hint when no excluded categories',
+        (WidgetTester tester) async {
       final mockPrefs = PreferenceVector(
         excludedCategories: const [],
       );
@@ -321,7 +327,8 @@ void main() {
       expect(find.text('Reset to defaults'), findsOneWidget);
     });
 
-    testWidgets('shows error state on failure and allows retry', (WidgetTester tester) async {
+    testWidgets('shows error state on failure and allows retry',
+        (WidgetTester tester) async {
       // Create a provider that throws
       final errorProvider = FutureProvider<PreferenceVector>((ref) async {
         throw Exception('Network error');
@@ -358,9 +365,14 @@ void main() {
 
       // Check for common categories
       expect(categories.any((c) => c.toLowerCase().contains('web')), isTrue);
-      expect(categories.any((c) => c.toLowerCase().contains('ai') || c.toLowerCase().contains('machine')), isTrue);
+      expect(
+          categories.any((c) =>
+              c.toLowerCase().contains('ai') ||
+              c.toLowerCase().contains('machine')),
+          isTrue);
       expect(categories.any((c) => c.toLowerCase().contains('mobile')), isTrue);
-      expect(categories.any((c) => c.toLowerCase().contains('security')), isTrue);
+      expect(
+          categories.any((c) => c.toLowerCase().contains('security')), isTrue);
     });
   });
 

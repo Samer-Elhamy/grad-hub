@@ -62,12 +62,15 @@ class WebSocketIntegration {
   Stream<WsEvent> get eventStream => _eventController.stream;
 
   /// Convenience stream filtered to [WsNewIdeaEvent] only.
-  Stream<Idea> get ideaStream =>
-      eventStream.whereType<WsNewIdeaEvent>().map((e) => e.idea);
+  Stream<Idea> get ideaStream => eventStream
+      .where((event) => event is WsNewIdeaEvent)
+      .cast<WsNewIdeaEvent>()
+      .map((event) => event.idea);
 
   /// Convenience stream filtered to [WsPreferenceUpdateEvent] only.
-  Stream<WsPreferenceUpdateEvent> get preferenceUpdateStream =>
-      eventStream.whereType<WsPreferenceUpdateEvent>();
+  Stream<WsPreferenceUpdateEvent> get preferenceUpdateStream => eventStream
+      .where((event) => event is WsPreferenceUpdateEvent)
+      .cast<WsPreferenceUpdateEvent>();
 
   /// Whether the service is currently connected.
   bool _connected = false;
@@ -152,16 +155,14 @@ class WebSocketIntegration {
       switch (type) {
         case 'new_idea':
           if (json['data'] != null) {
-            final idea =
-                Idea.fromJson(json['data'] as Map<String, dynamic>);
+            final idea = Idea.fromJson(json['data'] as Map<String, dynamic>);
             _eventController.add(WsNewIdeaEvent(idea));
           }
         case 'preference_update':
           final data = json['data'] as Map<String, dynamic>?;
           _eventController.add(WsPreferenceUpdateEvent(
             acknowledged: json['acknowledged'] as bool? ?? true,
-            preferences:
-                data != null ? PreferenceVector.fromJson(data) : null,
+            preferences: data != null ? PreferenceVector.fromJson(data) : null,
           ));
         default:
           _eventController.add(WsUnknownEvent(json));

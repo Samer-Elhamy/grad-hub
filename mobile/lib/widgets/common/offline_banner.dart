@@ -157,13 +157,18 @@ class _OfflineBannerState extends State<OfflineBanner>
                 child: Text(
                   _showSyncing
                       ? (widget.onlineMessage ?? 'Back online — syncing...')
-                      : (widget.offlineMessage ?? "You're offline — swipes saved locally"),
+                      : (widget.offlineMessage ??
+                          "You're offline — swipes saved locally"),
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                     color: _showSyncing
-                        ? (isDark ? const Color(0xFFA7F3D0) : const Color(0xFF065F46))
-                        : (isDark ? const Color(0xFFFDE68A) : const Color(0xFF92400E)),
+                        ? (isDark
+                            ? const Color(0xFFA7F3D0)
+                            : const Color(0xFF065F46))
+                        : (isDark
+                            ? const Color(0xFFFDE68A)
+                            : const Color(0xFF92400E)),
                   ),
                   textAlign: TextAlign.center,
                 ),

@@ -1,3 +1,5 @@
+import 'idea.dart';
+
 /// Direction of a swipe gesture.
 enum SwipeDirection {
   /// Swiped left — dislike / nope.
@@ -12,22 +14,27 @@ enum SwipeDirection {
 
 /// Records a single swipe interaction for API submission and history.
 class SwipeRecord {
+  final String? id;
   final int ideaId;
   final SwipeDirection direction;
   final double? rating;
   final int dwellTimeMs;
   final DateTime timestamp;
+  final Idea? idea;
 
   SwipeRecord({
+    this.id,
     required this.ideaId,
     required this.direction,
     this.rating,
     this.dwellTimeMs = 0,
     DateTime? timestamp,
+    this.idea,
   }) : timestamp = timestamp ?? DateTime.now().toUtc();
 
   factory SwipeRecord.fromJson(Map<String, dynamic> json) {
     return SwipeRecord(
+      id: json['id'] as String?,
       ideaId: json['idea_id'] as int,
       direction: SwipeDirection.values.firstWhere(
         (d) => d.name == json['direction'],
@@ -38,15 +45,20 @@ class SwipeRecord {
       timestamp: json['timestamp'] != null
           ? DateTime.parse(json['timestamp'] as String)
           : DateTime.now().toUtc(),
+      idea: json['idea'] is Map<String, dynamic>
+          ? Idea.fromJson(json['idea'] as Map<String, dynamic>)
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() => {
+        if (id != null) 'id': id,
         'idea_id': ideaId,
         'direction': direction.name,
         if (rating != null) 'rating': rating,
         'dwell_time_ms': dwellTimeMs,
         'timestamp': timestamp.toIso8601String(),
+        if (idea != null) 'idea': idea!.toJson(),
       };
 }
 
@@ -54,17 +66,21 @@ class SwipeRecord {
 class SwipeResult {
   final bool success;
   final bool preferenceUpdated;
+  final String? swipeId;
 
   const SwipeResult({
     required this.success,
     this.preferenceUpdated = false,
+    this.swipeId,
   });
 
   factory SwipeResult.fromJson(Map<String, dynamic> json) {
     final data = json['data'] as Map<String, dynamic>?;
     return SwipeResult(
       success: json['success'] as bool? ?? false,
-      preferenceUpdated: data?['preference_updated'] as bool? ?? false,
+      preferenceUpdated: data?['preference_updated'] as bool? ??
+          data?['updated_preferences'] != null,
+      swipeId: data?['swipe_id'] as String?,
     );
   }
 }
@@ -86,7 +102,10 @@ class HistoryResponse {
   });
 
   factory HistoryResponse.fromJson(Map<String, dynamic> json) {
-    final data = json['data'] as List<dynamic>? ?? [];
+    final rawData = json['data'];
+    final data = rawData is Map<String, dynamic>
+        ? rawData['records'] as List<dynamic>? ?? []
+        : rawData as List<dynamic>? ?? [];
     final meta = json['meta'] as Map<String, dynamic>? ?? {};
     return HistoryResponse(
       items: data

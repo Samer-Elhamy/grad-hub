@@ -14,7 +14,7 @@ class ApiService {
 
   ApiService({
     http.Client? client,
-    this.baseUrl = 'http://localhost:3000',
+    this.baseUrl = 'http://10.0.2.2:3000',
   }) : _client = client ?? http.Client();
 
   /// Close the underlying HTTP client.
@@ -23,9 +23,13 @@ class ApiService {
   // ── Ideas ─────────────────────────────────────────────────
 
   /// Fetch the next recommended idea from the API.
-  Future<Idea> fetchNextIdea() async {
-    final uri = Uri.parse('$baseUrl/api/ideas/next');
-    final response = await _client.get(uri).timeout(const Duration(seconds: 10));
+  Future<Idea> fetchNextIdea({List<int> excludeIds = const []}) async {
+    final uri = Uri.parse('$baseUrl/api/ideas/next').replace(
+      queryParameters:
+          excludeIds.isEmpty ? null : {'exclude_ids': excludeIds.join(',')},
+    );
+    final response =
+        await _client.get(uri).timeout(const Duration(seconds: 10));
 
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as Map<String, dynamic>;
@@ -50,7 +54,7 @@ class ApiService {
         )
         .timeout(const Duration(seconds: 10));
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       return SwipeResult.fromJson(json);
     }
@@ -97,13 +101,13 @@ class ApiService {
   Future<HistoryResponse> fetchHistory({
     int page = 1,
     int limit = 20,
-    String? direction,
+    String? filter,
   }) async {
     final params = <String, String>{
       'page': page.toString(),
       'limit': limit.toString(),
     };
-    if (direction != null) params['direction'] = direction;
+    if (filter != null) params['filter'] = filter;
 
     final uri =
         Uri.parse('$baseUrl/api/history').replace(queryParameters: params);

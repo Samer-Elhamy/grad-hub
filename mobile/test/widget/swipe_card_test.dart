@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:grad_projects_hub/widgets/card/swipeable_card.dart';
-import 'package:grad_projects_hub/models/idea.dart';
+import 'package:grad_hub_mobile/widgets/card/swipeable_card.dart';
+import 'package:grad_hub_mobile/models/idea.dart';
 
 void main() {
   group('SwipeableCard Widget Tests', () {
@@ -10,7 +10,8 @@ void main() {
       id: 1,
       title: 'AI-Powered Chatbot',
       titleAr: 'شات بوت مدعوم بالذكاء الاصطناعي',
-      description: 'A modern chatbot using machine learning for natural language processing.',
+      description:
+          'A modern chatbot using machine learning for natural language processing.',
       category: 'Machine Learning',
       university: 'MIT',
       difficulty: 'intermediate',
@@ -36,7 +37,8 @@ void main() {
       expect(find.text('AI-Powered Chatbot'), findsOneWidget);
     });
 
-    testWidgets('renders card with idea description', (WidgetTester tester) async {
+    testWidgets('renders card with idea description',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         MaterialApp(
@@ -52,12 +54,14 @@ void main() {
 
       // Assert
       expect(
-        find.text('A modern chatbot using machine learning for natural language processing.'),
+        find.text(
+            'A modern chatbot using machine learning for natural language processing.'),
         findsOneWidget,
       );
     });
 
-    testWidgets('renders card with university name', (WidgetTester tester) async {
+    testWidgets('renders card with university name',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         MaterialApp(
@@ -75,7 +79,8 @@ void main() {
       expect(find.text('MIT'), findsOneWidget);
     });
 
-    testWidgets('renders card with difficulty display', (WidgetTester tester) async {
+    testWidgets('renders card with difficulty display',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         MaterialApp(
@@ -113,7 +118,8 @@ void main() {
       expect(find.text('NLP'), findsOneWidget);
     });
 
-    testWidgets('calls onSwipedRight when swiped right past threshold', (WidgetTester tester) async {
+    testWidgets('calls onSwipedRight when swiped right past threshold',
+        (WidgetTester tester) async {
       // Arrange
       bool wasSwipedRight = false;
 
@@ -142,7 +148,8 @@ void main() {
       expect(wasSwipedRight, isTrue);
     });
 
-    testWidgets('calls onSwipedLeft when swiped left past threshold', (WidgetTester tester) async {
+    testWidgets('calls onSwipedLeft when swiped left past threshold',
+        (WidgetTester tester) async {
       // Arrange
       bool wasSwipedLeft = false;
 
@@ -171,7 +178,8 @@ void main() {
       expect(wasSwipedLeft, isTrue);
     });
 
-    testWidgets('does not call swipe callbacks when dragged under threshold', (WidgetTester tester) async {
+    testWidgets('does not call swipe callbacks when dragged under threshold',
+        (WidgetTester tester) async {
       // Arrange
       bool wasSwiped = false;
 
@@ -193,7 +201,8 @@ void main() {
 
       // Act: Drag right but under threshold (150px)
       final cardFinder = find.byType(SwipeableCard);
-      await tester.drag(cardFinder, const Offset(100, 0)); // Only 100px, under 150px threshold
+      await tester.drag(cardFinder,
+          const Offset(100, 0)); // Only 100px, under 150px threshold
       await tester.pumpAndSettle();
 
       // Assert
@@ -257,7 +266,8 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('renders category icon based on category', (WidgetTester tester) async {
+    testWidgets('renders category icon based on category',
+        (WidgetTester tester) async {
       // Arrange: Test different categories
       final categories = [
         'Web Development',
@@ -298,7 +308,8 @@ void main() {
   });
 
   group('SwipeableCard Edge Cases', () {
-    testWidgets('handles null description gracefully', (WidgetTester tester) async {
+    testWidgets('handles null description gracefully',
+        (WidgetTester tester) async {
       // Arrange
       const idea = Idea(
         id: 1,
@@ -348,7 +359,8 @@ void main() {
       expect(find.text('Idea Without Tech'), findsOneWidget);
     });
 
-    testWidgets('displays Arabic title when available', (WidgetTester tester) async {
+    testWidgets('displays Arabic title when available',
+        (WidgetTester tester) async {
       // Arrange
       const idea = Idea(
         id: 1,

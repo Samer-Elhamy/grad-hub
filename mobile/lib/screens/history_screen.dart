@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../i18n.dart';
 import '../models/swipe.dart';
-import '../services/api_service.dart';
 import '../providers/idea_provider.dart';
+import '../providers/language_provider.dart';
 
 /// State for the history screen.
 class HistoryScreenState {
@@ -57,7 +58,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   HistoryScreenState _state = const HistoryScreenState();
   final ScrollController _scrollController = ScrollController();
 
-  static const _filters = ['all', 'liked', 'disliked'];
+  static const _filters = ['all', 'starred', 'liked', 'disliked'];
 
   @override
   void initState() {
@@ -82,12 +83,14 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     }
   }
 
-  String _getDirectionParam() {
+  String _getFilterParam() {
     switch (_state.activeFilter) {
+      case 'starred':
+        return 'starred';
       case 'liked':
-        return 'right';
+        return 'liked';
       case 'disliked':
-        return 'left';
+        return 'disliked';
       default:
         return '';
     }
@@ -98,11 +101,11 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
 
     try {
       final api = ref.read(apiServiceProvider);
-      final direction = _getDirectionParam();
+      final filter = _getFilterParam();
       final response = await api.fetchHistory(
         page: 1,
         limit: 20,
-        direction: direction.isNotEmpty ? direction : null,
+        filter: filter.isNotEmpty ? filter : null,
       );
 
       setState(() => _state = _state.copyWith(
@@ -125,12 +128,12 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
 
     try {
       final api = ref.read(apiServiceProvider);
-      final direction = _getDirectionParam();
+      final filter = _getFilterParam();
       final nextPage = _state.currentPage + 1;
       final response = await api.fetchHistory(
         page: nextPage,
         limit: 20,
-        direction: direction.isNotEmpty ? direction : null,
+        filter: filter.isNotEmpty ? filter : null,
       );
 
       setState(() => _state = _state.copyWith(
@@ -151,13 +154,15 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
 
   void _setFilter(String filter) {
     if (filter == _state.activeFilter) return;
-    setState(() => _state = _state.copyWith(activeFilter: filter, currentPage: 1));
+    setState(
+        () => _state = _state.copyWith(activeFilter: filter, currentPage: 1));
     _loadHistory();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final language = ref.watch(languageProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -167,7 +172,8 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
             // Header
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
-              child: Text('History', style: theme.textTheme.headlineMedium),
+              child: Text(tr(language, 'history'),
+                  style: theme.textTheme.headlineMedium),
             ),
 
             // Filter chips
@@ -179,7 +185,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                   return Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: FilterChip(
-                      label: Text(filter[0].toUpperCase() + filter.substring(1)),
+                      label: Text(_filterLabel(language, filter)),
                       selected: isActive,
                       onSelected: (_) => _setFilter(filter),
                       selectedColor: theme.colorScheme.primary.withAlpha(38),
@@ -199,6 +205,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   }
 
   Widget _buildBody(ThemeData theme) {
+    final language = ref.watch(languageProvider);
     if (_state.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -210,9 +217,11 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
           children: [
             Icon(Icons.error_outline, size: 48, color: theme.colorScheme.error),
             const SizedBox(height: 12),
-            Text('Failed to load history', style: theme.textTheme.bodyLarge),
+            Text(tr(language, 'failedToLoadHistory'),
+                style: theme.textTheme.bodyLarge),
             const SizedBox(height: 8),
-            ElevatedButton(onPressed: _loadHistory, child: const Text('Retry')),
+            ElevatedButton(
+                onPressed: _loadHistory, child: Text(tr(language, 'retry'))),
           ],
         ),
       );
@@ -223,11 +232,14 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.history, size: 64, color: theme.textTheme.bodyMedium?.color?.withAlpha(77)),
+            Icon(Icons.history,
+                size: 64,
+                color: theme.textTheme.bodyMedium?.color?.withAlpha(77)),
             const SizedBox(height: 16),
-            Text('No swipes yet', style: theme.textTheme.titleMedium),
+            Text(tr(language, 'noSwipesYet'),
+                style: theme.textTheme.titleMedium),
             const SizedBox(height: 8),
-            Text('Start swiping to build your history.',
+            Text(tr(language, 'startSwiping'),
                 style: theme.textTheme.bodyMedium),
           ],
         ),
@@ -255,9 +267,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   }
 
   Widget _buildHistoryItem(SwipeRecord record, ThemeData theme) {
-    final isLiked = record.direction == SwipeDirection.right;
-    final isSuperlike = record.direction == SwipeDirection.up;
     final isDark = theme.brightness == Brightness.dark;
+    final idea = record.idea;
+    final language = ref.watch(languageProvider);
 
     IconData directionIcon;
     Color directionColor;
@@ -267,75 +279,204 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
       case SwipeDirection.right:
         directionIcon = Icons.favorite_rounded;
         directionColor = const Color(0xFF10B981);
-        directionLabel = 'Liked';
+        directionLabel = tr(language, 'liked');
       case SwipeDirection.left:
         directionIcon = Icons.close_rounded;
         directionColor = const Color(0xFFEF4444);
-        directionLabel = 'Disliked';
+        directionLabel = tr(language, 'disliked');
       case SwipeDirection.up:
         directionIcon = Icons.star_rounded;
         directionColor = const Color(0xFF8B5CF6);
-        directionLabel = 'Super liked';
+        directionLabel = tr(language, 'superLiked');
     }
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            // Direction indicator
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: directionColor.withAlpha(26),
-              ),
-              child: Icon(directionIcon, color: directionColor, size: 20),
-            ),
-            const SizedBox(width: 12),
-
-            // Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Idea #${record.ideaId}',
-                    style: theme.textTheme.titleSmall,
+      child: InkWell(
+        onTap: idea == null ? null : () => _showIdeaDetails(record),
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              if (idea?.imageUrl != null) ...[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    idea!.imageUrl!,
+                    width: 72,
+                    height: 72,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      width: 72,
+                      height: 72,
+                      color: isDark
+                          ? const Color(0xFF21262D)
+                          : const Color(0xFFE5E7EB),
+                      child: const Icon(Icons.image_not_supported_outlined),
+                    ),
                   ),
-                  const SizedBox(height: 2),
-                  Row(
-                    children: [
+                ),
+                const SizedBox(width: 12),
+              ],
+              // Direction indicator
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: directionColor.withAlpha(26),
+                ),
+                child: Icon(directionIcon, color: directionColor, size: 20),
+              ),
+              const SizedBox(width: 12),
+
+              // Info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      idea?.displayTitle(arabic: language.isArabic) ??
+                          tr(language, 'ideaDetailsUnavailable'),
+                      style: theme.textTheme.titleSmall,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (idea
+                            ?.displayDescription(arabic: language.isArabic)
+                            .isNotEmpty ==
+                        true) ...[
+                      const SizedBox(height: 4),
                       Text(
-                        directionLabel,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: directionColor,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        idea!.displayDescription(arabic: language.isArabic),
+                        style: theme.textTheme.bodySmall,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      if (record.rating != null) ...[
-                        const SizedBox(width: 8),
-                        Text(
-                          'Rating: ${record.rating!.toStringAsFixed(1)}',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                      ],
                     ],
-                  ),
-                ],
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        Text(
+                          directionLabel,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: directionColor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        if (idea?.category != null) ...[
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Text(
+                              idea!.category!,
+                              style: theme.textTheme.bodySmall,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                        if (record.rating != null) ...[
+                          const SizedBox(width: 8),
+                          Text(
+                            'Rating: ${record.rating!.toStringAsFixed(1)}',
+                            style: theme.textTheme.bodySmall,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            // Timestamp
-            Text(
-              _formatDate(record.timestamp),
-              style: theme.textTheme.bodySmall,
-            ),
-          ],
+              // Timestamp
+              Text(
+                _formatDate(record.timestamp),
+                style: theme.textTheme.bodySmall,
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  String _filterLabel(AppLanguage language, String filter) {
+    switch (filter) {
+      case 'starred':
+        return tr(language, 'starred');
+      case 'liked':
+        return tr(language, 'liked');
+      case 'disliked':
+        return tr(language, 'disliked');
+      default:
+        return tr(language, 'all');
+    }
+  }
+
+  void _showIdeaDetails(SwipeRecord record) {
+    final idea = record.idea;
+    if (idea == null) return;
+    final language = ref.read(languageProvider);
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (context) {
+        final theme = Theme.of(context);
+        return DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: 0.75,
+          maxChildSize: 0.92,
+          builder: (context, controller) => ListView(
+            controller: controller,
+            padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
+            children: [
+              if (idea.imageUrl != null)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.network(
+                    idea.imageUrl!,
+                    height: 190,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              const SizedBox(height: 16),
+              Text(idea.displayTitle(arabic: language.isArabic),
+                  style: theme.textTheme.headlineSmall),
+              const SizedBox(height: 8),
+              Text(idea.displayDescription(arabic: language.isArabic),
+                  style: theme.textTheme.bodyMedium),
+              if (idea.university != null || idea.country != null) ...[
+                const SizedBox(height: 12),
+                Text(
+                  [idea.university, idea.country]
+                      .whereType<String>()
+                      .join(' · '),
+                  style: theme.textTheme.bodySmall,
+                ),
+              ],
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: idea.technologies
+                    .map((tech) => Chip(label: Text(tech)))
+                    .toList(),
+              ),
+              if (idea.sourceUrl != null) ...[
+                const SizedBox(height: 16),
+                SelectableText(
+                  '${tr(language, 'moreDetails')}: ${idea.sourceUrl}',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      },
     );
   }
 

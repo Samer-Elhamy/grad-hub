@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../i18n.dart';
+import '../providers/language_provider.dart';
 import '../screens/main_feed_screen.dart';
 import '../screens/history_screen.dart';
 import '../screens/preferences_screen.dart';
-import '../theme/app_theme.dart';
 
 /// Route path constants for the app.
 class AppRoutes {
@@ -67,7 +69,7 @@ class _ShellScaffold extends StatelessWidget {
 }
 
 /// Bottom navigation bar with three tabs.
-class _BottomNavBar extends StatelessWidget {
+class _BottomNavBar extends ConsumerWidget {
   _BottomNavBar({super.key});
 
   /// Map of route → tab index.
@@ -86,8 +88,9 @@ class _BottomNavBar extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final currentIndex = _currentIndex(context);
+    final language = ref.watch(languageProvider);
 
     return BottomNavigationBar(
       currentIndex: currentIndex,
@@ -97,21 +100,21 @@ class _BottomNavBar extends StatelessWidget {
           context.go(route);
         }
       },
-      items: const [
+      items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.explore_outlined),
-          activeIcon: Icon(Icons.explore),
-          label: 'Discover',
+          icon: const Icon(Icons.explore_outlined),
+          activeIcon: const Icon(Icons.explore),
+          label: tr(language, 'discover'),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.history_outlined),
-          activeIcon: Icon(Icons.history),
-          label: 'History',
+          icon: const Icon(Icons.history_outlined),
+          activeIcon: const Icon(Icons.history),
+          label: tr(language, 'history'),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.tune_outlined),
-          activeIcon: Icon(Icons.tune),
-          label: 'Preferences',
+          icon: const Icon(Icons.tune_outlined),
+          activeIcon: const Icon(Icons.tune),
+          label: tr(language, 'preferences'),
         ),
       ],
     );

@@ -104,7 +104,9 @@ class _EmptyStateState extends State<EmptyState>
             Text(
               widget.message ?? 'Searching for ideas...',
               style: theme.textTheme.titleMedium?.copyWith(
-                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimaryLight,
               ),
               textAlign: TextAlign.center,
             ),
@@ -115,7 +117,7 @@ class _EmptyStateState extends State<EmptyState>
             Text(
               widget.subtitle ??
                   'Our Deep Search Agent is scanning university repositories '
-                  'and trending projects to find ideas that match your preferences.',
+                      'and trending projects to find ideas that match your preferences.',
               style: theme.textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
@@ -141,16 +143,21 @@ class _EmptyStateState extends State<EmptyState>
                   margin: const EdgeInsets.symmetric(horizontal: 4),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: isDark ? AppColors.primaryDark : AppColors.primaryLight,
+                    color:
+                        isDark ? AppColors.primaryDark : AppColors.primaryLight,
                   ),
-                ).animate(
-                  onPlay: (controller) => controller.repeat(),
-                ).fadeIn(
-                  duration: 600.ms,
-                  delay: (i * 200).ms,
-                ).then().fadeOut(
-                  duration: 600.ms,
-                );
+                )
+                    .animate(
+                      onPlay: (controller) => controller.repeat(),
+                    )
+                    .fadeIn(
+                      duration: 600.ms,
+                      delay: (i * 200).ms,
+                    )
+                    .then()
+                    .fadeOut(
+                      duration: 600.ms,
+                    );
               }),
             ),
 
@@ -204,12 +211,18 @@ class _SearchIndicator extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: primary.withAlpha(60), width: 2),
             ),
-          ).animate(onPlay: (controller) => controller.repeat()).scale(
-            duration: 2000.ms,
-            begin: const Offset(1, 1),
-            end: const Offset(1.3, 1.3),
-            curve: Curves.easeInOut,
-          ).then().fadeOut(duration: 500.ms).then().fadeIn(duration: 500.ms),
+          )
+              .animate(onPlay: (controller) => controller.repeat())
+              .scale(
+                duration: 2000.ms,
+                begin: const Offset(1, 1),
+                end: const Offset(1.3, 1.3),
+                curve: Curves.easeInOut,
+              )
+              .then()
+              .fadeOut(duration: 500.ms)
+              .then()
+              .fadeIn(duration: 500.ms),
 
           // Inner pulse ring
           Container(
@@ -219,13 +232,19 @@ class _SearchIndicator extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: primary.withAlpha(100), width: 2),
             ),
-          ).animate(onPlay: (controller) => controller.repeat()).scale(
-            duration: 2000.ms,
-            delay: 500.ms,
-            begin: const Offset(1, 1),
-            end: const Offset(1.2, 1.2),
-            curve: Curves.easeInOut,
-          ).then().fadeOut(duration: 500.ms).then().fadeIn(duration: 500.ms),
+          )
+              .animate(onPlay: (controller) => controller.repeat())
+              .scale(
+                duration: 2000.ms,
+                delay: 500.ms,
+                begin: const Offset(1, 1),
+                end: const Offset(1.2, 1.2),
+                curve: Curves.easeInOut,
+              )
+              .then()
+              .fadeOut(duration: 500.ms)
+              .then()
+              .fadeIn(duration: 500.ms),
 
           // Search icon
           Icon(

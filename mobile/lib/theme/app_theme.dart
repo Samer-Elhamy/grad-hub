@@ -223,8 +223,7 @@ class AppTheme {
     final isDark = brightness == Brightness.dark;
     return InputDecorationTheme(
       filled: true,
-      fillColor:
-          isDark ? AppColors.surfaceAltDark : AppColors.surfaceAltLight,
+      fillColor: isDark ? AppColors.surfaceAltDark : AppColors.surfaceAltLight,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(
@@ -249,9 +248,8 @@ class AppTheme {
         vertical: AppSpacing.md,
       ),
       hintStyle: TextStyle(
-        color: isDark
-            ? AppColors.textTertiaryDark
-            : AppColors.textTertiaryLight,
+        color:
+            isDark ? AppColors.textTertiaryDark : AppColors.textTertiaryLight,
       ),
     );
   }
@@ -270,8 +268,7 @@ class AppTheme {
         fontFamily: 'Roboto',
         fontSize: 20,
         fontWeight: FontWeight.w600,
-        color:
-            isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
       ),
     );
   }
@@ -279,8 +276,7 @@ class AppTheme {
   static BottomNavigationBarThemeData _bottomNavTheme(Brightness brightness) {
     final isDark = brightness == Brightness.dark;
     return BottomNavigationBarThemeData(
-      backgroundColor:
-          isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+      backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
       selectedItemColor:
           isDark ? AppColors.primaryDark : AppColors.primaryLight,
       unselectedItemColor:
@@ -298,14 +294,12 @@ class AppTheme {
       selectedColor: isDark
           ? AppColors.primaryDark.withAlpha(51)
           : AppColors.primaryLight.withAlpha(51),
-      disabledColor: isDark
-          ? AppColors.surfaceAltDark
-          : AppColors.surfaceAltLight,
+      disabledColor:
+          isDark ? AppColors.surfaceAltDark : AppColors.surfaceAltLight,
       labelStyle: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w500,
-        color:
-            isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
       ),
       secondaryLabelStyle: TextStyle(
         fontSize: 14,

@@ -145,9 +145,7 @@ class _UndoToastWidgetState extends State<_UndoToastWidget>
                 vertical: 12,
               ),
               decoration: BoxDecoration(
-                color: isDark
-                    ? AppColors.surfaceDark
-                    : AppColors.surfaceLight,
+                color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
                   color: isDark ? AppColors.borderDark : AppColors.borderLight,

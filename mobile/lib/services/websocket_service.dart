@@ -33,8 +33,7 @@ class WebSocketService {
   bool _connected = false;
   bool get isConnected => _connected;
 
-  WebSocketService({required String wsUrl})
-      : _wsUrl = wsUrl;
+  WebSocketService({required String wsUrl}) : _wsUrl = wsUrl;
 
   /// Connect to the WebSocket server.
   void connect() {

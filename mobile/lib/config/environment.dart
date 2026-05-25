@@ -25,11 +25,11 @@ class AppEnvironment {
 
   // ── Predefined environments ─────────────────────────────────
 
-  /// Local development — points to the backend running on localhost:3000.
+  /// Local Android emulator development — maps host localhost to 10.0.2.2.
   static const AppEnvironment development = AppEnvironment._(
     name: 'development',
-    baseUrl: 'http://localhost:3000',
-    wsUrl: 'ws://localhost:3000/ws/stream',
+    baseUrl: 'http://10.0.2.2:3000',
+    wsUrl: 'ws://10.0.2.2:3000/ws/stream',
   );
 
   /// Production — override URLs via env or config file.

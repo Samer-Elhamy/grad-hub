@@ -73,12 +73,10 @@ class _ShimmerBlockState extends State<ShimmerBlock>
           return CustomPaint(
             painter: _ShimmerPainter(
               progress: _animation.value,
-              baseColor: isDark
-                  ? AppColors.surfaceDark
-                  : AppColors.surfaceLight,
-              highlightColor: isDark
-                  ? AppColors.surfaceAltDark
-                  : AppColors.surfaceAltLight,
+              baseColor:
+                  isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+              highlightColor:
+                  isDark ? AppColors.surfaceAltDark : AppColors.surfaceAltLight,
             ),
           );
         },

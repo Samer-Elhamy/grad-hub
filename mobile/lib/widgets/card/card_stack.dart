@@ -136,17 +136,14 @@ class CardStack extends StatelessWidget {
             height: 200,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: isDark
-                  ? const Color(0xFF21262D)
-                  : const Color(0xFFF3F4F6),
+              color: isDark ? const Color(0xFF21262D) : const Color(0xFFF3F4F6),
             ),
             child: Center(
               child: Icon(
                 Icons.lightbulb_outline,
                 size: 40,
-                color: isDark
-                    ? const Color(0xFF484F58)
-                    : const Color(0xFFD1D5DB),
+                color:
+                    isDark ? const Color(0xFF484F58) : const Color(0xFFD1D5DB),
               ),
             ),
           ),
@@ -209,9 +206,8 @@ class CardStack extends StatelessWidget {
 
   Widget _buildSkeletonCard(BuildContext context, {bool isTop = false}) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final shimmerColor = isDark
-        ? const Color(0xFF21262D)
-        : const Color(0xFFF3F4F6);
+    final shimmerColor =
+        isDark ? const Color(0xFF21262D) : const Color(0xFFF3F4F6);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 800),
@@ -231,9 +227,7 @@ class CardStack extends StatelessWidget {
             height: 264,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: isDark
-                  ? const Color(0xFF30363D)
-                  : const Color(0xFFE5E7EB),
+              color: isDark ? const Color(0xFF30363D) : const Color(0xFFE5E7EB),
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(16),
               ),

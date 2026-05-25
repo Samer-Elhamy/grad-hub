@@ -2,9 +2,8 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/idea_provider.dart';
 import '../../theme/app_theme.dart';
-import '../../services/websocket_service.dart';
-import '../common/loading_indicator.dart';
 
 /// Provider that exposes WebSocket connection status.
 final wsConnectionStatusProvider = Provider<WsConnectionStatus>((ref) {
@@ -352,7 +351,9 @@ class _ConnectionStatus extends StatelessWidget {
               fontWeight: FontWeight.w500,
               color: isConnected
                   ? (isDark ? const Color(0xFFA7F3D0) : const Color(0xFF065F46))
-                  : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight),
+                  : (isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondaryLight),
             ),
           ),
         ],

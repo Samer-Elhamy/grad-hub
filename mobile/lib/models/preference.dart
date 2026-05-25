@@ -47,26 +47,34 @@ class PreferenceVector {
 
   factory PreferenceVector.fromJson(Map<String, dynamic> json) {
     final data = json['data'] as Map<String, dynamic>? ?? json;
-    final liked = data['liked_categories'] as List<dynamic>? ?? [];
+    final categoryWeights =
+        data['category_weights'] as Map<String, dynamic>? ?? {};
+    final liked = data['liked_categories'] as List<dynamic>? ??
+        categoryWeights.entries
+            .where((entry) => (entry.value as num?) != null)
+            .map((entry) => {
+                  'category': entry.key,
+                  'weight': (entry.value as num).toDouble(),
+                })
+            .toList();
     final excluded = data['excluded_categories'] as List<dynamic>? ?? [];
+    final keywordWeights =
+        data['keyword_weights'] as Map<String, dynamic>? ?? {};
     return PreferenceVector(
       likedCategories: liked
-          .map((e) =>
-              CategoryPreference.fromJson(e as Map<String, dynamic>))
+          .map((e) => CategoryPreference.fromJson(e as Map<String, dynamic>))
           .toList(),
       excludedCategories: excluded.whereType<String>().toList(),
-      keywords: (data['keywords'] as List<dynamic>?)
-              ?.whereType<String>()
-              .toList() ??
-          [],
+      keywords:
+          (data['keywords'] as List<dynamic>?)?.whereType<String>().toList() ??
+              keywordWeights.keys.toList(),
       totalSwipes: (data['total_swipes'] as int?) ?? 0,
       averageRating: (data['average_rating'] as num?)?.toDouble() ?? 0,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'liked_categories':
-            likedCategories.map((e) => e.toJson()).toList(),
+        'liked_categories': likedCategories.map((e) => e.toJson()).toList(),
         'excluded_categories': excludedCategories,
         'keywords': keywords,
       };

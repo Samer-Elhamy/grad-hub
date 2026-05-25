@@ -81,8 +81,7 @@ class SwipeNotifier extends StateNotifier<SwipeState> {
 }
 
 /// Provider for the swipe notifier.
-final swipeProvider =
-    StateNotifierProvider<SwipeNotifier, SwipeState>((ref) {
+final swipeProvider = StateNotifierProvider<SwipeNotifier, SwipeState>((ref) {
   final api = ref.watch(apiServiceProvider);
   final ideaStack = ref.watch(ideaStackProvider.notifier);
   return SwipeNotifier(api, ideaStack);

@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:grad_projects_hub/services/api_service.dart';
-import 'package:grad_projects_hub/models/idea.dart';
-import 'package:grad_projects_hub/models/swipe.dart';
-import 'package:grad_projects_hub/models/preference.dart';
+import 'package:grad_hub_mobile/services/api_service.dart';
+import 'package:grad_hub_mobile/models/idea.dart';
+import 'package:grad_hub_mobile/models/swipe.dart';
+import 'package:grad_hub_mobile/models/preference.dart';
 
 void main() {
   group('ApiService Tests with Mock Client', () {
@@ -243,7 +243,8 @@ void main() {
       );
     });
 
-    test('fetchNextIdea throws ApiException on invalid response format', () async {
+    test('fetchNextIdea throws ApiException on invalid response format',
+        () async {
       final invalidClient = MockClient((request) async {
         return http.Response(
           jsonEncode({
@@ -393,8 +394,14 @@ void main() {
       final record = SwipeRecord(ideaId: 1, direction: SwipeDirection.right);
       final after = DateTime.now();
 
-      expect(record.timestamp.isAfter(before) || record.timestamp.isAtSameMomentAs(before), isTrue);
-      expect(record.timestamp.isBefore(after) || record.timestamp.isAtSameMomentAs(after), isTrue);
+      expect(
+          record.timestamp.isAfter(before) ||
+              record.timestamp.isAtSameMomentAs(before),
+          isTrue);
+      expect(
+          record.timestamp.isBefore(after) ||
+              record.timestamp.isAtSameMomentAs(after),
+          isTrue);
     });
 
     test('SwipeRecord default dwellTimeMs is 0', () {
