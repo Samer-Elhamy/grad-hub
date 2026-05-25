@@ -36,7 +36,7 @@ class ApiService {
       if (json['success'] == true && json['data'] != null) {
         return Idea.fromJson(json['data'] as Map<String, dynamic>);
       }
-      throw ApiException('Invalid response: missing data', 200);
+      throw const ApiException('Invalid response: missing data', 200);
     }
     throw ApiException('Failed to fetch idea', response.statusCode);
   }

@@ -64,6 +64,7 @@ class _MainFeedScreenState extends ConsumerState<MainFeedScreen> {
                     onSwipedLeft: () => _handleSwipe(SwipeDirection.left),
                     onSwipedRight: () => _handleSwipe(SwipeDirection.right),
                     onDragUpdate: (_) {},
+                    arabic: language.isArabic,
                   ),
                 ),
               ),

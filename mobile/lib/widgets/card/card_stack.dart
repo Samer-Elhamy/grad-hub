@@ -27,6 +27,9 @@ class CardStack extends StatelessWidget {
   /// Whether the stack is in a loading state.
   final bool isLoading;
 
+  /// Whether localized Arabic idea text should be preferred.
+  final bool arabic;
+
   const CardStack({
     super.key,
     required this.ideas,
@@ -34,6 +37,7 @@ class CardStack extends StatelessWidget {
     this.onSwipedRight,
     this.onDragUpdate,
     this.isLoading = false,
+    this.arabic = false,
   });
 
   @override
@@ -105,6 +109,7 @@ class CardStack extends StatelessWidget {
                   onSwipedLeft: onSwipedLeft ?? () {},
                   onSwipedRight: onSwipedRight ?? () {},
                   onDragUpdate: onDragUpdate,
+                  arabic: arabic,
                 )
               : ClipRRect(
                   borderRadius: BorderRadius.circular(16),
@@ -154,7 +159,7 @@ class CardStack extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  idea.titleAr ?? idea.title,
+                  idea.displayTitle(arabic: arabic),
                   style: Theme.of(context).textTheme.titleSmall,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

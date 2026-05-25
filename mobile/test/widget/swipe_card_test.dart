@@ -311,7 +311,7 @@ void main() {
     testWidgets('handles null description gracefully',
         (WidgetTester tester) async {
       // Arrange
-      const idea = Idea(
+      final idea = Idea(
         id: 1,
         title: 'Idea Without Description',
         technologies: [],
@@ -336,7 +336,7 @@ void main() {
 
     testWidgets('handles empty technologies list', (WidgetTester tester) async {
       // Arrange
-      const idea = Idea(
+      final idea = Idea(
         id: 1,
         title: 'Idea Without Tech',
         technologies: [],
@@ -473,7 +473,7 @@ void main() {
 
   group('Idea Model JSON Serialization Tests', () {
     test('toJson converts idea to map correctly', () {
-      const idea = Idea(
+      final idea = Idea(
         id: 1,
         title: 'Test Idea',
         titleAr: 'اختبار',

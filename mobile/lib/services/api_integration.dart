@@ -100,7 +100,8 @@ class ApiIntegrationService {
       if (body != null && body['success'] == true && body['data'] != null) {
         return Idea.fromJson(body['data'] as Map<String, dynamic>);
       }
-      throw ApiIntegrationException('Invalid response: missing data', 200);
+      throw const ApiIntegrationException(
+          'Invalid response: missing data', 200);
     } on DioException catch (e) {
       throw e.error is ApiIntegrationException
           ? e.error as ApiIntegrationException

@@ -19,7 +19,7 @@ class PreferenceNotifier extends StateNotifier<AsyncValue<PreferenceVector>> {
     } catch (e, st) {
       // On first load, default to empty preferences.
       if (state is AsyncLoading) {
-        state = AsyncData(const PreferenceVector());
+        state = const AsyncData(PreferenceVector());
       } else {
         state = AsyncError(e, st);
       }

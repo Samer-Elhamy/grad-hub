@@ -191,22 +191,22 @@ class CardShimmer extends StatelessWidget {
           ),
 
           // Tag chips row
-          Row(
+          const Row(
             children: [
               ShimmerBlock(width: 60, height: 24, borderRadius: 12),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               ShimmerBlock(width: 80, height: 24, borderRadius: 12),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               ShimmerBlock(width: 55, height: 24, borderRadius: 12),
             ],
           ),
           const SizedBox(height: 16),
 
           // Metadata row
-          Row(
+          const Row(
             children: [
               ShimmerBlock(width: 90, height: 14, borderRadius: 4),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               ShimmerBlock(width: 60, height: 14, borderRadius: 4),
             ],
           ),

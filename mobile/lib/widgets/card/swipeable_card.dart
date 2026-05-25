@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/idea.dart';
-import '../../providers/language_provider.dart';
 import 'card_overlay.dart';
 
 /// A Tinder-style swipeable idea card.
@@ -13,7 +11,7 @@ import 'card_overlay.dart';
 ///   - Exit animation when over threshold
 ///
 /// Threshold: 150px horizontal distance or 500px/s velocity.
-class SwipeableCard extends ConsumerStatefulWidget {
+class SwipeableCard extends StatefulWidget {
   /// The idea to display on this card.
   final Idea idea;
 
@@ -29,6 +27,9 @@ class SwipeableCard extends ConsumerStatefulWidget {
   /// Whether this is the top card (draggable).
   final bool isTop;
 
+  /// Whether localized Arabic idea text should be preferred.
+  final bool arabic;
+
   const SwipeableCard({
     super.key,
     required this.idea,
@@ -36,13 +37,14 @@ class SwipeableCard extends ConsumerStatefulWidget {
     required this.onSwipedRight,
     this.onDragUpdate,
     this.isTop = true,
+    this.arabic = false,
   });
 
   @override
-  ConsumerState<SwipeableCard> createState() => _SwipeableCardState();
+  State<SwipeableCard> createState() => _SwipeableCardState();
 }
 
-class _SwipeableCardState extends ConsumerState<SwipeableCard>
+class _SwipeableCardState extends State<SwipeableCard>
     with SingleTickerProviderStateMixin {
   /// Current horizontal drag offset.
   double _dragX = 0;
@@ -167,7 +169,7 @@ class _SwipeableCardState extends ConsumerState<SwipeableCard>
             _isDragging ? Duration.zero : const Duration(milliseconds: 300),
         curve: Curves.easeOut,
         transform: Matrix4.identity()
-          ..translate(_dragX, 0, 0)
+          ..translateByDouble(_dragX, 0, 0, 1)
           ..rotateZ(rotationAngle),
         transformAlignment: Alignment.center,
         child: Stack(
@@ -187,7 +189,6 @@ class _SwipeableCardState extends ConsumerState<SwipeableCard>
     final idea = widget.idea;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final language = ref.watch(languageProvider);
 
     return Container(
       width: double.infinity,
@@ -252,7 +253,7 @@ class _SwipeableCardState extends ConsumerState<SwipeableCard>
                 children: [
                   // Title — 2 lines max
                   Text(
-                    idea.displayTitle(arabic: language.isArabic),
+                    idea.displayTitle(arabic: widget.arabic),
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontFamily: 'Roboto',
                     ),
@@ -291,7 +292,7 @@ class _SwipeableCardState extends ConsumerState<SwipeableCard>
 
                   // Description — 3 lines max
                   Text(
-                    idea.displayDescription(arabic: language.isArabic),
+                    idea.displayDescription(arabic: widget.arabic),
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: isDark
                           ? const Color(0xFF8B949E)

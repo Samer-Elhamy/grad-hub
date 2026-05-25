@@ -70,7 +70,7 @@ class _ShellScaffold extends StatelessWidget {
 
 /// Bottom navigation bar with three tabs.
 class _BottomNavBar extends ConsumerWidget {
-  _BottomNavBar({super.key});
+  const _BottomNavBar({super.key});
 
   /// Map of route → tab index.
   static const _routes = <int, String>{

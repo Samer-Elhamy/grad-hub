@@ -71,7 +71,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      colorScheme: ColorScheme.light(
+      colorScheme: const ColorScheme.light(
         primary: AppColors.primaryLight,
         onPrimary: Colors.white,
         secondary: AppColors.secondaryLight,
@@ -99,13 +99,13 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      colorScheme: ColorScheme.dark(
+      colorScheme: const ColorScheme.dark(
         primary: AppColors.primaryDark,
-        onPrimary: const Color(0xFF0D1117),
+        onPrimary: Color(0xFF0D1117),
         secondary: AppColors.secondaryDark,
-        onSecondary: const Color(0xFF0D1117),
+        onSecondary: Color(0xFF0D1117),
         error: AppColors.errorDark,
-        onError: const Color(0xFF0D1117),
+        onError: Color(0xFF0D1117),
         surface: AppColors.surfaceDark,
         onSurface: AppColors.textPrimaryDark,
       ),

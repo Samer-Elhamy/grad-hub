@@ -212,12 +212,12 @@ void main() {
       await trackingService.fetchHistory(
         page: 2,
         limit: 10,
-        direction: 'right',
+        filter: 'liked',
       );
 
       expect(capturedUrl, contains('page=2'));
       expect(capturedUrl, contains('limit=10'));
-      expect(capturedUrl, contains('direction=right'));
+      expect(capturedUrl, contains('filter=liked'));
     });
 
     test('dispose closes the client', () {

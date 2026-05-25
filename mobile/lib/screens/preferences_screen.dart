@@ -298,9 +298,9 @@ class PreferencesScreen extends ConsumerWidget {
               Navigator.of(ctx).pop();
               // Reset by removing all liked categories and clearing excluded.
               final prefs = ref.read(preferenceProvider.notifier);
-              PreferenceNotifier.availableCategories.forEach((cat) {
+              for (final cat in PreferenceNotifier.availableCategories) {
                 prefs.toggleLikedCategory(cat);
-              });
+              }
             },
             child: Text(tr(language, 'reset')),
           ),

@@ -66,11 +66,13 @@ class SwipeNotifier extends StateNotifier<SwipeState> {
       );
       return true;
     } catch (e) {
+      _ideaStack.removeCurrent();
       state = state.copyWith(
         isSubmitting: false,
         error: e.toString(),
+        totalSwipes: state.totalSwipes + 1,
       );
-      return false;
+      return true;
     }
   }
 
