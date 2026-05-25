@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>تفاصيل الفكرة — ناقد الأفكار</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="logo">ناقد <span>الأفكار</span></a>
+    <button class="dark-toggle" aria-label="الوضع الليلي">🌙</button>
+    <button class="nav-toggle" aria-label="القائمة">☰</button>
+    <nav>
+      <div class="nav-links">
+        <a href="index.html">المشاريع</a>
+        <a href="preferences.html">تفضيلاتي</a>
+        <a href="history.html">سجلي</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>تفاصيل الفكرة</h1>
+      <p>تفاصيل أوسع مع تحليل ناقض للمخاطر ونقاط التطوير</p>
+      <a class="btn btn-outline" href="history.html">↩ رجوع للسجل</a>
+    </section>
+
+    <section id="ideaDetailCard"></section>
+    <div id="criticPanel" class="critic-panel" style="display:none"></div>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <footer>
+    <p>© ٢٠٢٦ ناقد الأفكار — مشروع شخصي</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script defer src="critic.js"></script>
+  <script defer src="app.js"></script>
+</body>
+</html>

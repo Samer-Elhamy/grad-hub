@@ -1,0 +1,142 @@
+/* ════════════════════════════════════════
+   Design Tokens — Grad Projects Hub v3
+   Aggregates all CSS custom properties.
+   Import this file once in your app entry.
+   ════════════════════════════════════════ */
+
+@import "./colors.css";
+@import "./typography.css";
+@import "./spacing.css";
+
+/* ── Shadows ── */
+:root {
+  --shadow-xs: 0 1px 2px 0px var(--color-shadow-sm);
+  --shadow-sm: 0 1px 3px 0px var(--color-shadow), 0 1px 2px -1px var(--color-shadow);
+  --shadow-md: 0 4px 6px -1px var(--color-shadow-md), 0 2px 4px -2px var(--color-shadow);
+  --shadow-lg: 0 10px 15px -3px var(--color-shadow-lg), 0 4px 6px -4px var(--color-shadow);
+  --shadow-xl: 0 20px 25px -5px var(--color-shadow-lg), 0 8px 10px -6px var(--color-shadow);
+  --shadow-card: 0 4px 12px var(--color-shadow-md);
+  --shadow-card-hover: 0 8px 24px var(--color-shadow-lg);
+}
+
+.dark,
+[data-theme="dark"] {
+  --shadow-xs: 0 1px 2px 0px var(--color-shadow-sm);
+  --shadow-sm: 0 1px 3px 0px var(--color-shadow), 0 1px 2px -1px var(--color-shadow);
+  --shadow-md: 0 4px 6px -1px var(--color-shadow-md), 0 2px 4px -2px var(--color-shadow);
+  --shadow-lg: 0 10px 15px -3px var(--color-shadow-lg), 0 4px 6px -4px var(--color-shadow);
+  --shadow-xl: 0 20px 25px -5px var(--color-shadow-lg), 0 8px 10px -6px var(--color-shadow);
+  --shadow-card: 0 4px 12px var(--color-shadow-md);
+  --shadow-card-hover: 0 8px 24px var(--color-shadow-lg);
+}
+
+/* ── Border Radius ── */
+:root {
+  --radius-none: 0px;
+  --radius-sm: 0.25rem;   /* 4px  — small badges */
+  --radius-md: 0.5rem;    /* 8px  — buttons, inputs */
+  --radius-lg: 0.75rem;   /* 12px — cards, panels */
+  --radius-xl: 1rem;      /* 16px — card swipe area */
+  --radius-2xl: 1.5rem;   /* 24px — modals */
+  --radius-full: 9999px;  /* pills */
+  --radius-card: var(--radius-xl); /* 16px — swipeable cards */
+}
+
+/* ── Z-Index Scale ── */
+:root {
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-card-stack: 10;
+  --z-card-top: 30;
+  --z-card-middle: 20;
+  --z-card-bottom: 10;
+}
+
+/* ── Transition Tokens ── */
+:root {
+  --transition-fast: 150ms ease-out;
+  --transition-normal: 250ms ease-out;
+  --transition-slow: 350ms ease-out;
+  --transition-swipe: 300ms ease-out;
+  --transition-bounce: 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Swipe Animation Tokens ── */
+:root {
+  --swipe-duration: 300ms;
+  --swipe-ease: cubic-bezier(0, 0, 0.2, 1);
+  --swipe-translate-x: 500px;
+  --swipe-rotate: 15deg;
+
+  --card-stack-scale-top: 1;
+  --card-stack-scale-middle: 0.98;
+  --card-stack-scale-bottom: 0.96;
+  --card-stack-offset-y: 4px;
+
+  --micro-hover-scale: 1.05;
+  --micro-press-scale: 0.95;
+  --micro-duration: 150ms;
+}
+
+/* ── Breakpoints (for reference — use Tailwind in components) ── */
+:root {
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+  --bp-2xl: 1536px;
+}
+
+/* ── Body Defaults ── */
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  transition: background-color var(--transition-normal),
+              color var(--transition-normal);
+}
+
+/* ── Selection ── */
+::selection {
+  background: var(--color-primary-200);
+  color: var(--color-text-primary);
+}
+
+.dark ::selection,
+[data-theme="dark"] ::selection {
+  background: var(--color-primary-700);
+  color: var(--color-text-inverse);
+}
+
+/* ── Focus Ring ── */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
+}
+
+/* ── Scrollbar (Webkit) ── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-tertiary);
+}

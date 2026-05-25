@@ -1,7 +1,17 @@
 node_modules/
 .env
+.tmp/
+dist/
+backend/dist/
+backend/tests/**/*.js
+backend/tests/**/*.js.map
+backend/tests/**/*.d.ts
+backend/tests/**/*.d.ts.map
+web/dist/
+backend/.data/
 .DS_Store
 *.log
+*.tsbuildinfo
 .history/
 .hermes.md
 AGENT-*.md

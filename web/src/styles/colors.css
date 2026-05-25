@@ -1,0 +1,186 @@
+/* ════════════════════════════════════════
+   Color Palette — Grad Projects Hub v3
+   No "AI slop" aesthetic.
+   Clean, minimal, focused.
+   ════════════════════════════════════════ */
+
+/* ── Light Mode ── */
+:root {
+  /* Primary brand — calm blue (#3B82F6) */
+  --color-primary-50: #EFF6FF;
+  --color-primary-100: #DBEAFE;
+  --color-primary-200: #BFDBFE;
+  --color-primary-300: #93C5FD;
+  --color-primary-400: #60A5FA;
+  --color-primary-500: #3B82F6;
+  --color-primary-600: #2563EB;
+  --color-primary-700: #1D4ED8;
+  --color-primary-800: #1E40AF;
+  --color-primary-900: #1E3A8A;
+  --color-primary: var(--color-primary-500);
+
+  /* Secondary accent — purple (#8B5CF6) */
+  --color-secondary-50: #F5F3FF;
+  --color-secondary-100: #EDE9FE;
+  --color-secondary-200: #DDD6FE;
+  --color-secondary-300: #C4B5FD;
+  --color-secondary-400: #A78BFA;
+  --color-secondary-500: #8B5CF6;
+  --color-secondary-600: #7C3AED;
+  --color-secondary-700: #6D28D9;
+  --color-secondary-800: #5B21B6;
+  --color-secondary-900: #4C1D95;
+  --color-secondary: var(--color-secondary-500);
+
+  /* Semantic — feedback colors */
+  --color-success: #10B981;
+  --color-success-light: #D1FAE5;
+  --color-success-dark: #065F46;
+  --color-error: #EF4444;
+  --color-error-light: #FEE2E2;
+  --color-error-dark: #991B1B;
+  --color-warning: #F59E0B;
+  --color-warning-light: #FEF3C7;
+  --color-warning-dark: #92400E;
+  --color-info: #3B82F6;
+  --color-info-light: #DBEAFE;
+  --color-info-dark: #1E40AF;
+
+  /* Surface / Background */
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F9FAFB;
+  --color-surface-card: #FFFFFF;
+  --color-background: #F9FAFB;
+
+  /* Text */
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-text-tertiary: #9CA3AF;
+  --color-text-disabled: #D1D5DB;
+  --color-text-inverse: #FFFFFF;
+
+  /* Border */
+  --color-border: #E5E7EB;
+  --color-border-light: #F3F4F6;
+  --color-border-dark: #D1D5DB;
+
+  /* Shadow (light mode) */
+  --color-shadow-sm: rgba(0, 0, 0, 0.05);
+  --color-shadow: rgba(0, 0, 0, 0.1);
+  --color-shadow-md: rgba(0, 0, 0, 0.12);
+  --color-shadow-lg: rgba(0, 0, 0, 0.16);
+
+  /* Focus ring */
+  --color-ring: rgba(59, 130, 246, 0.3);
+}
+
+/* ── Dark Mode ── */
+.dark,
+[data-theme="dark"] {
+  /* Primary — slightly brighter in dark mode */
+  --color-primary: #60A5FA;
+  --color-primary-50: #172554;
+  --color-primary-100: #1E3A8A;
+  --color-primary-200: #1E40AF;
+  --color-primary-300: #2563EB;
+  --color-primary-400: #3B82F6;
+  --color-primary-500: #60A5FA;
+  --color-primary-600: #93C5FD;
+  --color-primary-700: #BFDBFE;
+  --color-primary-800: #DBEAFE;
+  --color-primary-900: #EFF6FF;
+
+  /* Secondary */
+  --color-secondary: #A78BFA;
+  --color-secondary-50: #2E1065;
+  --color-secondary-100: #4C1D95;
+  --color-secondary-200: #5B21B6;
+  --color-secondary-300: #6D28D9;
+  --color-secondary-400: #7C3AED;
+  --color-secondary-500: #A78BFA;
+  --color-secondary-600: #C4B5FD;
+  --color-secondary-700: #DDD6FE;
+  --color-secondary-800: #EDE9FE;
+  --color-secondary-900: #F5F3FF;
+
+  /* Semantic */
+  --color-success: #34D399;
+  --color-success-light: #064E3B;
+  --color-success-dark: #D1FAE5;
+  --color-error: #F87171;
+  --color-error-light: #7F1D1D;
+  --color-error-dark: #FEE2E2;
+  --color-warning: #FBBF24;
+  --color-warning-light: #78350F;
+  --color-warning-dark: #FEF3C7;
+  --color-info: #60A5FA;
+  --color-info-light: #1E3A8A;
+  --color-info-dark: #DBEAFE;
+
+  /* Surface / Background — GitHub-inspired dark */
+  --color-surface: #161B22;
+  --color-surface-alt: #0D1117;
+  --color-surface-card: #161B22;
+  --color-background: #0D1117;
+
+  /* Text */
+  --color-text-primary: #F0F6FC;
+  --color-text-secondary: #8B949E;
+  --color-text-tertiary: #6E7681;
+  --color-text-disabled: #484F58;
+  --color-text-inverse: #0D1117;
+
+  /* Border */
+  --color-border: #30363D;
+  --color-border-light: #21262D;
+  --color-border-dark: #484F58;
+
+  /* Shadow (dark mode — deeper) */
+  --color-shadow-sm: rgba(0, 0, 0, 0.3);
+  --color-shadow: rgba(0, 0, 0, 0.4);
+  --color-shadow-md: rgba(0, 0, 0, 0.5);
+  --color-shadow-lg: rgba(0, 0, 0, 0.6);
+
+  /* Focus ring */
+  --color-ring: rgba(96, 165, 250, 0.3);
+}
+
+/* ── Semantic Utility Classes ── */
+.text-success { color: var(--color-success); }
+.text-error { color: var(--color-error); }
+.text-warning { color: var(--color-warning); }
+.text-info { color: var(--color-info); }
+.border-success { border-color: var(--color-success); }
+.border-error { border-color: var(--color-error); }
+.border-warning { border-color: var(--color-warning); }
+.bg-success-light { background-color: var(--color-success-light); }
+.bg-error-light { background-color: var(--color-error-light); }
+.bg-warning-light { background-color: var(--color-warning-light); }
+.bg-info-light { background-color: var(--color-info-light); }
+.text-success-dark { color: var(--color-success-dark); }
+.text-error-dark { color: var(--color-error-dark); }
+.text-warning-dark { color: var(--color-warning-dark); }
+
+/* ── Swipe Indicator Colors ── */
+:root {
+  --swipe-like: var(--color-success);
+  --swipe-dislike: var(--color-error);
+  --swipe-superlike: var(--color-secondary);
+}
+
+/* ── Utility Classes ── */
+.bg-surface { background-color: var(--color-surface); }
+.bg-surface-alt { background-color: var(--color-surface-alt); }
+.bg-card { background-color: var(--color-surface-card); }
+.bg-primary { background-color: var(--color-primary); }
+.bg-secondary { background-color: var(--color-secondary); }
+.bg-success { background-color: var(--color-success); }
+.bg-error { background-color: var(--color-error); }
+.bg-background { background-color: var(--color-background); }
+
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-tertiary { color: var(--color-text-tertiary); }
+.text-inverse { color: var(--color-text-inverse); }
+
+.border-default { border-color: var(--color-border); }

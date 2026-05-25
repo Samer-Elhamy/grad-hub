@@ -1,6 +1,36 @@
-# Grad Projects Hub — Progress
+# Grad Hub — Progress
 
-**مشروع شخصي — أداة review فردية.** الموقع: `projects/grad-hub/site/`
+**الإصدار الحالي:** v3 — React + Express + Arabic/English UX + feedback loop.
+
+الواجهة الأساسية الآن في `web/`، والـ API في `backend/`. نسخة `site/` أصبحت prototype/legacy static.
+
+## v3 Highlights
+
+- واجهة bilingual: عربي RTL وإنجليزي LTR.
+- Discover swipe cards بصور مرتبطة بكل فكرة.
+- Heart وStar مستقلين في history والـ analytics.
+- Preferences summary يتحدث من history الحقيقي.
+- Top Keywords تتغير حسب swipes.
+- صفحة تفاصيل لكل فكرة فيها تحليل نقدي ورابط مصدر خارجي.
+- README تسويقي وسكرينشوتات وصورة preview للريبو.
+
+## تشغيل سريع
+
+```powershell
+cd backend
+npm run dev
+```
+
+```powershell
+cd web
+npm run dev
+```
+
+افتح: `http://localhost:5173`
+
+---
+
+## Legacy Notes
 
 ## Progress bar — الإصدار ٢ (شخصي)
 

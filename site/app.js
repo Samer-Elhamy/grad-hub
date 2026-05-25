@@ -91,7 +91,21 @@
 
   // ─── Local Storage Helpers ─────────────────────────────────
   function getReviews() {
-    try { return JSON.parse(localStorage.getItem('naked_reviews') || '[]'); } catch (e) { return []; }
+    try {
+      var reviews = JSON.parse(localStorage.getItem('naked_reviews') || '[]');
+      var byIdea = {};
+      reviews.forEach(function (review) {
+        var existing = byIdea[review.ideaId];
+        if (!existing || new Date(review.date || 0) >= new Date(existing.date || 0)) {
+          byIdea[review.ideaId] = review;
+        }
+      });
+      var deduped = Object.keys(byIdea).map(function (id) { return byIdea[id]; });
+      if (deduped.length !== reviews.length) {
+        localStorage.setItem('naked_reviews', JSON.stringify(deduped));
+      }
+      return deduped;
+    } catch (e) { return []; }
   }
 
   function saveReview(entry) {
@@ -121,6 +135,46 @@
 
   function defaultPrefs() {
     return { likedCategories: {}, dislikedCategories: {}, keywords: [] };
+  }
+
+  function getApiBaseUrl() {
+    return window.GRAD_HUB_API_URL || localStorage.getItem('gradhub_api_url') || 'http://localhost:3000';
+  }
+
+  async function fetchBackendPreferences() {
+    try {
+      var res = await fetch(getApiBaseUrl() + '/api/preferences');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var body = await res.json();
+      var prefs = body && body.success ? body.data : null;
+      // #region agent log
+      fetch('http://127.0.0.1:7261/ingest/f0a8580a-2159-4d02-8dff-6d707a9bcc1c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'3cfbd7'},body:JSON.stringify({sessionId:'3cfbd7',runId:'pre-fix',hypothesisId:'H7,H9,H10',location:'site/app.js:fetchBackendPreferences',message:'static preferences fetched backend preferences',data:{apiBaseUrl:getApiBaseUrl(),hasPreferences:Boolean(prefs),excludedCategories:prefs && prefs.excluded_categories,categoryWeights:prefs && prefs.category_weights,href:window.location.href},timestamp:Date.now()})}).catch(function(){});
+      // #endregion
+      return prefs;
+    } catch (e) {
+      // #region agent log
+      fetch('http://127.0.0.1:7261/ingest/f0a8580a-2159-4d02-8dff-6d707a9bcc1c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'3cfbd7'},body:JSON.stringify({sessionId:'3cfbd7',runId:'pre-fix',hypothesisId:'H7,H9,H10',location:'site/app.js:fetchBackendPreferences',message:'static preferences backend fetch failed',data:{apiBaseUrl:getApiBaseUrl(),error:e && e.message,href:window.location.href},timestamp:Date.now()})}).catch(function(){});
+      // #endregion
+      return null;
+    }
+  }
+
+  function backendPrefsToLocalShape(backendPrefs) {
+    if (!backendPrefs) return null;
+    var likedCategories = {};
+    Object.keys(backendPrefs.category_weights || {}).forEach(function (category) {
+      var weight = backendPrefs.category_weights[category];
+      if (weight > 0) likedCategories[category] = Math.round(weight * 100);
+    });
+    var keywords = Object.keys(backendPrefs.keyword_weights || {}).sort(function (a, b) {
+      return backendPrefs.keyword_weights[b] - backendPrefs.keyword_weights[a];
+    });
+    return {
+      likedCategories: likedCategories,
+      dislikedCategories: {},
+      keywords: keywords,
+      backend: backendPrefs
+    };
   }
 
   function updatePreferences() {
@@ -309,7 +363,7 @@
     if (rating === 0) { showToast('يرجى اختيار تقييم قبل الحفظ.'); return; }
     saveReview({
       ideaId: currentIdeaId,
-      title: currentIdea.title || '',
+      title: currentIdea.title_ar || currentIdea.title_en || currentIdea.title || '',
       category: currentIdea.category || '',
       rating: rating,
       comment: comment,
@@ -389,11 +443,15 @@
   };
 
   // ── Preferences Page ──
-  gh.renderPreferences = function () {
-    var prefs = getPreferences();
+  gh.renderPreferences = async function () {
+    var backendPrefs = await fetchBackendPreferences();
+    var prefs = backendPrefsToLocalShape(backendPrefs) || getPreferences();
     var cats = Object.keys(prefs.likedCategories);
     var maxRating = 0;
     cats.forEach(function (c) { if (prefs.likedCategories[c] > maxRating) maxRating = prefs.likedCategories[c]; });
+    // #region agent log
+    fetch('http://127.0.0.1:7261/ingest/f0a8580a-2159-4d02-8dff-6d707a9bcc1c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'3cfbd7'},body:JSON.stringify({sessionId:'3cfbd7',runId:'pre-fix',hypothesisId:'H7,H8,H9,H10',location:'site/app.js:renderPreferences',message:'static preferences render data selected',data:{source:backendPrefs ? 'backend' : 'localStorage',categoryCount:cats.length,categories:cats,keywords:prefs.keywords,href:window.location.href},timestamp:Date.now()})}).catch(function(){});
+    // #endregion
 
     var catList = document.getElementById('favCategoriesList');
     if (catList) {
@@ -446,7 +504,7 @@
       var empty = document.getElementById('emptyPrefs');
       var cards = document.getElementById('prefCards');
       if (empty && cards) {
-        if (!reviews.length) {
+        if (!reviews.length && !backendPrefs) {
           empty.style.display = 'block';
           cards.style.display = 'none';
         } else {
@@ -531,11 +589,13 @@
 
         var dateStr = r.date ? new Date(r.date).toLocaleDateString('ar-SA') : '-';
         var commentHtml = r.comment ? '<span class="comment-truncate" title="' + escapeHtml(r.comment) + '">' + escapeHtml(r.comment) + '</span>' : '<span class="text-muted">—</span>';
-        var delBtn = '<button class="btn btn-sm btn-ghost" onclick="GradHub.deleteReview(' + r.ideaId + ')" title="حذف">🗑️</button>';
+        var delBtn = '<button class="btn btn-sm btn-ghost" onclick="GradHub.deleteReview(' + r.ideaId + ')" title="حذف">🗑️ حذف</button>';
+        var proj = getProjectById(r.ideaId);
+        var ideaTitle = (proj && (proj.title_ar || proj.title_en)) || r.title || ('فكرة #' + r.ideaId);
 
         return '<tr>' +
           '<td>' + (idx + 1) + '</td>' +
-          '<td>' + escapeHtml(r.title || 'فكرة #' + r.ideaId) + '</td>' +
+          '<td><a href="idea-detail.html?id=' + r.ideaId + '">' + escapeHtml(ideaTitle) + '</a></td>' +
           '<td>' + escapeHtml(r.category || '-') + '</td>' +
           '<td><span class="' + cls + '">' + r.rating + '/5</span></td>' +
           '<td>' + commentHtml + '</td>' +
@@ -558,6 +618,39 @@
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     showToast('📥 تم تصدير السجل بنجاح');
+  };
+
+  gh.renderIdeaDetail = function () {
+    var params = new URLSearchParams(window.location.search);
+    var ideaId = parseInt(params.get('id') || '', 10);
+    var idea = getProjectById(ideaId);
+    var container = document.getElementById('ideaDetailCard');
+    if (!container) return;
+
+    // #region agent log
+    fetch('http://127.0.0.1:7261/ingest/f0a8580a-2159-4d02-8dff-6d707a9bcc1c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'3cfbd7'},body:JSON.stringify({sessionId:'3cfbd7',runId:'pre-fix',hypothesisId:'H11,H12',location:'site/app.js:renderIdeaDetail',message:'static idea detail render requested',data:{ideaId:ideaId,found:Boolean(idea),href:window.location.href},timestamp:Date.now()})}).catch(function(){});
+    // #endregion
+
+    if (!idea) {
+      container.innerHTML = '<div class="empty-state"><p>لم يتم العثور على الفكرة.</p><a class="btn btn-accent" href="history.html">رجوع للسجل</a></div>';
+      return;
+    }
+
+    var techs = (idea.technologies || idea.tech_stack || []).map(function (tech) {
+      return '<span class="badge">' + escapeHtml(tech) + '</span>';
+    }).join(' ');
+    container.innerHTML =
+      '<div class="idea-viewer">' +
+      '<div class="id-badge">رقم ' + idea.id + '</div>' +
+      '<h2>' + escapeHtml(idea.title_ar || idea.title || '') + '</h2>' +
+      (idea.title_en ? '<div class="title-en">' + escapeHtml(idea.title_en) + '</div>' : '') +
+      '<span class="category">' + escapeHtml(idea.category || '') + '</span>' +
+      '<div class="univ">🏛️ ' + escapeHtml(idea.university || 'غير محدد') + '</div>' +
+      '<div class="description">' + escapeHtml(idea.description || idea.short_desc_ar || '') + '</div>' +
+      '<div class="tech-tags">' + techs + '</div>' +
+      '</div>';
+
+    if (gh.Critic) gh.Critic.analyze(idea);
   };
 
   gh.getProjects = function () { return projects.slice(); };
@@ -614,6 +707,10 @@
     } else if (page === 'history.html') {
       window.GradHub.init().then(function () {
         window.GradHub.renderHistoryTable();
+      });
+    } else if (page === 'idea-detail.html') {
+      window.GradHub.init().then(function () {
+        window.GradHub.renderIdeaDetail();
       });
     } else if (page === 'ideas.html') {
       /* init + render handled by ideas.html inline script */

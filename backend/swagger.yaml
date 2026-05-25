@@ -1,0 +1,490 @@
+openapi: "3.0.3"
+info:
+  title: Grad Projects Hub v3 API
+  description: |
+    Personal Idea Discovery Platform API.
+    Tinder-style card-swiping interface for discovering CS/IT project ideas
+    with AI-powered preference learning and real-time idea streaming.
+  version: "3.0.0"
+  contact:
+    name: Grad Projects Hub Team
+
+servers:
+  - url: http://localhost:3001
+    description: Local development server
+  - url: ws://localhost:3001
+    description: WebSocket endpoint
+
+paths:
+  /api/health:
+    get:
+      summary: Health check
+      operationId: healthCheck
+      tags:
+        - System
+      responses:
+        "200":
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+              example:
+                success: true
+                data:
+                  status: ok
+                  version: "3.0.0"
+
+  /api/ideas/next:
+    get:
+      summary: Get next swipable idea
+      description: |
+        Returns the next best idea based on preference vector matching.
+        Uses preference-ranked ordering to suggest the most relevant idea.
+      operationId: getNextIdea
+      tags:
+        - Ideas
+      responses:
+        "200":
+          description: Next idea retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Idea"
+        "404":
+          description: No ideas available matching current preferences
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/swipe:
+    post:
+      summary: Record a swipe interaction
+      description: |
+        Records a left/right swipe on an idea with optional dwell time and rating.
+        Updates the preference vector based on the interaction.
+        Rate limited to 60 requests per minute.
+      operationId: createSwipe
+      tags:
+        - Swipe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSwipeInput"
+      responses:
+        "201":
+          description: Swipe recorded successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          swipe_id:
+                            type: string
+                            description: Unique identifier for the swipe record
+                          updated_preferences:
+                            $ref: "#/components/schemas/PreferenceVector"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/preferences:
+    get:
+      summary: Get current preference vector
+      description: Returns the user's current preference vector including category and keyword weights.
+      operationId: getPreferences
+      tags:
+        - Preferences
+      responses:
+        "200":
+          description: Preferences retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/PreferenceVector"
+    post:
+      summary: Update preference vector
+      description: |
+        Manually updates preference weights and excluded categories.
+        All fields are optional; only provided fields override current values.
+        Rate limited to 30 requests per minute.
+      operationId: updatePreferences
+      tags:
+        - Preferences
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePreferencesInput"
+      responses:
+        "200":
+          description: Preferences updated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/PreferenceVector"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/history:
+    get:
+      summary: Get paginated swipe history
+      description: Returns swipe history with idea details, paginated.
+      operationId: getHistory
+      tags:
+        - History
+      parameters:
+        - name: page
+          in: query
+          description: Page number (default 1)
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Items per page (default 20, max 100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        "200":
+          description: History retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          records:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/SwipeRecord"
+                      meta:
+                        $ref: "#/components/schemas/PaginationMeta"
+
+components:
+  schemas:
+    # ─── Shared Envelopes ──────────────────────────────────────────
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          enum: [true]
+        data:
+          type: object
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+      required:
+        - success
+        - data
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          enum: [false]
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          enum:
+            - VALIDATION_ERROR
+            - NOT_FOUND
+            - RATE_LIMIT_EXCEEDED
+            - INTERNAL_ERROR
+            - BAD_REQUEST
+          description: Machine-readable error code
+        details:
+          type: object
+          description: Optional error details (e.g., field-level validation errors)
+      required:
+        - success
+        - error
+        - code
+
+    PaginationMeta:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        limit:
+          type: integer
+          description: Items per page
+        total:
+          type: integer
+          description: Total number of items
+        totalPages:
+          type: integer
+          description: Total number of pages
+      required:
+        - page
+        - limit
+        - total
+        - totalPages
+
+    # ─── Domain Models ─────────────────────────────────────────────
+
+    Idea:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique idea identifier
+        title_ar:
+          type: string
+          description: Arabic title
+        title_en:
+          type: string
+          description: English title
+        category:
+          type: string
+          description: Idea category (e.g., AI/ML, Web Applications)
+        short_desc_ar:
+          type: string
+          description: Arabic short description
+        short_desc_en:
+          type: string
+          description: English short description
+        university:
+          type: string
+          description: Source university
+        country:
+          type: string
+          description: Country of origin
+        tech_stack:
+          type: array
+          items:
+            type: string
+          description: Technology stack
+        difficulty:
+          type: string
+          description: Difficulty level
+        rating:
+          type: integer
+          description: Average rating
+        featured:
+          type: boolean
+          description: Whether the idea is featured
+        description:
+          type: string
+          description: Full description
+        technologies:
+          type: array
+          items:
+            type: string
+          description: List of technologies used
+      required:
+        - id
+        - title_ar
+        - title_en
+        - category
+
+    PreferenceVector:
+      type: object
+      properties:
+        category_weights:
+          type: object
+          additionalProperties:
+            type: number
+            minimum: 0
+            maximum: 1
+          description: Weight per category (0-1)
+        keyword_weights:
+          type: object
+          additionalProperties:
+            type: number
+            minimum: 0
+            maximum: 1
+          description: Weight per keyword (0-1)
+        excluded_categories:
+          type: array
+          items:
+            type: string
+          description: Categories to exclude from suggestions
+        difficulty_preference:
+          type: string
+          nullable: true
+          description: Preferred difficulty level
+        last_updated:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of last update
+      required:
+        - category_weights
+        - keyword_weights
+        - excluded_categories
+        - last_updated
+
+    SwipeRecord:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique swipe record identifier
+        idea_id:
+          type: integer
+          description: ID of the swiped idea
+        direction:
+          type: string
+          enum:
+            - left
+            - right
+          description: Swipe direction
+        dwell_time_ms:
+          type: integer
+          nullable: true
+          description: Time spent viewing the idea (ms)
+        rating:
+          type: integer
+          nullable: true
+          minimum: 1
+          maximum: 5
+          description: Optional rating (1-5)
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of the swipe
+      required:
+        - id
+        - idea_id
+        - direction
+        - timestamp
+
+    # ─── Request Bodies ────────────────────────────────────────────
+
+    CreateSwipeInput:
+      type: object
+      properties:
+        idea_id:
+          type: integer
+          description: ID of the idea being swiped
+        direction:
+          type: string
+          enum:
+            - left
+            - right
+          description: Swipe direction
+        dwell_time_ms:
+          type: integer
+          minimum: 0
+          description: Time spent viewing (milliseconds)
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          description: Optional rating
+      required:
+        - idea_id
+        - direction
+
+    UpdatePreferencesInput:
+      type: object
+      properties:
+        category_weights:
+          type: object
+          additionalProperties:
+            type: number
+            minimum: 0
+            maximum: 1
+          description: Category weight overrides
+        keyword_weights:
+          type: object
+          additionalProperties:
+            type: number
+            minimum: 0
+            maximum: 1
+          description: Keyword weight overrides
+        excluded_categories:
+          type: array
+          items:
+            type: string
+          description: Categories to exclude from suggestions
+      description: All fields are optional
+
+  # ─── WebSocket ─────────────────────────────────────────────────────
+
+  x-webhooks:
+    stream:
+      post:
+        summary: "ws://host/ws/stream"
+        description: |
+          Real-time WebSocket stream for live idea cards from the Search Agent.
+          Connect to ws://localhost:3001/ws/stream.
+
+          Server sends JSON messages:
+          - { type: "new_idea", data: Idea }
+          - { type: "preference_update", data: PreferenceVector }
+
+          The server sends periodic ping frames. Clients should respond with pong.
+          If a client does not respond within 30 seconds, the connection is terminated.
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                      - new_idea
+                      - preference_update
+                    description: Message type
+                  data:
+                    oneOf:
+                      - $ref: "#/components/schemas/Idea"
+                      - $ref: "#/components/schemas/PreferenceVector"

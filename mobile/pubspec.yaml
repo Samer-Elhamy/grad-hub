@@ -1,0 +1,28 @@
+name: grad_hub_mobile
+description: Grad Projects Hub v3 — Personal Idea Discovery Platform (Flutter)
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.10.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.6.1
+  riverpod: ^2.6.1
+  go_router: ^17.2.3
+  web_socket_channel: ^3.0.3
+  http: ^1.2.0
+  flutter_animate: ^4.5.0
+  dio: ^5.4.0
+  connectivity_plus: ^6.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
