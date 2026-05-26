@@ -94,9 +94,22 @@ describe("Preferences", () => {
   it("moves categories with explicit click actions", () => {
     render(<Preferences />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Like Web Applications" }));
-    fireEvent.click(screen.getByRole("button", { name: "Dislike AI/ML" }));
-    fireEvent.click(screen.getByRole("button", { name: "Clear DevOps preference" }));
+    const likeButton = screen.getByRole("button", {
+      name: "Move Web Applications to preferred categories",
+    });
+    const dislikeButton = screen.getByRole("button", {
+      name: "Move AI/ML to avoided categories",
+    });
+    const clearButton = screen.getByRole("button", { name: "Clear DevOps preference" });
+
+    expect(likeButton).not.toHaveTextContent("Like");
+    expect(dislikeButton).not.toHaveTextContent("Dislike");
+    expect(likeButton).not.toHaveAttribute("title", "Like");
+    expect(dislikeButton).not.toHaveAttribute("title", "Dislike");
+
+    fireEvent.click(likeButton);
+    fireEvent.click(dislikeButton);
+    fireEvent.click(clearButton);
 
     expect(preferenceActions.markCategoryLiked).toHaveBeenCalledWith("Web Applications");
     expect(preferenceActions.markCategoryDisliked).toHaveBeenCalledWith("AI/ML");

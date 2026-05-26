@@ -49,8 +49,15 @@
 ### Mobile Preview
 
 <p align="center">
-  <img src="docs/assets/screenshots/mobile-hand-discover.png" alt="Grad Hub mobile app in use" width="360" />
-  <img src="docs/assets/screenshots/mobile-logo-preview.png" alt="Grad Hub logo preview on a phone" width="360" />
+  <img src="docs/assets/screenshots/mobile-hand-discover.png" alt="Grad Hub mobile app in use" width="760" />
+</p>
+
+### Logo Preview
+
+<p align="center">
+  <img src="docs/assets/grad-hub-logo.png" alt="Grad Hub clean logo" width="180" />
+  <br />
+  <img src="docs/assets/screenshots/mobile-logo-preview.png" alt="Grad Hub logo preview on a phone" width="560" />
 </p>
 
 ## APK Download

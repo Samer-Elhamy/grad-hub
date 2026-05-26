@@ -203,6 +203,8 @@ void main() {
     expect(find.text('Disliked Categories'), findsOneWidget);
     expect(find.text('Machine Learning'), findsWidgets);
     expect(find.text('DevOps'), findsWidgets);
+    expect(find.text('Like'), findsNothing);
+    expect(find.text('Dislike'), findsNothing);
   });
 }
 

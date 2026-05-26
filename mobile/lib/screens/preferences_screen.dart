@@ -350,7 +350,8 @@ class PreferencesScreen extends ConsumerWidget {
               if (group != _CategoryGroup.liked)
                 _smallActionButton(
                   context,
-                  label: 'Like',
+                  label: 'Move to preferred categories',
+                  icon: Icons.favorite,
                   color: const Color(0xFF10B981),
                   onPressed: () =>
                       _moveCategory(ref, category, _CategoryGroup.liked),
@@ -358,7 +359,8 @@ class PreferencesScreen extends ConsumerWidget {
               if (group != _CategoryGroup.disliked)
                 _smallActionButton(
                   context,
-                  label: 'Dislike',
+                  label: 'Move to avoided categories',
+                  icon: Icons.close,
                   color: const Color(0xFFEF4444),
                   onPressed: () =>
                       _moveCategory(ref, category, _CategoryGroup.disliked),
@@ -367,6 +369,7 @@ class PreferencesScreen extends ConsumerWidget {
                 _smallActionButton(
                   context,
                   label: 'Clear',
+                  icon: Icons.add,
                   color: theme.colorScheme.primary,
                   onPressed: () =>
                       _moveCategory(ref, category, _CategoryGroup.available),
@@ -381,18 +384,23 @@ class PreferencesScreen extends ConsumerWidget {
   Widget _smallActionButton(
     BuildContext context, {
     required String label,
+    required IconData icon,
     required Color color,
     required VoidCallback onPressed,
   }) {
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        minimumSize: Size.zero,
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        foregroundColor: color,
+    return Tooltip(
+      message: label,
+      child: IconButton(
+        onPressed: onPressed,
+        icon: Icon(icon, size: 14),
+        style: IconButton.styleFrom(
+          minimumSize: const Size(28, 28),
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          padding: EdgeInsets.zero,
+          foregroundColor: color,
+          backgroundColor: color.withAlpha(18),
+        ),
       ),
-      child: Text(label, style: const TextStyle(fontSize: 12)),
     );
   }
 

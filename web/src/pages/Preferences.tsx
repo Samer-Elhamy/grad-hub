@@ -283,21 +283,25 @@ function CategoryZone({
                 {tone !== "liked" && (
                   <button
                     type="button"
-                    aria-label={`Like ${category}`}
+                    aria-label={`Move ${category} to preferred categories`}
                     onClick={() => onLike(category)}
-                    className="rounded-md bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300"
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300"
                   >
-                    {language === "ar" ? "إعجاب" : "Like"}
+                    <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path d="M3.2 6.4c1.4-2.5 4.5-2.1 5.8 0.1l1 1.6 1-1.6c1.3-2.2 4.4-2.6 5.8-0.1 1 1.8 0.6 4-1 5.5L10 17.2 4.2 11.9c-1.6-1.5-2-3.7-1-5.5Z" />
+                    </svg>
                   </button>
                 )}
                 {tone !== "disliked" && (
                   <button
                     type="button"
-                    aria-label={`Dislike ${category}`}
+                    aria-label={`Move ${category} to avoided categories`}
                     onClick={() => onDislike(category)}
-                    className="rounded-md bg-red-50 px-2 py-1 text-xs font-semibold text-red-600 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-300"
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-300"
                   >
-                    {language === "ar" ? "عدم إعجاب" : "Dislike"}
+                    <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true">
+                      <path strokeLinecap="round" d="M5 5l10 10M15 5 5 15" />
+                    </svg>
                   </button>
                 )}
                 {tone !== "neutral" && (
@@ -305,9 +309,12 @@ function CategoryZone({
                     type="button"
                     aria-label={`Clear ${category} preference`}
                     onClick={() => onClear(category)}
-                    className="rounded-md bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"
+                    title={language === "ar" ? "إزالة" : "Clear"}
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"
                   >
-                    {language === "ar" ? "إزالة" : "Clear"}
+                    <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 10h12M10 4v12" />
+                    </svg>
                   </button>
                 )}
               </div>
