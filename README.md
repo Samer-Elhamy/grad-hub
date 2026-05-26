@@ -40,21 +40,18 @@
 
 ## Screenshots
 
-### Web — Arabic Discover
+### Laptop Preview
 
-![Arabic Discover screenshot](docs/assets/screenshots/discover-ar.png)
+<p align="center">
+  <img src="docs/assets/screenshots/laptop-discover-mockup.png" alt="Grad Hub web app shown inside a laptop mockup" width="760" />
+</p>
 
-### Web — Idea Details + Source Link
+### Mobile Preview
 
-![Arabic idea details screenshot](docs/assets/screenshots/idea-detail-ar.png)
-
-### Web — English Discover
-
-![English Discover screenshot](docs/assets/screenshots/discover-en.png)
-
-### Mobile — Offline Discover
-
-![Mobile offline discover screenshot](docs/assets/screenshots/mobile-offline-discover.svg)
+<p align="center">
+  <img src="docs/assets/screenshots/mobile-hand-discover.png" alt="Grad Hub mobile app in use" width="360" />
+  <img src="docs/assets/screenshots/mobile-logo-preview.png" alt="Grad Hub logo preview on a phone" width="360" />
+</p>
 
 ## APK Download
 
