@@ -6,6 +6,12 @@
 
 ![Grad Hub social preview](docs/assets/grad-hub-social-preview.svg)
 
+<p align="center">
+  <a href="https://github.com/Samer-Elhamy/grad-hub/releases/download/v1.0.3/grad-hub-mobile-v1.0.3-logo-offline.apk"><strong>Download Android APK</strong></a>
+  ·
+  <a href="https://github.com/Samer-Elhamy/grad-hub/releases/tag/v1.0.3">Release Notes</a>
+</p>
+
 **Grad Hub** is a bilingual graduation-project discovery platform. It helps students find stronger project ideas, save what they like, reject what does not fit, and gradually build a preference profile that improves recommendations.
 
 **جراد هب** منصة عربية/إنجليزية لاكتشاف أفكار مشاريع التخرج. تساعد الطالب يلاقي أفكار مناسبة، يحفظ الأفكار المهمة، يستبعد التصنيفات غير المناسبة، ويكوّن تفضيلات ذكية تتحسن مع كل Swipe.
@@ -52,9 +58,13 @@
 
 ## APK Download
 
-The latest Android APK is published through GitHub Releases when available:
+Download the latest Android build directly:
 
-[Download the latest APK](https://github.com/Samer-Elhamy/grad-hub/releases)
+[Download Grad Hub Mobile APK](https://github.com/Samer-Elhamy/grad-hub/releases/download/v1.0.3/grad-hub-mobile-v1.0.3-logo-offline.apk)
+
+تحميل مباشر لأحدث نسخة Android:
+
+[تحميل ملف APK](https://github.com/Samer-Elhamy/grad-hub/releases/download/v1.0.3/grad-hub-mobile-v1.0.3-logo-offline.apk)
 
 For local builds:
 
