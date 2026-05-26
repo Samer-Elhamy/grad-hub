@@ -36,6 +36,41 @@ export function usePreferences() {
     await savePreferences({ excluded_categories: updated });
   };
 
+  /** Move a category into the liked group. */
+  const markCategoryLiked = async (category: string) => {
+    if (!prefs) return;
+    const excluded = (prefs.excluded_categories ?? []).filter((c) => c !== category);
+    await savePreferences({
+      excluded_categories: excluded,
+      category_weights: {
+        [category]: Math.max(prefs.category_weights?.[category] ?? 0, 0.85),
+      },
+    });
+  };
+
+  /** Move a category into the disliked group. */
+  const markCategoryDisliked = async (category: string) => {
+    if (!prefs) return;
+    const current = prefs.excluded_categories ?? [];
+    await savePreferences({
+      excluded_categories: current.includes(category) ? current : [...current, category],
+      category_weights: {
+        [category]: 0,
+      },
+    });
+  };
+
+  /** Move a category back to the neutral available group. */
+  const clearCategoryPreference = async (category: string) => {
+    if (!prefs) return;
+    await savePreferences({
+      excluded_categories: (prefs.excluded_categories ?? []).filter((c) => c !== category),
+      category_weights: {
+        [category]: 0,
+      },
+    });
+  };
+
   /** Check if a category is excluded */
   const isCategoryExcluded = (category: string): boolean => {
     return prefs?.excluded_categories?.includes(category) ?? false;
@@ -46,6 +81,9 @@ export function usePreferences() {
     loading,
     toggleExcludedCategory,
     isCategoryExcluded,
+    markCategoryLiked,
+    markCategoryDisliked,
+    clearCategoryPreference,
     savePreferences,
     reload: loadPreferences,
   };

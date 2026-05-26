@@ -53,19 +53,26 @@ class CardStack extends StatelessWidget {
     // Take up to 3 cards for the stack
     final displayIdeas = ideas.take(3).toList();
 
-    return SizedBox(
-      height: 480,
-      child: Stack(
-        children: [
-          for (var i = displayIdeas.length - 1; i >= 0; i--)
-            _buildStackedCard(
-              context,
-              idea: displayIdeas[i],
-              index: i,
-              total: displayIdeas.length,
-            ),
-        ],
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final stackHeight =
+            constraints.maxHeight.isFinite ? constraints.maxHeight : 480.0;
+        return SizedBox(
+          height: stackHeight,
+          child: Stack(
+            children: [
+              for (var i = displayIdeas.length - 1; i >= 0; i--)
+                _buildStackedCard(
+                  context,
+                  idea: displayIdeas[i],
+                  index: i,
+                  total: displayIdeas.length,
+                  height: stackHeight,
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -74,6 +81,7 @@ class CardStack extends StatelessWidget {
     required Idea idea,
     required int index,
     required int total,
+    required double height,
   }) {
     final isTop = index == 0;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -110,10 +118,11 @@ class CardStack extends StatelessWidget {
                   onSwipedRight: onSwipedRight ?? () {},
                   onDragUpdate: onDragUpdate,
                   arabic: arabic,
+                  height: height,
                 )
               : ClipRRect(
                   borderRadius: BorderRadius.circular(16),
-                  child: _buildMiniCard(context, idea, isDark),
+                  child: _buildMiniCard(context, idea, isDark, height),
                 ),
         ),
       ),
@@ -121,10 +130,12 @@ class CardStack extends StatelessWidget {
   }
 
   /// Smaller/tighter card for non-top positions.
-  Widget _buildMiniCard(BuildContext context, Idea idea, bool isDark) {
+  Widget _buildMiniCard(
+      BuildContext context, Idea idea, bool isDark, double height) {
+    final imageHeight = (height * 0.42).clamp(100.0, 200.0);
     return Container(
       width: double.infinity,
-      height: 480,
+      height: height,
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
@@ -138,7 +149,7 @@ class CardStack extends StatelessWidget {
         children: [
           // Mini image placeholder
           Container(
-            height: 200,
+            height: imageHeight,
             width: double.infinity,
             decoration: BoxDecoration(
               color: isDark ? const Color(0xFF21262D) : const Color(0xFFF3F4F6),

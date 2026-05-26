@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:grad_hub_mobile/services/api_service.dart';
-import 'package:grad_hub_mobile/models/idea.dart';
 import 'package:grad_hub_mobile/models/swipe.dart';
 import 'package:grad_hub_mobile/models/preference.dart';
 
@@ -166,7 +165,7 @@ void main() {
     });
 
     test('updatePreferences sends preferences to API', () async {
-      final prefs = const PreferenceVector(
+      const prefs = PreferenceVector(
         likedCategories: [CategoryPreference(category: 'Test', weight: 0.5)],
       );
 
@@ -531,10 +530,7 @@ void main() {
       );
 
       // This should complete before 15 seconds due to timeout
-      final future = slowService.fetchNextIdea();
-
-      // We expect a timeout exception, but this depends on actual timeout config
-      // The test demonstrates the timeout mechanism exists
+      await expectLater(slowService.fetchNextIdea(), throwsA(isA<Exception>()));
     });
   });
 }

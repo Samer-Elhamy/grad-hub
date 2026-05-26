@@ -63,7 +63,23 @@ export function SwipeableCard({ idea, onSwipe, isTop }: SwipeableCardProps) {
             : {})}
         >
           {/* Card face */}
-          <div className="w-full h-full bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col shadow-md">
+          <div className="relative w-full h-full bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col shadow-md">
+            {/* Swipe direction glow overlays */}
+            {isTop && (
+              <>
+                <motion.div
+                  data-testid="like-glow-overlay"
+                  className="pointer-events-none absolute inset-y-0 right-0 z-20 w-2/3 bg-gradient-to-l from-emerald-400/45 via-emerald-300/20 to-transparent shadow-[inset_-28px_0_48px_rgba(16,185,129,0.42)]"
+                  style={{ opacity: likeOpacity }}
+                />
+                <motion.div
+                  data-testid="nope-glow-overlay"
+                  className="pointer-events-none absolute inset-y-0 left-0 z-20 w-2/3 bg-gradient-to-r from-red-400/45 via-red-300/20 to-transparent shadow-[inset_28px_0_48px_rgba(239,68,68,0.42)]"
+                  style={{ opacity: nopeOpacity }}
+                />
+              </>
+            )}
+
             {/* Image area (top 55%) */}
             <div className="relative h-[55%] min-h-[200px] overflow-hidden">
               {idea.image_url ? (
@@ -82,28 +98,6 @@ export function SwipeableCard({ idea, onSwipe, isTop }: SwipeableCardProps) {
                     {title.charAt(0)}
                   </span>
                 </div>
-              )}
-
-              {/* Swipe direction overlays */}
-              {isTop && (
-                <>
-                  <motion.div
-                    className="absolute inset-0 rounded-t-xl flex items-center justify-start pl-6"
-                    style={{ opacity: likeOpacity }}
-                  >
-                    <span className="text-emerald-500 dark:text-emerald-400 text-5xl font-bold -rotate-12 border-4 border-emerald-500 dark:border-emerald-400 rounded-xl px-4 py-2 bg-white/80 dark:bg-gray-900/80">
-                      {language === "ar" ? "إعجاب" : "LIKE"}
-                    </span>
-                  </motion.div>
-                  <motion.div
-                    className="absolute inset-0 rounded-t-xl flex items-center justify-end pr-6"
-                    style={{ opacity: nopeOpacity }}
-                  >
-                    <span className="text-red-500 dark:text-red-400 text-5xl font-bold rotate-12 border-4 border-red-500 dark:border-red-400 rounded-xl px-4 py-2 bg-white/80 dark:bg-gray-900/80">
-                      {language === "ar" ? "رفض" : "NOPE"}
-                    </span>
-                  </motion.div>
-                </>
               )}
 
               {/* Difficulty badge */}

@@ -5,6 +5,10 @@ import '../models/preference.dart';
 import '../providers/language_provider.dart';
 import '../providers/preference_provider.dart';
 
+const double _likedCategoryThreshold = 0.6;
+
+enum _CategoryGroup { available, liked, disliked }
+
 /// Preferences screen with category toggles and stats.
 ///
 /// Layout:
@@ -40,6 +44,30 @@ class PreferencesScreen extends ConsumerWidget {
     AppLanguage language,
   ) {
     final isDark = theme.brightness == Brightness.dark;
+    final allCategories = {
+      ...PreferenceNotifier.availableCategories,
+      ...prefs.likedCategories.map((item) => item.category),
+      ...prefs.excludedCategories,
+    }.toList();
+    double categoryWeight(String category) {
+      for (final item in prefs.likedCategories) {
+        if (item.category == category) return item.weight;
+      }
+      return 0;
+    }
+
+    final likedCategories = allCategories.where((category) {
+      return !prefs.excludedCategories.contains(category) &&
+          categoryWeight(category) >= _likedCategoryThreshold;
+    }).toList();
+    final dislikedCategories = allCategories
+        .where((category) => prefs.excludedCategories.contains(category))
+        .toList();
+    final availableCategories = allCategories
+        .where((category) =>
+            !likedCategories.contains(category) &&
+            !dislikedCategories.contains(category))
+        .toList();
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
@@ -60,54 +88,14 @@ class PreferencesScreen extends ConsumerWidget {
           _buildStatsCard(context, prefs, isDark, language),
           const SizedBox(height: 24),
 
-          // Liked categories
-          _buildSectionLabel(context, tr(language, 'likedCategories')),
-          const SizedBox(height: 8),
-          if (prefs.likedCategories.isEmpty)
-            _buildEmptyHint(context, tr(language, 'noLikedCategories'))
-          else
-            _buildCategoryChips(
-              context,
-              categories: prefs.allLikedCategoryNames,
-              selectedCategories: prefs.allLikedCategoryNames,
-              excludedCategories: prefs.excludedCategories,
-              onToggle: (cat) => ref
-                  .read(preferenceProvider.notifier)
-                  .toggleLikedCategory(cat),
-              isDark: isDark,
-            ),
-          const SizedBox(height: 24),
-
-          // Excluded categories
-          _buildSectionLabel(context, tr(language, 'excludedCategories')),
-          const SizedBox(height: 8),
-          if (prefs.excludedCategories.isEmpty)
-            _buildEmptyHint(context, tr(language, 'noExcludedCategories'))
-          else
-            _buildCategoryChips(
-              context,
-              categories: prefs.excludedCategories,
-              selectedCategories: prefs.allLikedCategoryNames,
-              excludedCategories: prefs.excludedCategories,
-              onToggle: (cat) => ref
-                  .read(preferenceProvider.notifier)
-                  .toggleExcludedCategory(cat),
-              isDark: isDark,
-              showExcluded: true,
-            ),
-          const SizedBox(height: 24),
-
-          // All available categories
-          _buildSectionLabel(context, tr(language, 'allCategories')),
-          const SizedBox(height: 8),
-          _buildCategoryChips(
+          _buildCategoryBoard(
             context,
-            categories: PreferenceNotifier.availableCategories,
-            selectedCategories: prefs.allLikedCategoryNames,
-            excludedCategories: prefs.excludedCategories,
-            onToggle: (cat) =>
-                ref.read(preferenceProvider.notifier).toggleLikedCategory(cat),
+            ref,
+            language: language,
             isDark: isDark,
+            availableCategories: availableCategories,
+            likedCategories: likedCategories,
+            dislikedCategories: dislikedCategories,
           ),
           const SizedBox(height: 32),
 
@@ -182,83 +170,249 @@ class PreferencesScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildCategoryChips(
-    BuildContext context, {
-    required List<String> categories,
-    required List<String> selectedCategories,
-    required List<String> excludedCategories,
-    required ValueChanged<String> onToggle,
+  Widget _buildCategoryBoard(
+    BuildContext context,
+    WidgetRef ref, {
+    required AppLanguage language,
     required bool isDark,
-    bool showExcluded = false,
+    required List<String> availableCategories,
+    required List<String> likedCategories,
+    required List<String> dislikedCategories,
   }) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: categories.map((category) {
-        final isSelected = selectedCategories.contains(category);
-        final isExcluded = excludedCategories.contains(category);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionLabel(context, tr(language, 'categories')),
+        const SizedBox(height: 8),
+        Text(
+          language.isArabic
+              ? 'اسحب التصنيف أو استخدم الأزرار لوضعه في الإعجاب أو عدم الإعجاب.'
+              : 'Drag a category or use the buttons to move it into like or dislike.',
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+        const SizedBox(height: 12),
+        _buildCategoryDropZone(
+          context,
+          ref,
+          title: language.isArabic ? 'التصنيفات المتاحة' : 'Available Categories',
+          emptyText:
+              language.isArabic ? 'لا توجد تصنيفات متاحة' : 'No neutral categories',
+          group: _CategoryGroup.available,
+          categories: availableCategories,
+          isDark: isDark,
+        ),
+        const SizedBox(height: 12),
+        _buildCategoryDropZone(
+          context,
+          ref,
+          title: language.isArabic ? 'تصنيفات الإعجاب' : 'Liked Categories',
+          emptyText: language.isArabic
+              ? 'اسحب تصنيفًا هنا للإعجاب'
+              : 'Drag categories here to like them',
+          group: _CategoryGroup.liked,
+          categories: likedCategories,
+          isDark: isDark,
+        ),
+        const SizedBox(height: 12),
+        _buildCategoryDropZone(
+          context,
+          ref,
+          title: language.isArabic
+              ? 'تصنيفات عدم الإعجاب'
+              : 'Disliked Categories',
+          emptyText: language.isArabic
+              ? 'اسحب تصنيفًا هنا لإخفائه'
+              : 'Drag categories here to dislike them',
+          group: _CategoryGroup.disliked,
+          categories: dislikedCategories,
+          isDark: isDark,
+        ),
+      ],
+    );
+  }
 
-        Color chipColor;
-        if (isExcluded) {
-          chipColor = const Color(0xFFEF4444);
-        } else if (isSelected) {
-          chipColor = const Color(0xFF10B981);
-        } else {
-          chipColor =
-              isDark ? const Color(0xFF30363D) : const Color(0xFFE5E7EB);
-        }
+  Widget _buildCategoryDropZone(
+    BuildContext context,
+    WidgetRef ref, {
+    required String title,
+    required String emptyText,
+    required _CategoryGroup group,
+    required List<String> categories,
+    required bool isDark,
+  }) {
+    final color = switch (group) {
+      _CategoryGroup.liked => const Color(0xFF10B981),
+      _CategoryGroup.disliked => const Color(0xFFEF4444),
+      _CategoryGroup.available =>
+        isDark ? const Color(0xFF30363D) : const Color(0xFFE5E7EB),
+    };
 
-        return GestureDetector(
-          onTap: () => onToggle(category),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: 8,
-            ),
-            decoration: BoxDecoration(
-              color: isExcluded
-                  ? chipColor.withAlpha(26)
-                  : isSelected
-                      ? chipColor.withAlpha(26)
-                      : Colors.transparent,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: chipColor.withAlpha(isSelected || isExcluded ? 153 : 77),
-                width: isSelected || isExcluded ? 1.5 : 1,
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (isSelected)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 6),
-                    child: Icon(Icons.check_circle, size: 16, color: chipColor),
-                  ),
-                if (isExcluded)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 6),
-                    child: Icon(Icons.block, size: 16, color: chipColor),
-                  ),
-                Text(
-                  category,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: isExcluded
-                        ? const Color(0xFFEF4444)
-                        : isSelected
-                            ? const Color(0xFF10B981)
-                            : Theme.of(context).textTheme.bodyLarge?.color,
-                  ),
-                ),
-              ],
+    return DragTarget<String>(
+      onWillAcceptWithDetails: (_) => true,
+      onAcceptWithDetails: (details) => _moveCategory(ref, details.data, group),
+      builder: (context, candidateData, rejectedData) {
+        final isHovering = candidateData.isNotEmpty;
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          width: double.infinity,
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: isHovering ? color.withAlpha(34) : color.withAlpha(18),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: color.withAlpha(isHovering ? 178 : 92),
+              width: isHovering ? 1.6 : 1,
             ),
           ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: Theme.of(context).textTheme.titleSmall),
+              const SizedBox(height: 8),
+              if (categories.isEmpty)
+                _buildEmptyHint(context, emptyText)
+              else
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: categories
+                      .map(
+                        (category) => _buildDraggableCategoryChip(
+                          context,
+                          ref,
+                          category: category,
+                          group: group,
+                        ),
+                      )
+                      .toList(),
+                ),
+            ],
+          ),
         );
-      }).toList(),
+      },
     );
+  }
+
+  Widget _buildDraggableCategoryChip(
+    BuildContext context,
+    WidgetRef ref, {
+    required String category,
+    required _CategoryGroup group,
+  }) {
+    final child = _buildMovableCategoryChip(
+      context,
+      ref,
+      category: category,
+      group: group,
+    );
+
+    return Draggable<String>(
+      data: category,
+      feedback: Material(
+        color: Colors.transparent,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 240),
+          child: child,
+        ),
+      ),
+      childWhenDragging: Opacity(opacity: 0.35, child: child),
+      child: child,
+    );
+  }
+
+  Widget _buildMovableCategoryChip(
+    BuildContext context,
+    WidgetRef ref, {
+    required String category,
+    required _CategoryGroup group,
+  }) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: theme.dividerColor.withAlpha(120)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            category,
+            style: theme.textTheme.labelLarge,
+          ),
+          const SizedBox(height: 6),
+          Wrap(
+            spacing: 4,
+            runSpacing: 4,
+            children: [
+              if (group != _CategoryGroup.liked)
+                _smallActionButton(
+                  context,
+                  label: 'Like',
+                  color: const Color(0xFF10B981),
+                  onPressed: () =>
+                      _moveCategory(ref, category, _CategoryGroup.liked),
+                ),
+              if (group != _CategoryGroup.disliked)
+                _smallActionButton(
+                  context,
+                  label: 'Dislike',
+                  color: const Color(0xFFEF4444),
+                  onPressed: () =>
+                      _moveCategory(ref, category, _CategoryGroup.disliked),
+                ),
+              if (group != _CategoryGroup.available)
+                _smallActionButton(
+                  context,
+                  label: 'Clear',
+                  color: theme.colorScheme.primary,
+                  onPressed: () =>
+                      _moveCategory(ref, category, _CategoryGroup.available),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _smallActionButton(
+    BuildContext context, {
+    required String label,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        minimumSize: Size.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        foregroundColor: color,
+      ),
+      child: Text(label, style: const TextStyle(fontSize: 12)),
+    );
+  }
+
+  void _moveCategory(
+    WidgetRef ref,
+    String category,
+    _CategoryGroup group,
+  ) {
+    final notifier = ref.read(preferenceProvider.notifier);
+    switch (group) {
+      case _CategoryGroup.liked:
+        notifier.markCategoryLiked(category);
+        break;
+      case _CategoryGroup.disliked:
+        notifier.markCategoryDisliked(category);
+        break;
+      case _CategoryGroup.available:
+        notifier.clearCategoryPreference(category);
+        break;
+    }
   }
 
   Widget _buildError(BuildContext context, Object error, WidgetRef ref) {

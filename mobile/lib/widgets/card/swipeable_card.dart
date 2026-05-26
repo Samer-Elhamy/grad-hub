@@ -30,6 +30,9 @@ class SwipeableCard extends StatefulWidget {
   /// Whether localized Arabic idea text should be preferred.
   final bool arabic;
 
+  /// Height allocated by the stack. Keeps the card responsive on small phones.
+  final double height;
+
   const SwipeableCard({
     super.key,
     required this.idea,
@@ -38,6 +41,7 @@ class SwipeableCard extends StatefulWidget {
     this.onDragUpdate,
     this.isTop = true,
     this.arabic = false,
+    this.height = 480,
   });
 
   @override
@@ -189,10 +193,12 @@ class _SwipeableCardState extends State<SwipeableCard>
     final idea = widget.idea;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final cardHeight = widget.height;
+    final imageHeight = (cardHeight * 0.42).clamp(120.0, 240.0);
 
     return Container(
       width: double.infinity,
-      height: 480,
+      height: cardHeight,
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
@@ -210,7 +216,7 @@ class _SwipeableCardState extends State<SwipeableCard>
         children: [
           // Idea image (falls back to a category gradient).
           Container(
-            height: 264, // ~55% of 480
+            height: imageHeight,
             width: double.infinity,
             decoration: BoxDecoration(
               color: isDark ? const Color(0xFF21262D) : const Color(0xFFF3F4F6),
@@ -302,31 +308,36 @@ class _SwipeableCardState extends State<SwipeableCard>
                     overflow: TextOverflow.ellipsis,
                   ),
 
-                  const Spacer(),
+                  const SizedBox(height: 8),
 
                   // Tech stack badges
                   if (idea.technologies.isNotEmpty)
-                    Wrap(
-                      spacing: 6,
-                      runSpacing: 4,
-                      children: idea.technologies.take(5).map((tech) {
-                        return Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isDark
-                                ? const Color(0xFF21262D)
-                                : const Color(0xFFF3F4F6),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Text(
-                            tech,
-                            style: theme.textTheme.labelSmall,
-                          ),
-                        );
-                      }).toList(),
+                    Flexible(
+                      child: SingleChildScrollView(
+                        physics: const NeverScrollableScrollPhysics(),
+                        child: Wrap(
+                          spacing: 6,
+                          runSpacing: 4,
+                          children: idea.technologies.take(5).map((tech) {
+                            return Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isDark
+                                    ? const Color(0xFF21262D)
+                                    : const Color(0xFFF3F4F6),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                tech,
+                                style: theme.textTheme.labelSmall,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
                     ),
                 ],
               ),

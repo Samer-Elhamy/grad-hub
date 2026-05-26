@@ -85,7 +85,7 @@ class AppTheme {
       cardColor: AppColors.surfaceLight,
       dividerColor: AppColors.borderLight,
       textTheme: _buildTextTheme(Brightness.light),
-      cardTheme: _cardTheme(Brightness.light) as CardThemeData,
+      cardTheme: _cardTheme(Brightness.light),
       inputDecorationTheme: _inputDecorationTheme(Brightness.light),
       appBarTheme: _appBarTheme(Brightness.light),
       bottomNavigationBarTheme: _bottomNavTheme(Brightness.light),
@@ -113,7 +113,7 @@ class AppTheme {
       cardColor: AppColors.surfaceDark,
       dividerColor: AppColors.borderDark,
       textTheme: _buildTextTheme(Brightness.dark),
-      cardTheme: _cardTheme(Brightness.dark) as CardThemeData,
+      cardTheme: _cardTheme(Brightness.dark),
       inputDecorationTheme: _inputDecorationTheme(Brightness.dark),
       appBarTheme: _appBarTheme(Brightness.dark),
       bottomNavigationBarTheme: _bottomNavTheme(Brightness.dark),
@@ -202,9 +202,9 @@ class AppTheme {
     );
   }
 
-  static CardTheme _cardTheme(Brightness brightness) {
+  static CardThemeData _cardTheme(Brightness brightness) {
     final isDark = brightness == Brightness.dark;
-    return CardTheme(
+    return CardThemeData(
       color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
       elevation: isDark ? 0 : 0,
       shadowColor: Colors.black.withAlpha(isDark ? 77 : 26),

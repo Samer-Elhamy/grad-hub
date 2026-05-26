@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../i18n.dart';
 import '../models/swipe.dart';
-import '../providers/idea_provider.dart';
 import '../providers/language_provider.dart';
+import '../providers/local_storage_provider.dart';
 
 /// State for the history screen.
 class HistoryScreenState {
@@ -100,9 +100,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     setState(() => _state = _state.copyWith(isLoading: true, error: null));
 
     try {
-      final api = ref.read(apiServiceProvider);
+      final storage = ref.read(localStorageProvider);
       final filter = _getFilterParam();
-      final response = await api.fetchHistory(
+      final response = await storage.fetchHistory(
         page: 1,
         limit: 20,
         filter: filter.isNotEmpty ? filter : null,
@@ -127,10 +127,10 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     setState(() => _state = _state.copyWith(isLoadingMore: true));
 
     try {
-      final api = ref.read(apiServiceProvider);
+      final storage = ref.read(localStorageProvider);
       final filter = _getFilterParam();
       final nextPage = _state.currentPage + 1;
-      final response = await api.fetchHistory(
+      final response = await storage.fetchHistory(
         page: nextPage,
         limit: 20,
         filter: filter.isNotEmpty ? filter : null,

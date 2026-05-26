@@ -95,9 +95,24 @@ class _MainFeedScreenState extends ConsumerState<MainFeedScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                tr(language, 'discover'),
-                style: theme.textTheme.headlineMedium,
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      'assets/grad-hub-logo.png',
+                      width: 34,
+                      height: 34,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    tr(language, 'discover'),
+                    style: theme.textTheme.headlineMedium,
+                  ),
+                ],
               ),
               const SizedBox(height: 2),
               Text(

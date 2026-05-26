@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// Directional overlay text that appears during a swipe drag.
+/// Directional glow that appears during a swipe drag.
 ///
-/// Shows "LIKE" (green) when dragging right, "NOPE" (red) when dragging left.
-/// Fades in based on how far the card has been dragged.
+/// Shows a green glow on the right when dragging right, and a red glow on the
+/// left when dragging left. Fades in based on drag distance.
 class CardOverlay extends StatelessWidget {
   /// Normalized drag progress from -1.0 (full left) to 1.0 (full right).
   final double dragProgress;
@@ -15,43 +15,38 @@ class CardOverlay extends StatelessWidget {
     if (dragProgress.abs() < 0.1) return const SizedBox.shrink();
 
     final isLike = dragProgress > 0;
+    final color =
+        isLike ? const Color(0xFF10B981) : const Color(0xFFEF4444);
+    final alignment = isLike ? Alignment.centerRight : Alignment.centerLeft;
+    final gradient = LinearGradient(
+      begin: isLike ? Alignment.centerRight : Alignment.centerLeft,
+      end: isLike ? Alignment.centerLeft : Alignment.centerRight,
+      colors: [
+        color.withAlpha(115),
+        color.withAlpha(48),
+        Colors.transparent,
+      ],
+    );
 
     return Positioned.fill(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Align(
-          alignment: isLike ? Alignment.topLeft : Alignment.topRight,
-          child: Opacity(
-            opacity: (dragProgress.abs()).clamp(0.0, 1.0),
-            child: Transform.rotate(
-              angle: isLike ? -0.15 : 0.15,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: isLike
-                        ? const Color(0xFF10B981)
-                        : const Color(0xFFEF4444),
-                    width: 4,
+      child: IgnorePointer(
+        child: Opacity(
+          opacity: dragProgress.abs().clamp(0.0, 1.0),
+          child: Align(
+            alignment: alignment,
+            child: Container(
+              key: Key(isLike ? 'like-glow-overlay' : 'nope-glow-overlay'),
+              width: MediaQuery.sizeOf(context).width * 0.7,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                gradient: gradient,
+                boxShadow: [
+                  BoxShadow(
+                    color: color.withAlpha(82),
+                    blurRadius: 48,
+                    spreadRadius: 8,
                   ),
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.transparent,
-                ),
-                child: Text(
-                  isLike ? 'LIKE' : 'NOPE',
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 32,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 4,
-                    color: isLike
-                        ? const Color(0xFF10B981)
-                        : const Color(0xFFEF4444),
-                  ),
-                ),
+                ],
               ),
             ),
           ),

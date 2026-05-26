@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/fallback_ideas.dart';
 import '../models/idea.dart';
@@ -17,64 +16,23 @@ final apiServiceProvider = Provider<ApiService>((ref) {
 final webSocketServiceProvider = Provider<WebSocketService>((ref) {
   final service = WebSocketService(wsUrl: AppEnvironment.current.wsUrl);
   ref.onDispose(() => service.dispose());
-  // Connect on first access.
-  service.connect();
   return service;
 });
 
 /// State holder for the idea stack.
 ///
 /// Manages a queue of [Idea] cards:
-///   - Fetches initial batch from API
-///   - Receives live ideas from WebSocket
+///   - Loads bundled local ideas immediately
 ///   - Removes top card after swipe
 ///   - Fetches more when stack runs low
 class IdeaStackNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
-  final ApiService _api;
-  final WebSocketService _ws;
-  StreamSubscription<Idea>? _wsSubscription;
-
-  IdeaStackNotifier(this._api, this._ws) : super(const AsyncLoading()) {
+  IdeaStackNotifier(ApiService api, WebSocketService ws)
+      : super(const AsyncLoading()) {
     _init();
   }
 
   Future<void> _init() async {
-    // Listen for new ideas from WebSocket.
-    _wsSubscription = _ws.ideaStream.listen(_addIdea);
     state = AsyncData(_fallbackIdeas(count: 3));
-
-    try {
-      final initialIdeas = await _fetchBatch(3);
-      if (initialIdeas.isNotEmpty) {
-        state = AsyncData(_mergeUnique(initialIdeas, state.value ?? const []));
-      }
-    } catch (e, st) {
-      if ((state.value ?? const []).isEmpty) {
-        state = AsyncError(e, st);
-      }
-    }
-  }
-
-  /// Fetch a batch of ideas from the API.
-  Future<List<Idea>> _fetchBatch(int count) async {
-    final ideas = <Idea>[];
-    for (var i = 0; i < count; i++) {
-      try {
-        final existingIds = state.whenOrNull(
-              data: (items) => items.map((idea) => idea.id),
-            ) ??
-            const <int>[];
-        final activeIds = [
-          ...ideas.map((idea) => idea.id),
-          ...existingIds,
-        ];
-        final idea = await _api.fetchNextIdea(excludeIds: activeIds);
-        if (!ideas.contains(idea)) ideas.add(idea);
-      } catch (_) {
-        break;
-      }
-    }
-    return ideas;
   }
 
   List<Idea> _fallbackIdeas({
@@ -122,11 +80,6 @@ class IdeaStackNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
           ),
         );
         state = AsyncData(seeded);
-        _fetchBatch(2).then((newIdeas) {
-          if (newIdeas.isNotEmpty) {
-            state = AsyncData(_mergeUnique(state.value ?? const [], newIdeas));
-          }
-        });
       } else {
         state = AsyncData(updated);
       }
@@ -135,22 +88,11 @@ class IdeaStackNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
 
   /// Manually fetch and push the next idea.
   Future<void> fetchNext() async {
-    try {
-      final activeIds = state.whenOrNull(
-            data: (ideas) => ideas.map((idea) => idea.id).toList(),
-          ) ??
-          const <int>[];
-      final idea = await _api.fetchNextIdea(excludeIds: activeIds);
-      _addIdea(idea);
-    } catch (e, st) {
-      final activeIds =
-          state.value?.map((idea) => idea.id).toList() ?? const <int>[];
-      final fallback = _fallbackIdeas(count: 1, excludedIds: activeIds);
-      if (fallback.isNotEmpty) {
-        _addIdea(fallback.first);
-      } else {
-        state = AsyncError(e, st);
-      }
+    final activeIds =
+        state.value?.map((idea) => idea.id).toList() ?? const <int>[];
+    final fallback = _fallbackIdeas(count: 1, excludedIds: activeIds);
+    if (fallback.isNotEmpty) {
+      _addIdea(fallback.first);
     }
   }
 
@@ -165,11 +107,6 @@ class IdeaStackNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
     return state.whenOrNull(data: (ideas) => ideas.length) ?? 0;
   }
 
-  @override
-  void dispose() {
-    _wsSubscription?.cancel();
-    super.dispose();
-  }
 }
 
 /// Provider for the idea stack notifier.

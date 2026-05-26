@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:grad_hub_mobile/widgets/card/card_overlay.dart';
 import 'package:grad_hub_mobile/widgets/card/swipeable_card.dart';
 import 'package:grad_hub_mobile/models/idea.dart';
 
 void main() {
   group('SwipeableCard Widget Tests', () {
     // Test data
-    final testIdea = const Idea(
+    const testIdea = Idea(
       id: 1,
       title: 'AI-Powered Chatbot',
       titleAr: 'شات بوت مدعوم بالذكاء الاصطناعي',
@@ -35,6 +36,27 @@ void main() {
 
       // Assert
       expect(find.text('AI-Powered Chatbot'), findsOneWidget);
+    });
+
+    testWidgets('swipe overlay uses glow without LIKE or NOPE text',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: Stack(
+              children: [
+                CardOverlay(dragProgress: 1),
+                CardOverlay(dragProgress: -1),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('LIKE'), findsNothing);
+      expect(find.text('NOPE'), findsNothing);
+      expect(find.byKey(const Key('like-glow-overlay')), findsOneWidget);
+      expect(find.byKey(const Key('nope-glow-overlay')), findsOneWidget);
     });
 
     testWidgets('renders card with idea description',
@@ -311,7 +333,7 @@ void main() {
     testWidgets('handles null description gracefully',
         (WidgetTester tester) async {
       // Arrange
-      final idea = Idea(
+      const idea = Idea(
         id: 1,
         title: 'Idea Without Description',
         technologies: [],
@@ -336,7 +358,7 @@ void main() {
 
     testWidgets('handles empty technologies list', (WidgetTester tester) async {
       // Arrange
-      final idea = Idea(
+      const idea = Idea(
         id: 1,
         title: 'Idea Without Tech',
         technologies: [],

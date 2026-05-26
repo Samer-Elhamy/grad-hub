@@ -3,7 +3,7 @@
    ════════════════════════════════════════ */
 
 import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, type DragEvent } from "react";
 import { usePreferences } from "../hooks/usePreferences";
 import { useStore } from "../store";
 import { categoryLabel, t } from "../i18n";
@@ -20,9 +20,19 @@ const ALL_CATEGORIES = [
   "IoT",
 ];
 
+const LIKED_CATEGORY_THRESHOLD = 0.6;
+
+type CategoryGroup = "available" | "liked" | "disliked";
+
 export function Preferences() {
-  const { preferences, loading, toggleExcludedCategory, isCategoryExcluded } =
-    usePreferences();
+  const {
+    preferences,
+    loading,
+    isCategoryExcluded,
+    markCategoryLiked,
+    markCategoryDisliked,
+    clearCategoryPreference,
+  } = usePreferences();
   const history = useStore((s) => s.history);
   const historyTotal = useStore((s) => s.historyTotal);
   const loadHistory = useStore((s) => s.loadHistory);
@@ -49,21 +59,41 @@ export function Preferences() {
   }
 
   const categories = Array.from(
-    new Set([...ALL_CATEGORIES, ...Object.keys(preferences.category_weights ?? {})]),
+    new Set([
+      ...ALL_CATEGORIES,
+      ...Object.keys(preferences.category_weights ?? {}),
+      ...(preferences.excluded_categories ?? []),
+    ]),
   );
 
-  const sortedCategories = categories.sort((a, b) => {
-    const aExcluded = isCategoryExcluded(a);
-    const bExcluded = isCategoryExcluded(b);
-    if (aExcluded && !bExcluded) return 1;
-    if (!aExcluded && bExcluded) return -1;
-    return 0;
-  });
+  const dislikedCategories = categories.filter((cat) => isCategoryExcluded(cat));
+  const likedCategories = categories.filter(
+    (cat) =>
+      !isCategoryExcluded(cat) &&
+      (preferences.category_weights?.[cat] ?? 0) >= LIKED_CATEGORY_THRESHOLD,
+  );
+  const availableCategories = categories.filter(
+    (cat) => !isCategoryExcluded(cat) && !likedCategories.includes(cat),
+  );
 
   const totalSwipes = historyTotal || history.length;
   const starredCount = history.filter((record) => record.direction === "up").length;
   const likedCount = history.filter((record) => record.direction === "right").length;
   const likedPct = totalSwipes > 0 ? Math.round((likedCount / totalSwipes) * 100) : 0;
+  const moveCategory = (category: string, group: CategoryGroup) => {
+    if (group === "liked") markCategoryLiked(category);
+    if (group === "disliked") markCategoryDisliked(category);
+    if (group === "available") clearCategoryPreference(category);
+  };
+  const handleDrop = (group: CategoryGroup) => (event: DragEvent<HTMLElement>) => {
+    event.preventDefault();
+    const category = event.dataTransfer.getData("text/plain");
+    if (category) moveCategory(category, group);
+  };
+  const handleDragStart = (category: string) => (event: DragEvent<HTMLElement>) => {
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", category);
+  };
 
   return (
     <motion.main
@@ -109,40 +139,56 @@ export function Preferences() {
         </div>
       </section>
 
-      {/* Category toggles */}
+      {/* Category movement zones */}
       <section className="mb-8">
         <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
           {t(language, "categories")}
         </h2>
         <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">
-          {t(language, "categoriesHelp")}
+          {language === "ar"
+            ? "اسحب التصنيف أو استخدم الأزرار لوضعه في الإعجاب أو عدم الإعجاب."
+            : "Drag a category or use the buttons to move it into like or dislike."}
         </p>
-        <div className="flex flex-wrap gap-2">
-          {sortedCategories.map((cat) => {
-            const excluded = isCategoryExcluded(cat);
-            const weight = preferences.category_weights?.[cat] ?? 0;
-
-            return (
-              <motion.button
-                key={cat}
-                onClick={() => toggleExcludedCategory(cat)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  excluded
-                    ? "bg-red-50 dark:bg-red-900/30 text-red-500 dark:text-red-400 line-through opacity-60"
-                    : "bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-50 border border-gray-200 dark:border-gray-700"
-                }`}
-                whileTap={{ scale: 0.95 }}
-                whileHover={{ scale: 1.02 }}
-              >
-                {categoryLabel(cat, language)}
-                {weight > 0 && !excluded && (
-                  <span className="text-xs text-emerald-500 dark:text-emerald-400 font-semibold">
-                    {(weight * 100).toFixed(0)}%
-                  </span>
-                )}
-              </motion.button>
-            );
-          })}
+        <div className="grid gap-4 md:grid-cols-3">
+          <CategoryZone
+            title={language === "ar" ? "التصنيفات المتاحة" : "Available Categories"}
+            testId="available-categories"
+            tone="neutral"
+            categories={availableCategories}
+            emptyText={language === "ar" ? "لا توجد تصنيفات متاحة" : "No neutral categories"}
+            language={language}
+            onDragStart={handleDragStart}
+            onDrop={handleDrop("available")}
+            onLike={(cat) => moveCategory(cat, "liked")}
+            onDislike={(cat) => moveCategory(cat, "disliked")}
+            onClear={(cat) => moveCategory(cat, "available")}
+          />
+          <CategoryZone
+            title={language === "ar" ? "تصنيفات الإعجاب" : "Liked Categories"}
+            testId="liked-categories"
+            tone="liked"
+            categories={likedCategories}
+            emptyText={language === "ar" ? "اسحب تصنيفًا هنا للإعجاب" : "Drag categories here to like them"}
+            language={language}
+            onDragStart={handleDragStart}
+            onDrop={handleDrop("liked")}
+            onLike={(cat) => moveCategory(cat, "liked")}
+            onDislike={(cat) => moveCategory(cat, "disliked")}
+            onClear={(cat) => moveCategory(cat, "available")}
+          />
+          <CategoryZone
+            title={language === "ar" ? "تصنيفات عدم الإعجاب" : "Disliked Categories"}
+            testId="disliked-categories"
+            tone="disliked"
+            categories={dislikedCategories}
+            emptyText={language === "ar" ? "اسحب تصنيفًا هنا لإخفائه" : "Drag categories here to dislike them"}
+            language={language}
+            onDragStart={handleDragStart}
+            onDrop={handleDrop("disliked")}
+            onLike={(cat) => moveCategory(cat, "liked")}
+            onDislike={(cat) => moveCategory(cat, "disliked")}
+            onClear={(cat) => moveCategory(cat, "available")}
+          />
         </div>
       </section>
 
@@ -172,5 +218,103 @@ export function Preferences() {
           </section>
         )}
     </motion.main>
+  );
+}
+
+interface CategoryZoneProps {
+  title: string;
+  testId: string;
+  tone: "neutral" | "liked" | "disliked";
+  categories: string[];
+  emptyText: string;
+  language: "en" | "ar";
+  onDragStart: (category: string) => (event: DragEvent<HTMLElement>) => void;
+  onDrop: (event: DragEvent<HTMLElement>) => void;
+  onLike: (category: string) => void;
+  onDislike: (category: string) => void;
+  onClear: (category: string) => void;
+}
+
+function CategoryZone({
+  title,
+  testId,
+  tone,
+  categories,
+  emptyText,
+  language,
+  onDragStart,
+  onDrop,
+  onLike,
+  onDislike,
+  onClear,
+}: CategoryZoneProps) {
+  const toneClasses = {
+    neutral: "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900",
+    liked: "border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20",
+    disliked: "border-red-200 dark:border-red-800 bg-red-50/50 dark:bg-red-950/20",
+  }[tone];
+
+  return (
+    <section
+      data-testid={testId}
+      onDragOver={(event) => event.preventDefault()}
+      onDrop={onDrop}
+      className={`min-h-40 rounded-2xl border border-dashed p-3 transition-colors ${toneClasses}`}
+    >
+      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">
+        {title}
+      </h3>
+
+      {categories.length === 0 ? (
+        <p className="text-xs text-gray-400 dark:text-gray-500">{emptyText}</p>
+      ) : (
+        <div className="space-y-2">
+          {categories.map((category) => (
+            <div
+              key={category}
+              draggable
+              onDragStart={onDragStart(category)}
+              className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3 shadow-sm cursor-grab active:cursor-grabbing"
+            >
+              <div className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                {categoryLabel(category, language)}
+              </div>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {tone !== "liked" && (
+                  <button
+                    type="button"
+                    aria-label={`Like ${category}`}
+                    onClick={() => onLike(category)}
+                    className="rounded-md bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300"
+                  >
+                    {language === "ar" ? "إعجاب" : "Like"}
+                  </button>
+                )}
+                {tone !== "disliked" && (
+                  <button
+                    type="button"
+                    aria-label={`Dislike ${category}`}
+                    onClick={() => onDislike(category)}
+                    className="rounded-md bg-red-50 px-2 py-1 text-xs font-semibold text-red-600 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-300"
+                  >
+                    {language === "ar" ? "عدم إعجاب" : "Dislike"}
+                  </button>
+                )}
+                {tone !== "neutral" && (
+                  <button
+                    type="button"
+                    aria-label={`Clear ${category} preference`}
+                    onClick={() => onClear(category)}
+                    className="rounded-md bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"
+                  >
+                    {language === "ar" ? "إزالة" : "Clear"}
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }

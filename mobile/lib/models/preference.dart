@@ -74,6 +74,9 @@ class PreferenceVector {
   }
 
   Map<String, dynamic> toJson() => {
+        'category_weights': {
+          for (final category in likedCategories) category.category: category.weight,
+        },
         'liked_categories': likedCategories.map((e) => e.toJson()).toList(),
         'excluded_categories': excludedCategories,
         'keywords': keywords,
@@ -81,7 +84,7 @@ class PreferenceVector {
 
   /// Whether a category is explicitly liked.
   bool isCategoryLiked(String category) =>
-      likedCategories.any((c) => c.category == category);
+      likedCategories.any((c) => c.category == category && c.weight > 0);
 
   /// Whether a category is excluded.
   bool isCategoryExcluded(String category) =>
@@ -89,5 +92,8 @@ class PreferenceVector {
 
   /// All unique category names from liked preferences.
   List<String> get allLikedCategoryNames =>
-      likedCategories.map((c) => c.category).toList();
+      likedCategories
+          .where((c) => c.weight > 0)
+          .map((c) => c.category)
+          .toList();
 }

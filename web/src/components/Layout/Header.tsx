@@ -6,6 +6,7 @@ import { NavLink } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
 import { useStore } from "../../store";
 import { t } from "../../i18n";
+import logoUrl from "../../assets/grad-hub-logo.png";
 
 export function Header() {
   const language = useStore((s) => s.language);
@@ -18,21 +19,11 @@ export function Header() {
       <div className="max-w-3xl mx-auto flex items-center justify-between h-14 px-6">
         {/* Brand */}
         <NavLink to="/" className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-blue-500 dark:bg-blue-400 flex items-center justify-center">
-            <svg
-              className="w-4 h-4 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2.5}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 4.5v15m7.5-7.5h-15"
-              />
-            </svg>
-          </div>
+          <img
+            src={logoUrl}
+            alt="Grad Hub logo"
+            className="w-8 h-8 rounded-xl object-cover shadow-sm"
+          />
           <span className="font-sans font-semibold text-base text-gray-900 dark:text-gray-50 hidden sm:inline">
             {language === "ar" ? "جراد هب" : "Grad Hub"}
           </span>

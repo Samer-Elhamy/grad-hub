@@ -1,5 +1,5 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen, within } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { SwipeRecord } from "../../types/swipe";
 import { Preferences } from "../Preferences";
 
@@ -27,18 +27,27 @@ const history: SwipeRecord[] = [
   },
 ];
 
+const preferenceActions = vi.hoisted(() => ({
+  markCategoryLiked: vi.fn(),
+  markCategoryDisliked: vi.fn(),
+  clearCategoryPreference: vi.fn(),
+}));
+
 vi.mock("../../hooks/usePreferences", () => ({
   usePreferences: () => ({
     preferences: {
       category_weights: { "AI/ML": 0.6 },
       keyword_weights: { python: 0.7 },
-      excluded_categories: [],
+      excluded_categories: ["DevOps"],
       difficulty_preference: null,
       last_updated: "2026-05-25T03:00:00.000Z",
     },
     loading: false,
     toggleExcludedCategory: vi.fn(),
-    isCategoryExcluded: () => false,
+    isCategoryExcluded: (category: string) => category === "DevOps",
+    markCategoryLiked: preferenceActions.markCategoryLiked,
+    markCategoryDisliked: preferenceActions.markCategoryDisliked,
+    clearCategoryPreference: preferenceActions.clearCategoryPreference,
   }),
 }));
 
@@ -58,11 +67,39 @@ function statValue(label: string): string {
 }
 
 describe("Preferences", () => {
+  beforeEach(() => {
+    preferenceActions.markCategoryLiked.mockClear();
+    preferenceActions.markCategoryDisliked.mockClear();
+    preferenceActions.clearCategoryPreference.mockClear();
+  });
+
   it("renders summary stats from loaded swipe history", () => {
     render(<Preferences />);
 
     expect(statValue("Total swipes")).toBe("3");
     expect(statValue("Liked")).toBe("2");
     expect(statValue("Like rate")).toBe("67%");
+  });
+
+  it("groups categories into available, liked, and disliked zones", () => {
+    render(<Preferences />);
+
+    expect(screen.getByText("Available Categories")).toBeInTheDocument();
+    expect(screen.getByText("Liked Categories")).toBeInTheDocument();
+    expect(screen.getByText("Disliked Categories")).toBeInTheDocument();
+    expect(within(screen.getByTestId("liked-categories")).getByText("AI/ML")).toBeInTheDocument();
+    expect(within(screen.getByTestId("disliked-categories")).getByText("DevOps")).toBeInTheDocument();
+  });
+
+  it("moves categories with explicit click actions", () => {
+    render(<Preferences />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Like Web Applications" }));
+    fireEvent.click(screen.getByRole("button", { name: "Dislike AI/ML" }));
+    fireEvent.click(screen.getByRole("button", { name: "Clear DevOps preference" }));
+
+    expect(preferenceActions.markCategoryLiked).toHaveBeenCalledWith("Web Applications");
+    expect(preferenceActions.markCategoryDisliked).toHaveBeenCalledWith("AI/ML");
+    expect(preferenceActions.clearCategoryPreference).toHaveBeenCalledWith("DevOps");
   });
 });

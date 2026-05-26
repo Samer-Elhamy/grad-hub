@@ -1,0 +1,57 @@
+<svg width="900" height="1200" viewBox="0 0 900 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="900" height="1200" rx="56" fill="#EEF2FF"/>
+  <rect x="210" y="60" width="480" height="1080" rx="58" fill="#111827"/>
+  <rect x="230" y="90" width="440" height="1020" rx="44" fill="#F8FAFC"/>
+  <rect x="390" y="108" width="120" height="10" rx="5" fill="#1F2937"/>
+  <text x="270" y="185" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">Discover</text>
+  <text x="270" y="222" fill="#6B7280" font-family="Arial, sans-serif" font-size="18">3 ideas in stack " Offline-first</text>
+  <rect x="570" y="158" width="62" height="34" rx="17" fill="#DBEAFE"/>
+  <text x="584" y="181" fill="#2563EB" font-family="Arial, sans-serif" font-size="14" font-weight="700">AR</text>
+  <rect x="270" y="270" width="360" height="530" rx="28" fill="white" stroke="#E5E7EB" stroke-width="2"/>
+  <clipPath id="cardClip">
+    <rect x="270" y="270" width="360" height="530" rx="28"/>
+  </clipPath>
+  <g clip-path="url(#cardClip)">
+    <rect x="270" y="270" width="360" height="236" fill="url(#heroGradient)"/>
+    <circle cx="450" cy="388" r="64" fill="white" fill-opacity="0.16"/>
+    <path d="M420 390c0-18 14-32 32-32s32 14 32 32-14 32-32 32-32-14-32-32Z" fill="white" fill-opacity="0.5"/>
+    <rect x="290" y="290" width="96" height="30" rx="15" fill="#FEF3C7"/>
+    <text x="307" y="310" fill="#B45309" font-family="Arial, sans-serif" font-size="13" font-weight="700">Intermediate</text>
+    <rect x="508" y="290" width="102" height="30" rx="15" fill="white" fill-opacity="0.9"/>
+    <text x="526" y="310" fill="#475569" font-family="Arial, sans-serif" font-size="13" font-weight="700">AI/ML</text>
+    <rect x="270" y="270" width="128" height="530" fill="url(#redGlow)" opacity="0.78"/>
+    <rect x="502" y="270" width="128" height="530" fill="url(#greenGlow)" opacity="0.78"/>
+    <text x="300" y="565" fill="#111827" font-family="Arial, sans-serif" font-size="26" font-weight="700">AI Study Planner</text>
+    <text x="300" y="605" fill="#4B5563" font-family="Arial, sans-serif" font-size="17">A mobile planner that turns course</text>
+    <text x="300" y="630" fill="#4B5563" font-family="Arial, sans-serif" font-size="17">deadlines into a weekly study plan.</text>
+    <rect x="300" y="674" width="72" height="30" rx="10" fill="#F3F4F6" stroke="#E5E7EB"/>
+    <text x="316" y="694" fill="#6B7280" font-family="Arial, sans-serif" font-size="13" font-weight="700">Flutter</text>
+    <rect x="382" y="674" width="78" height="30" rx="10" fill="#F3F4F6" stroke="#E5E7EB"/>
+    <text x="399" y="694" fill="#6B7280" font-family="Arial, sans-serif" font-size="13" font-weight="700">Node.js</text>
+    <rect x="470" y="674" width="46" height="30" rx="10" fill="#F3F4F6" stroke="#E5E7EB"/>
+    <text x="486" y="694" fill="#6B7280" font-family="Arial, sans-serif" font-size="13" font-weight="700">AI</text>
+    <text x="300" y="758" fill="#94A3B8" font-family="Arial, sans-serif" font-size="15">Saved locally " Feedback loop ready</text>
+  </g>
+  <circle cx="330" cy="890" r="42" fill="#FEE2E2" stroke="#FCA5A5" stroke-width="2"/>
+  <path d="M315 875L345 905M345 875L315 905" stroke="#EF4444" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="450" cy="890" r="36" fill="#EDE9FE" stroke="#C4B5FD" stroke-width="2"/>
+  <path d="M450 868l7 15 16 2-12 11 3 16-14-8-14 8 3-16-12-11 16-2 7-15Z" fill="#8B5CF6"/>
+  <circle cx="570" cy="890" r="42" fill="#D1FAE5" stroke="#6EE7B7" stroke-width="2"/>
+  <path d="M552 882c0-10 8-18 18-18 5 0 10 2 13 6 3-4 8-6 13-6 10 0 18 8 18 18 0 22-31 39-31 39s-31-17-31-39Z" fill="#10B981"/>
+  <text x="270" y="1010" fill="#111827" font-family="Arial, sans-serif" font-size="24" font-weight="700">Grad Hub Mobile</text>
+  <text x="270" y="1044" fill="#64748B" font-family="Arial, sans-serif" font-size="18">Fast offline discovery, local swipes, bilingual UI.</text>
+  <defs>
+    <linearGradient id="heroGradient" x1="270" y1="270" x2="630" y2="506" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4F46E5"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="redGlow" x1="270" y1="535" x2="398" y2="535" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EF4444" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#EF4444" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="greenGlow" x1="630" y1="535" x2="502" y2="535" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10B981" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#10B981" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>
