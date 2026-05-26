@@ -77,7 +77,7 @@ cd mobile
 flutter build apk --release
 ```
 
-The generated APK is located at:
+Local APK path:
 
 ```text
 mobile/build/app/outputs/flutter-apk/app-release.apk
@@ -183,10 +183,10 @@ flutter build apk --release
 - Add a hosted sync service for optional multi-device mobile sync.
 - Expand the offline idea catalog and add import tools for new project datasets.
 - Add authenticated multi-user profiles.
-- Add AI-generated critique and feasibility scoring per student context.
+- Add contextual critique and feasibility scoring per student context.
 - Add shareable project shortlists.
 - Publish a hosted demo.
 
 ## License
 
-Personal/student project. Add a formal license before commercial reuse.
+License to be added before commercial reuse.

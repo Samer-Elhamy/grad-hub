@@ -1,17 +1,18 @@
-# grad_hub_mobile
+# Grad Hub Mobile
 
-A new Flutter project.
+Flutter Android app for Grad Hub, focused on offline-first graduation project discovery.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Swipe through graduation project ideas locally.
+- Save liked, starred, and rejected ideas on-device.
+- Update preferences and category choices without requiring a backend.
+- Support Arabic RTL and English LTR interfaces.
 
-A few resources to get you started if this is your first Flutter project:
+## Run
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```powershell
+flutter pub get
+flutter test
+flutter build apk --release
+```
